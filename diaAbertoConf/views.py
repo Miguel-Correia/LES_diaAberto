@@ -1,11 +1,23 @@
 from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.template import loader
+from django.urls import reverse
+
 from diaAbertoConf.models import Transporte, TransporteUniversitarioHorario, HorarioTransporte
 
 from diaAbertoConf.forms import TransporteForm, TransporteUniversitarioHorarioForm, HorarioTransporteForm
 # Create your views here.
 
 def index(request):
-    pass
+    #template = loader.get_template('diaAbertoConf/DiaAbertoConfMain.html')
+    #return HttpResponse(template.render({}, request))
+    return render(request, 'diaAbertoConf/DiaAbertoConfMain.html')
+
+def gestaoTransportes(request):
+    #template = loader.get_template('diaAbertoConf/GestaoTransportes.html')
+    #return HttpResponse(template.render({}, request)) 
+    return render(request, 'diaAbertoConf/GestaoTransportes.html')
+ 
 
 #Transporte CRUD- Create Read Update Delete
 #Creates new transporte
@@ -15,17 +27,21 @@ def createTransporte(request):
         if form.is_valid():
             form.save()
             #add later
-            return 0
+            return HttpResponseRedirect(reverse('diaAbertoConf:gestaoTransportes'))
         else:
             form = TransporteForm()
         #add later
-        return 0
+        return render(request, 'diaAbertoConf/AdicionarTransporte.html')
+
+def showCreateTransporte(request):
+    return render(request, 'diaAbertoConf/AdicionarTransporte.html')
 
 #show all transportes
 def showTransportes(request):
     allTransportes = Transporte.objects.all()
-    #add later
-    return 0
+    context = {'allTransportes' : allTransportes,}
+    #template = loader.get_template('diaAbertoConf/ShowTransportes.html')
+    return render(request, 'diaAbertoConf/ShowTransportes.html', context)
 
 #gets a transporte with a specific id 
 def getTransporte(request, id):
@@ -39,17 +55,21 @@ def updateTransporte(request, id):
     form = TransporteForm(request.POST, instance = dados_Transporte)
     if form.is_valid():
         form.save()
-        #add later
-        return 0
+        return  HttpResponseRedirect(reverse('diaAbertoConf:gestaoTransportes'))
     #add later
-    return 0
+    return render(request, 'diaAbertoConf/EditarTransporte.html')
+
+def showUpdateTransporte(request, id):
+    dados_Transporte = Transporte.objects.get(id = id)
+    context = {'transporte' : dados_Transporte,}
+    return render(request, 'diaAbertoConf/EditarTransporte.html', context)
+
 
 #deletes a transporte
 def deleteTransporte(request, id):
     dados_transporte = Transporte.objects.get(id = id)
     dados_transporte.delete()
-    #add later
-    return 0
+    return HttpResponseRedirect(reverse('diaAbertoConf:allTransportes'))
 
 #TransporteUniversitario_Horario CRUD- Create Read Update Delete
 #Creates new TransporteUniversitario_Horario, associates Horario to transporte 
@@ -90,7 +110,7 @@ def updateTransporteUniversidade_Horario(request, id):
     return 0
 
 #deletes a transporteUniversidade_Horario
-def deleteTransporte(request, id):
+def deleteTransporteUniversidade_Horario(request, id):
     dados_TransporteUni_Horario = TransporteUniversitarioHorario.objects.get(id = id)
     dados_TransporteUni_Horario.delete()
     #add later
