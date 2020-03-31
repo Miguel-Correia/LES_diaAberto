@@ -33,7 +33,7 @@
     		    <li class="breadcrumb-item"><a href="#">Página Inicial</a></li>
     		    <li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Configuração dia Aberto</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:gestaoTransportes' %}">Gestão de Transportes</a></li>
-    		    <li class="breadcrumb-item active" aria-current="page">Transportes</li>
+    		    <li class="breadcrumb-item active" aria-current="page">Horarios Transportes</li>
     	    </ol>
     	</nav>
 
@@ -43,28 +43,38 @@
     	<div class="container">
     	    <div class = "row">
     		    <div class = "col-sm-6 ">
-                    <h2>Editar transporte</h2>
+                    <h2>Horarios Transportes</h2>
                     <hr>
     		    </div>
             </div>
     	    <div class = "row">
-    		    <div class = "col-sm-6 ">
-					<form action = "{% url 'diaAbertoConf:updateTransporte' id=transporte.id %}" method="post">
-						{% csrf_token %}
-  						<div class="form-group row">
-    						<label for="Tipo_Transporte" class="col-sm-4 col-form-label">Tipo de Transporte</label>
-    						<div class="col-sm-8">
-      							<input id="tipo_transporte" type="text" name="tipo_transporte" class="form-control" value ="{{ transporte.tipo_transporte }}" required>
-    						</div>
-  						</div>
-  						<div class="form-group row">
-    						<label for="Capacidade" class="col-sm-4 col-form-label">Capacidade</label>
-    						<div class="col-sm-8">
-      							<input id="capacidade" type="number" name="capacidade" class="form-control" value ="{{transporte.capacidade}}" min="1" required>
-    						</div>
-  						</div>
-						<button type="submit" class="btn btn-primary">Alterar</button>
-					</form>
+    		    <div class = "col-sm-10 ">
+					{% if allHorarios_Transporte %}
+    		    		<table class="table">
+                    	    <thead>
+                    	        <tr>
+                    	            <th scope="col">#</th>
+                    	            <th scope="col">Hora partida</th>
+                    	            <th scope="col">Hora chegada</th>
+                    	            <th scope="col"></th>
+                    	            <th scope="col"></th>
+                    	        </tr>
+                    	    </thead>
+                    	    <tbody>
+								{% for horario in allHorarios_Transporte %}
+                    	        	<tr>
+                    	        	    <th scope="row">{{ horario.id }}</th>
+                    	        	    <td>{{ horario.hora_de_partida }}</td>
+                    	        	    <td>{{ horario.hora_de_chegada}}</td>
+                    	        	    <td><a href="{% url 'diaAbertoConf:showUpdateHorarioTransporte' id=horario.id %}">Editar</a></td>
+                    	        	    <td><a href="{% url 'diaAbertoConf:deleteHorarioTransporte' id=horario.id %}">Remover</a></td>
+                    	        	</tr>
+								{% endfor %}
+                    	    </tbody>
+                    	</table>
+					{% else %}
+						<h2>Dados não se encontram disponiveis</h2>
+					{% endif %}
     		    </div>
     	    </div>
     	</div>

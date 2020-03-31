@@ -33,7 +33,7 @@
     		    <li class="breadcrumb-item"><a href="#">Página Inicial</a></li>
     		    <li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Configuração dia Aberto</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:gestaoTransportes' %}">Gestão de Transportes</a></li>
-    		    <li class="breadcrumb-item active" aria-current="page">Transportes</li>
+    		    <li class="breadcrumb-item active" aria-current="page">Rotas Transportes</li>
     	    </ol>
     	</nav>
 
@@ -43,24 +43,58 @@
     	<div class="container">
     	    <div class = "row">
     		    <div class = "col-sm-6 ">
-                    <h2>Editar transporte</h2>
+                    <h2>Editar Rota de Transporte</h2>
                     <hr>
     		    </div>
             </div>
     	    <div class = "row">
     		    <div class = "col-sm-6 ">
-					<form action = "{% url 'diaAbertoConf:updateTransporte' id=transporte.id %}" method="post">
+					<form action = "{% url 'diaAbertoConf:updateRotaTransporte' id=rota.id %}" method="post">
 						{% csrf_token %}
-  						<div class="form-group row">
-    						<label for="Tipo_Transporte" class="col-sm-4 col-form-label">Tipo de Transporte</label>
+                        <div class="form-group row">
+    						<label for="transporteid" class="col-sm-4 col-form-label">Transporte</label>
     						<div class="col-sm-8">
-      							<input id="tipo_transporte" type="text" name="tipo_transporte" class="form-control" value ="{{ transporte.tipo_transporte }}" required>
+                                <select id = "transporteid" name="transporteid" class = "form-control" required>
+                                {% for transporte in allTransportes %}
+                                    {% if transporte.id == rota.transporteid.id %}
+                                    <option selected value="{{transporte.id}}">{{transporte}}</option>
+                                    {% else %}
+                                    <option value="{{transporte.id}}">{{transporte}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                                </select>
+    						</div>
+  						</div>
+                        <div class="form-group row">
+    						<label for="horarioid" class="col-sm-4 col-form-label">Horario</label>
+    						<div class="col-sm-8">
+                                <select id = "horarioid" name="horarioid" class = "form-control" required>
+                                {% for horario in allHorarios %}
+                                    {% if horario.id == rota.horarioid.id %}
+                                    <option selected value="{{horario.id}}">{{horario}}</option>
+                                    {% else %}
+                                    <option value="{{horario.id}}">{{horario}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                                </select>
     						</div>
   						</div>
   						<div class="form-group row">
-    						<label for="Capacidade" class="col-sm-4 col-form-label">Capacidade</label>
+    						<label for="origem" class="col-sm-4 col-form-label">Origem</label>
     						<div class="col-sm-8">
-      							<input id="capacidade" type="number" name="capacidade" class="form-control" value ="{{transporte.capacidade}}" min="1" required>
+      							<input id="origem" type="text" name="origem" class="form-control" value="{{rota.origem}}" required>
+    						</div>
+  						</div>
+                        <div class="form-group row">
+    						<label for="destino" class="col-sm-4 col-form-label">Destino</label>
+    						<div class="col-sm-8">
+      							<input id="destino" type="text" name="destino" class="form-control" value="{{rota.destino}}" required>
+    						</div>
+  						</div>
+  						<div class="form-group row">
+    						<label for="data" class="col-sm-4 col-form-label">Data</label>
+    						<div class="col-sm-8">
+      							<input id="data" type="date" name="data" class="form-control" value="{{rota.data|date:"Y-m-d"}}" required>
     						</div>
   						</div>
 						<button type="submit" class="btn btn-primary">Alterar</button>

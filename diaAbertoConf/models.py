@@ -1,5 +1,5 @@
 from django.db import models
-
+from datetime import datetime
 # Create your models here.
 
 
@@ -11,7 +11,7 @@ class Transporte(models.Model):
     capacidade = models.IntegerField(db_column='Capacidade', blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
-        return "Transporte nº " + str(self.id)
+        return str(self.tipo_transporte)
 
     class Meta:
         #managed = True
@@ -20,8 +20,11 @@ class Transporte(models.Model):
 class HorarioTransporte(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     hora_de_partida = models.TimeField(db_column='Hora_de_partida', blank=True, null=True)  # Field name made lowercase.
-    Hora_de_chegada = models.TimeField(db_column='Hora_de_chegada', blank=True, null=True)  # Field name made lowercase.
+    hora_de_chegada = models.TimeField(db_column='Hora_de_chegada', blank=True, null=True)  # Field name made lowercase.
     #data = models.DateField(db_column='Data', blank=True, null=True)  # Field name made lowercase.
+
+    def __str__(self):
+        return str(self.hora_de_partida) + " -> " + str(self.hora_de_chegada)
 
     class Meta:
         #managed = True

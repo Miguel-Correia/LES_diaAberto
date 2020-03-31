@@ -26,11 +26,9 @@ def createTransporte(request):
         form = TransporteForm(request.POST)
         if form.is_valid():
             form.save()
-            #add later
             return HttpResponseRedirect(reverse('diaAbertoConf:gestaoTransportes'))
         else:
             form = TransporteForm()
-        #add later
         return render(request, 'diaAbertoConf/AdicionarTransporte.html')
 
 def showCreateTransporte(request):
@@ -55,8 +53,7 @@ def updateTransporte(request, id):
     form = TransporteForm(request.POST, instance = dados_Transporte)
     if form.is_valid():
         form.save()
-        return  HttpResponseRedirect(reverse('diaAbertoConf:gestaoTransportes'))
-    #add later
+        return  HttpResponseRedirect(reverse('diaAbertoConf:allTransportes'))
     return render(request, 'diaAbertoConf/EditarTransporte.html')
 
 def showUpdateTransporte(request, id):
@@ -79,18 +76,28 @@ def createTransporteUniversitario_Horario(request):
         form = TransporteUniversitarioHorarioForm(request.POST)
         if form.is_valid():
             form.save()
-            #add later
-            return 0
+            return HttpResponseRedirect(reverse('diaAbertoConf:gestaoTransportes'))
         else:
             form = TransporteForm()
         #add later
-        return 0
+        return HttpResponseRedirect(reverse('diaAbertoConf:showCreateRotaTransporte'))
+
+def showCreateTransporteUniversitario_Horario(request):
+    dadosTransportes = Transporte.objects.all()
+    dadosHorarios = HorarioTransporte.objects.all()
+    context = { 'allTransportes': dadosTransportes,
+                'allHorarios': dadosHorarios,}
+    return render(request, 'diaAbertoConf/AdicionarTransporteUniversitario_Horario.html', context)
 
 #show all transporteUniversidade_Horarios
-def showTransporteUniversidade_Horarios(request):
+def showTransporteUniversitario_Horarios(request):
     allTransportesUni_Horario = TransporteUniversitarioHorario.objects.all()
-    #add later
-    return 0
+    for transporteUni_Horario in allTransportesUni_Horario:
+        transporteUni_Horario.transporte = 'aaa'
+        transporteUni_Horario.horario = 'aaa'
+
+    context = {'allRotas': allTransportesUni_Horario,}
+    return render(request, 'diaAbertoConf/showTransporteUniversitario_Horario.html', context)
 
 #gets a transporteUniversidade_Horario with a specific id 
 def getTransporteUniversidade_Horario(request, id):
@@ -99,22 +106,29 @@ def getTransporteUniversidade_Horario(request, id):
     return 0
 
 #upadates the fields of a spcific transporteUniversidade_Horario
-def updateTransporteUniversidade_Horario(request, id):
+def updateTransporteUniversitario_Horario(request, id):
     dados_TransporteUni_Horario = TransporteUniversitarioHorario.objects.get(id = id)
     form = TransporteUniversitarioHorarioForm(request.POST, instance = dados_TransporteUni_Horario)
     if form.is_valid():
         form.save()
-        #add later
-        return 0
-    #add later
-    return 0
+        return HttpResponseRedirect(reverse('diaAbertoConf:allRotasTransporte'))
+    return HttpResponseRedirect(reverse('diaAbertoConf:showUpdateTransporteUniversitario_Horario', args=(),
+        kwargs={'id': dados_TransporteUni_Horario.id}))
+
+def showUpdateTransporteUniversitario_Horario(request, id):
+    dados_TransporteUni_Horario = TransporteUniversitarioHorario.objects.get(id = id)
+    dadosTransportes = Transporte.objects.all()
+    dadosHorarios = HorarioTransporte.objects.all()
+    context = {'rota' : dados_TransporteUni_Horario,
+                'allTransportes': dadosTransportes,
+                'allHorarios': dadosHorarios,}
+    return render(request, 'diaAbertoConf/EditarTransporteUniversitario_Horario.html', context)
 
 #deletes a transporteUniversidade_Horario
-def deleteTransporteUniversidade_Horario(request, id):
+def deleteTransporteUniversitario_Horario(request, id):
     dados_TransporteUni_Horario = TransporteUniversitarioHorario.objects.get(id = id)
     dados_TransporteUni_Horario.delete()
-    #add later
-    return 0
+    return HttpResponseRedirect(reverse('diaAbertoConf:allRotasTransporte'))
 
 #Horario Transporte CRUD- Create Read Update Delete
 #Creates new Horario Transporte
@@ -123,18 +137,19 @@ def createHorario_Transporte(request):
         form = HorarioTransporteForm(request.POST)
         if form.is_valid():
             form.save()
-            #add later
-            return 0
+            return HttpResponseRedirect(reverse('diaAbertoConf:gestaoTransportes'))
         else:
             form = HorarioTransporteForm()
-        #add later
-        return 0
+        return render(request, 'diaAbertoConf/AdicionarHorarioTransporte.html')
+
+def showCreateHorario_Transporte(request):
+    return render(request, 'diaAbertoConf/AdicionarHorarioTransporte.html')
 
 #show all Hprarios Transporte
 def showHorarios_Transporte(request):
     allHorarios_Transporte = HorarioTransporte.objects.all()
-    #add later
-    return 0
+    context = {'allHorarios_Transporte': allHorarios_Transporte,}
+    return render(request, 'diaAbertoConf/ShowHorarioTransportes.html', context)
 
 #gets a Horario_Transporte with a specific id 
 def getHorario_Transporte(request, id):
@@ -148,14 +163,17 @@ def updateHorario_Transporte(request, id):
     form = HorarioTransporteForm(request.POST, instance = dados_Horario_Transporte)
     if form.is_valid():
         form.save()
-        #add later
-        return 0
-    #add later
-    return 0
+        return HttpResponseRedirect(reverse('diaAbertoConf:allHorarios'))
+    return HttpResponseRedirect(reverse('diaAbertoConf:showUpdateHorarioTransporte', args=(),
+        kwargs={'id': dados_Horario_Transporte.id}))
+
+def showUpdateHorario_Transporte(request, id):
+    dados_Horario_Transporte = HorarioTransporte.objects.get(id = id)
+    context = {'horario' : dados_Horario_Transporte,}
+    return render(request, 'diaAbertoConf/EditarHorarioTransporte.html', context)
 
 #deletes a Horario_Transporte
 def deleteHorario_Transporte(request, id):
-    dados_Horario_Transporte = Horario_Transporte.objects.get(id = id)
+    dados_Horario_Transporte = HorarioTransporte.objects.get(id = id)
     dados_Horario_Transporte.delete()
-    #add later
-    return 0
+    return HttpResponseRedirect(reverse('diaAbertoConf:allHorarios'))
