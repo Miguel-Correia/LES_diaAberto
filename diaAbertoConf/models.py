@@ -14,7 +14,7 @@ class Transporte(models.Model):
         return str(self.tipo_transporte)
 
     class Meta:
-        #managed = True
+        managed = True
         db_table = 'transporte'
 
 class HorarioTransporte(models.Model):
@@ -27,7 +27,7 @@ class HorarioTransporte(models.Model):
         return str(self.hora_de_partida) + " -> " + str(self.hora_de_chegada)
 
     class Meta:
-        #managed = True
+        managed = True
         db_table = 'horario'
 
 class TransporteUniversitarioHorario(models.Model):
@@ -39,7 +39,7 @@ class TransporteUniversitarioHorario(models.Model):
     data = models.DateField(db_column='Data', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        #managed = True
+        managed = True
         db_table = 'transporte_universitario_horario'
 
 
