@@ -3,9 +3,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 
-from diaAbertoConf.models import Transporte, TransporteUniversitarioHorario, HorarioTransporte
+from diaAbertoConf.models import Transporte, TransporteUniversitarioHorario, HorarioTransporte, Ementa, Prato
 
-from diaAbertoConf.forms import TransporteForm, TransporteUniversitarioHorarioForm, HorarioTransporteForm
+from diaAbertoConf.forms import TransporteForm, TransporteUniversitarioHorarioForm, HorarioTransporteForm, EmentaForm, PratoForm
 # Create your views here.
 
 def index(request):
@@ -177,3 +177,46 @@ def deleteHorario_Transporte(request, id):
     dados_Horario_Transporte = HorarioTransporte.objects.get(id = id)
     dados_Horario_Transporte.delete()
     return HttpResponseRedirect(reverse('diaAbertoConf:allHorarios'))
+
+
+def gestaoEmentas(request):
+    allEmentas = Ementa.objects.all()
+    context = {'allEmentas' : allEmentas,}
+    return render(request, 'diaAbertoConf/GestaoEmentas.html', context)
+
+def deleteEmenta(request, id):
+    dados_Ementa = Ementa.objects.get(id = id)
+    dados_Ementa.delete()
+    return HttpResponseRedirect(reverse('diaAbertoConf:gestaoEmentas'))
+
+def newEmenta(request):
+    if request.method == "POST":
+        form = EmentaForm(request.POST)
+        if form.is_valid():
+            ementaData=form.save()
+            #add later
+            return HttpResponseRedirect(reverse('diaAbertoConf:showNewPratos',args=(),kwargs={'id': ementaData.id}))
+        else:
+            form = EmentaForm()
+        #add later
+        return render(request, 'diaAbertoConf/AdicionarEmenta.html')
+
+def showNewEmenta(request):
+     return render(request, 'diaAbertoConf/AdicionarEmenta.html')
+
+def showNewPratos(request, id):
+    dados_Ementa = Ementa.objects.get(id = id)
+    context={ 'ementaData': dados_Ementa,}
+    return render(request, 'diaAbertoConf/newPratos.html',context)
+
+def newPrato(request,id):
+    dados_Ementa = Ementa.objects.get(id = id)
+    context={ 'ementaData': dados_Ementa,}
+    if request.method == "POST":
+        form = PratoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('diaAbertoConf:showNewPratos',args=(),kwargs={'id': id}))
+        else:
+            form = PratoForm()
+        return render(request,'diaAbertoConf/newPratos.html',context)   
