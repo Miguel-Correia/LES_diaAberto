@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica
+from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica
 
 class EdificioForm(ModelForm):
     class Meta:
@@ -29,4 +29,9 @@ class LocalForm(ModelForm):
 class AtividadeForm(ModelForm):
     class Meta:
         model = Atividade
+        fields =    '__all__'
+
+class TematicaForm(ModelForm):
+    class Meta:
+        model = Tematica
         fields =    '__all__'
