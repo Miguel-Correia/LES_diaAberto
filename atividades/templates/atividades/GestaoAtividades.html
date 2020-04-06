@@ -68,12 +68,8 @@
                             <a href="{% url 'atividades:showCreateDepartamento' %}">+ Adicionar</a>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="#">Sessões</a>
-                            <a href="#">+ Adicionar</a>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="#">Temáticas</a>
-                            <a href="#">+ Adicionar</a>
+                            <a href="{% url 'atividades:allTematicas' %}">Temáticas</a>
+                            <a href="{% url 'atividades:showCreateTematica' %}">+ Adicionar</a>
                         </li>
     		    	</ul>
     		    </div>

@@ -3,9 +3,9 @@ from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
-from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica
+from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica
 
-from atividades.forms import EdificioForm, CampusForm, DepartamentoForm, LocalForm, AtividadeForm, UnidadeOrganicaForm
+from atividades.forms import EdificioForm, CampusForm, DepartamentoForm, LocalForm, AtividadeForm, UnidadeOrganicaForm, TematicaForm
 # Create your views here.
 
 def index(request):
@@ -341,3 +341,47 @@ def validAtividade(request, id):
     dados_atividade.validada = True 
     #add later
     return 0
+
+#Functions for the handling of tematicas
+#showAll
+def showTematicas(request):
+    allTematicas = Tematica.objects.all()
+    context = {'allTematicas': allTematicas,}
+    return render(request, 'atividades/ShowTematicas.html', context)
+
+#show Create
+def showCreateTematica(request):
+    return render(request, 'atividades/AdicionarTematica.html')
+
+#Add tematica
+def addTematica(request):
+    if request.method == "POST":
+        form = TematicaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('atividades:gestaoAtividades'))
+        else:
+            form = AtividadeForm()
+        return render(request, 'atividades/AdicionarTematica.html')
+
+def showUpdateTematica(request, id):
+    dados = Tematica.objects.get(id = id)
+    context = {'tematica': dados,}
+    return render(request, 'atividades/EditarTematica.html', context)
+
+def updateTematica(request, id):
+    dados = Tematica.objects.get(id = id)
+    form = TematicaForm(request.POST, instance = dados)
+    if form.is_valid():
+        form.save()
+        return  HttpResponseRedirect(reverse('atividades:allTematicas'))
+    return HttpResponseRedirect(reverse('atividades:showUpdateTematica', args=(),
+        kwargs={'id': dados.id}))
+
+def deleteTematica(request, id):
+    dados = Tematica.objects.get(id = id)
+    dados.delete()
+    return HttpResponseRedirect(reverse('atividades:allTematicas'))
+   
+
+    

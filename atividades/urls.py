@@ -44,4 +44,13 @@ urlpatterns = [
     path('GestaoAtividades/Locais/delete/<int:id>', views.deleteLocal, name='deleteLocal'),
     path('GestaoAtividades/Locais/update/<int:id>', views.showUpdateLocal, name='showUpdateLocal'),
     path('GestaoAtividades/Locais/updates/<int:id>', views.updateLocal, name='updateLocal'),
+
+    path('GestaoAtividades/Tematicas', views.showTematicas, name='allTematicas'),
+    path('GestaoAtividades/Tematicas/create', views.showCreateTematica, name='showCreateTematica'),
+    path('GestaoAtividades/Tematicas/add', views.addTematica, name='addTematica'),
+    path('GestaoAtividades/Tematicas/delete/<int:id>', views.deleteTematica, name='deleteTematica'),
+    path('GestaoAtividades/Tematicas/update/<int:id>', views.showUpdateTematica, name='showUpdateTematica'),
+    path('GestaoAtividades/Tematicas/updates/<int:id>', views.updateTematica, name='updateTematica'),
+
+  
 ]
