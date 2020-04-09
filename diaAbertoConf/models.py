@@ -46,11 +46,26 @@ class TransporteUniversitarioHorario(models.Model):
 class Ementa(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     dia = models.DateField(db_column='Dia', blank=True, null=True)  # Field name made lowercase.
-    preco_economico_aluno = models.FloatField(db_column='Preco_economico_aluno', blank=True, null=True)  # Field name made lowercase.
-    preco_normal_aluno = models.FloatField(db_column='Preco_normal_aluno', blank=True, null=True)  # Field name made lowercase.
-    preco_economico_outro = models.FloatField(db_column='Preco_economico_outro', blank=True, null=True)  # Field name made lowercase.
-    preco_outro = models.FloatField(db_column='Preco_outro', blank=True, null=True)  # Field name made lowercase.
+    preco_economico = models.FloatField(db_column='Preco_economico_aluno', blank=True, null=True)  # Field name made lowercase.
+    preco_normal = models.FloatField(db_column='Preco_normal_aluno', blank=True, null=True)  # Field name made lowercase.
+    #preco_economico_outro = models.FloatField(db_column='Preco_economico_outro', blank=True, null=True)  # Field name made lowercase.
+    #preco_outro = models.FloatField(db_column='Preco_outro', blank=True, null=True)  # Field name made lowercase.
+
+    def __str__(self):
+        return "Ementa " + str(self.id)
 
     class Meta:
-        managed = False
+        #managed = False
         db_table = 'ementa'
+
+
+class Prato(models.Model):
+    #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    ementaid = models.ForeignKey(Ementa, on_delete=models.CASCADE, db_column='EmentaID')  # Field name made lowercase.
+    nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    tipo = models.CharField(db_column='Tipo', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    descricao = models.CharField(db_column='Descricao', max_length=255, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        #managed = False
+        db_table = 'prato'

@@ -28,8 +28,13 @@ urlpatterns = [
     path('GestaoTransporte/RotasTransporte/delete/<int:id>', views.deleteTransporteUniversitario_Horario, name= 'deleteRotaTransporte'),
     path('GestaoTransporte/RotasTransporte/update/<int:id>', views.showUpdateTransporteUniversitario_Horario, name='showUpdateRotaTransporte'),
     path('GestaoTransporte/RotasTransporte/updates/<int:id>', views.updateTransporteUniversitario_Horario, name='updateRotaTransporte'),
+
+    path('GestaoEmentas/',views.gestaoEmentas, name='gestaoEmentas'),
+    path('GestaoEmentas/delete/<int:id>',views.deleteEmenta, name='deleteEmenta'),
+    path('GestaoEmentas/create',views.showNewEmenta, name='showNewEmenta'),
+    path('GestaoEmentas/add', views.newEmenta, name='newEmenta'),
+    path('GestaoEmentas/create/createPratos/<int:id>',views.showNewPratos, name='showNewPratos'),
+    path('GestaoEmentas/create/addPratos/<int:id>', views.newPrato, name='newPratos'),
     
-
-
 
 ]   
