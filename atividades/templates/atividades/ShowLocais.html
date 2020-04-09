@@ -48,6 +48,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
+                                <th scope="col">Campus</th>
                                 <th scope="col">Edifício</th>
                                 <th scope="col">Andar</th>
                                 <th scope="col">Sala</th>
@@ -59,6 +60,7 @@
                             {% for local in allLocais %}
                             <tr>
                                 <th scope="row">{{ local.id }}</th>
+                                <td>{{ local.campusid.nome }}</td>
                                 <td>{{ local.edicifioid.nome_edificio }}</td>
                                 <td>{{ local.andar }}</td>
                                 <td>{{ local.sala }}</td>

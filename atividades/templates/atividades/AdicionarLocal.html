@@ -45,12 +45,22 @@
                     <hr>
 					<form action = "{% url 'atividades:addLocal' %}" method="post">
                         {% csrf_token %}
+                        <div class="form-group row">
+                            <label for="campusid" class="col-sm-4 col-form-label">Campus</label>
+                            <div class="col-sm-8">
+                                <select name="campusid" id="campusid" class = "form-control" required>
+                                    {% for campus in allCampus %}
+                                    <option value="{{campus.id}}">{{campus.nome}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
   						<div class="form-group row">
     						<label for="edificio" class="col-sm-4 col-form-label">Edifício</label>
     						<div class="col-sm-8">
-      							<select name="edicifioid" id = "edicifioid" class = "form-control">
+      							<select name="edicifioid" id = "edicifioid" class = "form-control" required>
                                     {% for edificio in allEdificios %}
-                                    <option value="{{edificio.id}}">{{edificio.nome_edificio}}</option>
+                                    <option value="{{form.data.campusid}}">{{edificio.nome_edificio}}</option>
                                     {% endfor %}
                                 </select>
     						</div>

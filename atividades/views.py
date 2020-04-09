@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -34,12 +34,15 @@ def createEdificio(request):
         return render(request, 'atividades/AdicionarEdificio.html')
 
 def showCreateEdificio(request):
-    return render(request, 'atividades/AdicionarEdificio.html')
+    allCampus = Campus.objects.all()
+    context = {'allCampus' : allCampus}
+    return render(request, 'atividades/AdicionarEdificio.html', context)
 
 #show all edificios
 def showEdificios(request):
     allEdificios = Edificio.objects.all()
-    context = {'allEdificios' : allEdificios,}
+    allCampus = Campus.objects.all()
+    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios,}
     return render(request, 'atividades/ShowEdificios.html', context)
 
 #gets a edificios with a specific id 
@@ -54,12 +57,13 @@ def updateEdificio(request, id):
     form = EdificioForm(request.POST, instance = dados_Edificio)
     if form.is_valid():
         form.save()
-        return  HttpResponseRedirect(reverse('atividades:gestaoAtividades'))
+        return  HttpResponseRedirect(reverse('atividades:allEdificios'))
     return render(request, 'atividades/EditarEdificio.html')
 
 def showUpdateEdificio(request, id):
     dados_Edificio = Edificio.objects.get(id = id)
-    context = {'edificio' : dados_Edificio}
+    allCampus = Campus.objects.all()
+    context = {'allCampus' : allCampus, 'edificio' : dados_Edificio}
     return render(request, 'atividades/EditarEdificio.html', context)
 
 #deletes a edificio
@@ -102,7 +106,7 @@ def updateCampus(request, id):
     form = CampusForm(request.POST, instance = dados_Campus)
     if form.is_valid():
         form.save()
-        return  HttpResponseRedirect(reverse('atividades:gestaoAtividades'))
+        return  HttpResponseRedirect(reverse('atividades:allCampus'))
     return render(request, 'atividades/EditarCampus.html')
 
 def showUpdateCampus(request, id):
@@ -122,14 +126,18 @@ def createUnidadeOrganica(request):
         form = UnidadeOrganicaForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('atividades:gestaoAtividades'))
+            #if 'add_next' in request.POST: 
+            return redirect('atividades:showCreateUnidadeOrganica', saved=1)
+            #else:
+                #return HttpResponseRedirect(reverse('atividades:gestaoAtividades'))
         else:
             form = UnidadeOrganicaForm()
-        return render(request, 'atividades/AdicionarUO.html')
+            return render(request, 'atividades/AdicionarUO.html')
 
-def showCreateUnidadeOrganica(request):
-    allCampus = Campus.objects.all()
-    context = {'allCampus' : allCampus,}
+def showCreateUnidadeOrganica(request, saved=0):
+    #allCampus = Campus.objects.all()
+    #context = {'allCampus' : allCampus,}
+    context = {'form' : UnidadeOrganicaForm(), 'saved' : saved}
     return render(request, 'atividades/AdicionarUO.html', context)
 
 #show all unidade
@@ -150,7 +158,7 @@ def updateUnidadeOrganica(request, id):
     form = UnidadeOrganicaForm(request.POST, instance = dados_UnidadeOrganica)
     if form.is_valid():
         form.save()
-        return  HttpResponseRedirect(reverse('atividades:gestaoAtividades'))
+        return  HttpResponseRedirect(reverse('atividades:allUnidadeOrganicas'))
     return render(request, 'atividades/EditarUO.html')
 
 def showUpdateUnidadeOrganica(request, id):
@@ -199,7 +207,7 @@ def updateDepartamento(request, id):
     form = DepartamentoForm(request.POST, instance = dados_Departamento)
     if form.is_valid():
         form.save()
-        return  HttpResponseRedirect(reverse('atividades:gestaoAtividades'))
+        return  HttpResponseRedirect(reverse('atividades:allDepartamentos'))
     return render(request, 'atividades/EditarDepartamento.html')
 
 def showUpdateDepartamento(request, id):
@@ -227,13 +235,15 @@ def createLocal(request):
 
 def showCreateLocal(request):
     allEdificios = Edificio.objects.all()
-    context = {'allEdificios' : allEdificios,}
+    allCampus = Campus.objects.all()
+    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios,}
     return render(request, 'atividades/AdicionarLocal.html', context)
 
 #show all local
 def showLocais(request):
     allLocais = Local.objects.all()
-    context = {'allLocais' : allLocais,}
+    allCampus = Campus.objects.all()
+    context = {'allCampus': allCampus, 'allLocais' : allLocais,}
     return render(request, 'atividades/ShowLocais.html', context)
 
 #gets a local with a specific id 
@@ -248,13 +258,14 @@ def updateLocal(request, id):
     form = LocalForm(request.POST, instance = dados_Local)
     if form.is_valid():
         form.save()
-        return  HttpResponseRedirect(reverse('atividades:gestaoAtividades'))
+        return  HttpResponseRedirect(reverse('atividades:allLocais'))
     return render(request, 'atividades/EditarLocal.html')
 
 def showUpdateLocal(request, id):
     dados_Local = Local.objects.get(id = id)
     allEdificios = Edificio.objects.all()
-    context = {'allEdificios' : allEdificios, 'local' : dados_Local,}
+    allCampus = Campus.objects.all()
+    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'local' : dados_Local,}
     return render(request, 'atividades/EditarLocal.html', context)
 
 #deletes a local

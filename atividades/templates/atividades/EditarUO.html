@@ -27,7 +27,7 @@
     		    <li class="breadcrumb-item"><a href="#">Página Inicial</a></li>
     		    <li class="breadcrumb-item"><a href="{% url 'atividades:index' %}">Atividades Dia Aberto</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'atividades:gestaoAtividades' %}">Gestão de Atividades</a></li>
-    		    <li class="breadcrumb-item active" aria-current="page">Atividades</li>
+    		    <li class="breadcrumb-item active" aria-current="page">Unidade Orgânica</li>
     	    </ol>
     	</nav>
 
@@ -37,35 +37,46 @@
     	<div class="container">
     	    <div class = "row">
     		    <div class = "col-sm-8 ">
-                    <h2>Adicionar Unidade Orgânica</h2>
+                    <h2>Editar Unidade Orgânica</h2>
     		    </div>
             </div>
     	    <div class = "row">
     		    <div class = "col-sm-6 ">
                     <hr>
 					<form action = "{% url 'atividades:updateUnidadeOrganica' id=unidadeorganica.id %}" method="post">
-                        {% csrf_token %}
-  						<div class="form-group row">
+                        {% csrf_token %} 
+                        <div class="form-group row">
                             <label for="nome" class="col-sm-4 col-form-label">Nome</label>
                             <div class="col-sm-8">
                                 <input id="nome" type="text" name="nome" class="form-control" value="{{unidadeorganica.nome}}" required>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="campus" class="col-sm-4 col-form-label">Campus</label>
-                            <div class="col-sm-8">
-                                <select name="campusid" id = "campusid" class = "form-control">
-                                    {% for campus in allCampus %}
-                                    {% if campus.id == unidadeorganica.campusid.id %}
-                                    <option selected="selected" value="{{campus.id}}">{{campus.nome}}</option>
-                                    {% else %}
-                                    <option value="{{campus.id}}">{{campus.nome}}</option>
-                                    {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>    						
-						<button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>  
+                        <a type="button" class="pop btn btn-secondary" href="{% url 'atividades:allUnidadeOrganicas' %}">Voltar à página anterior</a>
+                        &nbsp; 						
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Alterar</button>
+                        <div class="modal fade" id="myModal">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                      
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                          <h4 class="modal-title">Aviso</h4>
+                                          <button type="button" class="close" data-dismiss="modal">×</button>
+                                        </div>
+                                        
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                          Tem a certeza que pretende guardar as alterações?
+                                        </div>
+                                        
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                          <button type="submit" class="btn btn-success">Sim</a>
+                                          <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+                                        </div>        
+                                      </div>
+                                    </div>
+                                  </div>
 					</form>
     		    </div>
     	    </div>

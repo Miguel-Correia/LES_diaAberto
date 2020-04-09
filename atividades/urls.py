@@ -25,7 +25,7 @@ urlpatterns = [
     path('GestaoAtividades/Campus/updates/<int:id>', views.updateCampus, name='updateCampus'),
 
     path('GestaoAtividades/UnidadeOrganicas/', views.showUnidadeOrganicas, name='allUnidadeOrganicas'),
-    path('GestaoAtividades/UnidadeOrganicas/create', views.showCreateUnidadeOrganica, name='showCreateUnidadeOrganica'),
+    path('GestaoAtividades/UnidadeOrganicas/create/<int:saved>', views.showCreateUnidadeOrganica, name='showCreateUnidadeOrganica'),
     path('GestaoAtividades/UnidadeOrganicas/add', views.createUnidadeOrganica, name='addUnidadeOrganica'),
     path('GestaoAtividades/UnidadeOrganicas/delete/<int:id>', views.deleteUnidadeOrganica, name='deleteUnidadeOrganica'),
     path('GestaoAtividades/UnidadeOrganicas/update/<int:id>', views.showUpdateUnidadeOrganica, name='showUpdateUnidadeOrganica'),

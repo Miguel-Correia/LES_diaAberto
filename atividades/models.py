@@ -2,15 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-class Edificio(models.Model):
-    #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    num_edificio = models.IntegerField(db_column='Num_edificio', blank=True, null=True)  # Field name made lowercase.
-    nome_edificio = models.CharField(db_column='Nome_edificio', max_length=255, blank=True, null=True)  # Field name made lowercase
-
-    class Meta:
-        managed = True
-        db_table = 'edicifio'
-
 class Campus(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -21,14 +12,23 @@ class Campus(models.Model):
         managed = False
         db_table = 'campus'
 
+class Edificio(models.Model):
+    #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    num_edificio = models.IntegerField(db_column='Num_edificio', blank=True, null=True)  # Field name made lowercase.
+    nome_edificio = models.CharField(db_column='Nome_edificio', max_length=255, blank=True, null=True)  # Field name made lowercase
+    campusid = models.ForeignKey(Campus, on_delete = models.CASCADE, db_column='CampusID', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = True
+        db_table = 'edicifio'
 
 class UnidadeOrganica(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    campusid = models.ForeignKey(Campus, on_delete = models.CASCADE, db_column='CampusID')  # Field name made lowercase.
+    #campusid = models.ForeignKey(Campus, on_delete = models.CASCADE, db_column='CampusID', blank=True, null=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'unidade_organica'
 
 class Departamento(models.Model):
@@ -42,11 +42,12 @@ class Departamento(models.Model):
 
 class Local(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    #edicifioid = models.ForeignKey(Edificio, on_delete = models.CASCADE, db_column='EdicifioID')  # Field name made lowercase.
+    edicifioid = models.ForeignKey(Edificio, on_delete = models.CASCADE, db_column='EdicifioID', blank=True, null=True)  # Field name made lowercase.
     andar = models.IntegerField(db_column='Andar', blank=True, null=True)  # Field name made lowercase.
     sala = models.CharField(db_column='Sala', blank=True, null=True, max_length=255)  # Field name made lowercase.
     descricao = models.CharField(db_column='Descricao', max_length=255, blank=True, null=True)  # Field name made lowercase.
     indoor = models.BooleanField(db_column='Indoor', blank=True, null=True)  # Field name made lowercase.
+    campusid = models.ForeignKey(Campus, on_delete = models.CASCADE, db_column='CampusID', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = True
