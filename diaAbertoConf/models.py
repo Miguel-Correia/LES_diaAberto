@@ -24,7 +24,7 @@ class HorarioTransporte(models.Model):
     #data = models.DateField(db_column='Data', blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
-        return str(self.hora_de_partida) + " -> " + str(self.hora_de_chegada)
+        return str(self.hora_de_partida) + " - " + str(self.hora_de_chegada)
 
     class Meta:
         managed = True

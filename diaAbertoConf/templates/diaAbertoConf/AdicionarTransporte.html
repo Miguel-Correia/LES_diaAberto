@@ -1,79 +1,193 @@
-<!doctype html>
-<html lang="en">
-    <head>
+{% extends "diaAbertoConf/Home.html" %}
 
-	    <!-- Required meta tags -->
-	    <meta charset="utf-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-	    <!-- Bootstrap CSS -->
-	    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-	    <title>Dia Aberto Ualg | Gestão Transportes</title>
-    </head>
-    <body>
-    	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    	    <a class="navbar-brand" href="{% url 'diaAbertoConf:index' %}">Configuração Dia Aberto Ualg</a>
-    	    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    		    <ul class="navbar-nav mr-auto">
-    		        <li class="nav-item">
-    			        <a class="nav-link" href="#">Configuração Web site</a>
-    		        </li>
-    		        <li class="nav-item">
-    			        <a class="nav-link" href="#">Gestão de Ementas</a>
-    		        </li>
-    		        <li class="nav-item active">
-    			        <a class="nav-link" href="{% url 'diaAbertoConf:gestaoTransportes' %}">Gestão de Transportes</a>
-    		        </li>
-    		    </ul>
-    	    </div>
-    	</nav>
-    	<nav aria-label="breadcrumb">
-    	    <ol class="breadcrumb">
-    		    <li class="breadcrumb-item"><a href="#">Página Inicial</a></li>
-    		    <li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Configuração dia Aberto</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:gestaoTransportes' %}">Gestão de Transportes</a></li>
-    		    <li class="breadcrumb-item active" aria-current="page">Transportes</li>
-    	    </ol>
-    	</nav>
-
-    	<p></p>
-    
-
-    	<div class="container">
+	{% block content %}
+    	<div class="mt-3 mx-2">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb bg-white">
+					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
+					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:allTransportes' %}">Transportes</a></li>
+					<li class="breadcrumb-item active">Adicionar Transporte</li>
+				</ol>
+			</nav>
     	    <div class = "row">
-    		    <div class = "col-sm-6 ">
-                    <h2>Adicionar transporte</h2>
-                    <hr>
+    		    <div class = "col-sm-4 offset-sm-4">
+                    <h4>Adicionar Transporte</h4>
     		    </div>
             </div>
+			<hr class="mx-5">
     	    <div class = "row">
-    		    <div class = "col-sm-6 ">
-					<form action = "{% url 'diaAbertoConf:addTransporte' %}" method="post">
+    		    <div class = "col-sm-6 offset-sm-3">
+					<form action = "{% url 'diaAbertoConf:createTransporte' %}" method="post">
 						{% csrf_token %}
-  						<div class="form-group row">
-    						<label for="Tipo_Transporte" class="col-sm-4 col-form-label">Tipo de Transporte</label>
+ 						<div class="form-group row">
+							<div class="col-sm-4 col-form-label">
+    							<label>{{ transporteform.tipo_transporte.label }}</label>
+							</div>
     						<div class="col-sm-8">
-      							<input id="tipo_transporte" type="text" name="tipo_transporte" class="form-control" required>
+								{{ transporteform.tipo_transporte }}
     						</div>
   						</div>
   						<div class="form-group row">
-    						<label for="Capacidade" class="col-sm-4 col-form-label">Capacidade</label>
+							<div class="col-sm-4 col-form-label">
+    							<label>{{ transporteform.capacidade.label }}</label>
+							</div>
     						<div class="col-sm-8">
-      							<input id="capacidade" type="number" name="capacidade" class="form-control"  min="1" required>
+      							{{ transporteform.capacidade }}
     						</div>
   						</div>
-						<button type="submit" class="btn btn-primary">Guardar</button>
+						{{rotaformset.management_form}}
+						{% for rota in rotaformset %}
+							<div class="rota-form-comp"> 
+								<hr>
+								<div class="form-group row">
+									<div class="col-sm-4 col-form-label">
+										<label>{{ rota.origem.label}}</label>
+									</div>
+    								<div class="col-sm-8">
+										{{ rota.origem }}
+    								</div>
+  								</div>
+								<div class="form-group row">
+									<div class="col-sm-4 col-form-label">
+										<label>{{ rota.destino.label}}</label>
+									</div>
+    								<div class="col-sm-8">
+										{{ rota.destino }}
+    								</div>
+  								</div>
+								<div class="form-group row">
+									<div class="col-sm-4 col-form-label">
+										<label>{{ rota.data.label}}</label>
+									</div>
+    								<div class="col-sm-8">
+      									<input id="id_form-0-data" type="date" name="form-0-data" class="form-control" required>
+    								</div>
+  								</div>
+								<div class="form-group row">
+									<div class="col-sm-4 col-form-label">
+										<label>{{ rota.horarioid.label}}</label>
+									</div>
+    								<div class="col-sm-8 multiselect">
+										<div class="selectBox">
+											<select class="form-control"><option>Selecione os Horários</option></select>
+											<div class="overSelect"></div>
+										</div>
+										<div id="checkboxes">
+											{{rota.horarioid}}
+    									</div>
+    								</div>
+  								</div>
+								<div class="form-group row">
+									<div class="col-sm-4">
+										<button class="add-form-row btn btn-outline-success">Adicionar Rota</button>
+									</div>								
+								</div>
+							</div>
+							<hr>
+						{% endfor %}
+						<div class="form-group row">
+							<div class="col-sm-2">
+								<a type="button" class="btn btn-secondary" href="{% url 'diaAbertoConf:allTransportes' %}">Cancelar</a>
+							</div>
+							<div class="col-sm-2">
+								<button type="submit" class="btn btn-primary">Guardar</button>
+							</div>
+						</div>
 					</form>
     		    </div>
     	    </div>
     	</div>
 
-
+	{% endblock %}
+	{% block js %}
     	<!-- Optional JavaScript -->
     	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
     	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    </body>
-</html>
+		<script type='text/javascript'>
+
+			function updateElementIndex(el, prefix, ndx) {
+			    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+			    var replacement = prefix + '-' + ndx;
+			    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+			    if (el.id) el.id = el.id.replace(id_regex, replacement);
+			    if (el.name) el.name = el.name.replace(id_regex, replacement);
+			}
+
+			function cloneMore(selector, prefix) {
+    			var newElement = $(selector).clone(true);
+    			var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+    			newElement.find('input, ul').each(function() {
+					if($(this).is('input'))
+    			    	var name = $(this).attr('name').replace('-' + (total-1) + '-', '-' + total + '-');
+    			    //var id = 'id_' + name;
+					var id = $(this).attr('id').replace('-' + (total-1) + '-', '-' + total + '-');
+
+					if($(this).attr('type') === "checkbox"){
+						$(this).attr({'name': name, 'id': id}).prop('checked', false);
+					}else {
+						$(this).attr({'name': name, 'id': id}).val('');
+
+					}
+    			});
+    			total++;
+    			$('#id_' + prefix + '-TOTAL_FORMS').val(total);
+    			$(selector).after(newElement);
+    			var conditionRow = $('.rota-form-comp:not(:last)');
+    			conditionRow.find('.add-form-row')
+    			.removeClass('btn-outline-success').addClass('btn-outline-danger')
+    			.removeClass('add-form-row').addClass('remove-form-row')
+    			.html('Remover Rota');
+    			return false;
+			}
+
+			function deleteForm(prefix, btn) {
+				var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+			    if (total > 1){
+			        btn.closest('.rota-form-comp').remove();
+			        var forms = $('.rota-form-comp');
+			        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+			        for (var i=0, formCount=forms.length; i<formCount; i++) {
+			            $(forms.get(i)).find('input, ul').each(function() {
+			                updateElementIndex(this, prefix, i);
+			            });
+			        }
+			    }
+			    return false;
+			}
+
+
+			$(document).on('click', '.add-form-row', function(e){
+    			e.preventDefault();
+    			cloneMore('.rota-form-comp:last', 'form');
+    			return false;
+			});
+
+			$(document).on('click', '.remove-form-row', function(e){
+			    e.preventDefault();
+			    deleteForm('form', $(this));
+			    return false;
+			});
+
+
+			var expanded = false;
+
+			$(document).on('click', '.selectBox', function(){
+				var checkboxes = $(this).nextAll('#checkboxes').first();
+				if(!expanded){
+					console.log("show");
+					checkboxes.show();
+					expanded = true;
+				}
+				else {
+					console.log("hide");
+					checkboxes.hide();
+					expanded = false;
+				}
+			})
+
+			$(document).on()
+
+		</script>
+	{% endblock %}

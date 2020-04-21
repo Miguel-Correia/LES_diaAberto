@@ -1,51 +1,69 @@
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
+from django.core.paginator import Paginator
+
 
 from diaAbertoConf.models import Transporte, TransporteUniversitarioHorario, HorarioTransporte, Ementa, Prato
 
-from diaAbertoConf.forms import TransporteForm, TransporteUniversitarioHorarioForm, HorarioTransporteForm, EmentaForm, PratoForm
+from diaAbertoConf.forms import TransporteForm, TransporteUniversitarioHorarioForm, HorarioTransporteForm, EmentaForm, PratoForm, RotaFormSet
 # Create your views here.
 
 def index(request):
     #template = loader.get_template('diaAbertoConf/DiaAbertoConfMain.html')
     #return HttpResponse(template.render({}, request))
-    return render(request, 'diaAbertoConf/DiaAbertoConfMain.html')
+    return render(request, 'diaAbertoConf/Home.html')
 
-def gestaoTransportes(request):
-    #template = loader.get_template('diaAbertoConf/GestaoTransportes.html')
-    #return HttpResponse(template.render({}, request)) 
-    return render(request, 'diaAbertoConf/GestaoTransportes.html')
- 
+#show all transporteUniversidade_Horarios
+def showTransportes(request):
+    allTransportesUni_Horario = TransporteUniversitarioHorario.objects.all()
+
+    paginator = Paginator(allTransportesUni_Horario, 5) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {'page_obj': page_obj,}
+    return render(request, 'diaAbertoConf/ShowTransportes.html', context)
 
 #Transporte CRUD- Create Read Update Delete
 #Creates new transporte
 def createTransporte(request):
-    if request.method == "POST":
-        form = TransporteForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('diaAbertoConf:gestaoTransportes'))
-        else:
-            form = TransporteForm()
-        return render(request, 'diaAbertoConf/AdicionarTransporte.html')
+    
+    horarios = HorarioTransporte.objects.all()
 
-def showCreateTransporte(request):
-    return render(request, 'diaAbertoConf/AdicionarTransporte.html')
+    if request.method == "GET":
+        transporteform = TransporteForm(request.GET or None)
+        rotaformset = RotaFormSet(request.GET or None)
+    elif request.method == "POST":
+        transporteform = TransporteForm(request.POST)
+        rotaformset = RotaFormSet(request.POST)
+        if transporteform.is_valid() and rotaformset.is_valid():
+            transporte = transporteform.save()
+            for form in rotaformset:    
+                for horario in form.cleaned_data['horarioid']:
+                    result = TransporteUniversitarioHorario(
+                        horarioid= HorarioTransporte.objects.get(id=horario),
+                        transporteid = transporte,
+                        origem = form.cleaned_data['origem'],
+                        destino = form.cleaned_data['destino'],
+                        data = form.cleaned_data['data'],
+                    )
+                    result.save()
+            
+            return redirect('diaAbertoConf:allTransportes')
+        
+    return render(request, 'diaAbertoConf/AdicionarTransporte.html', {
+        'transporteform' : transporteform,
+        'rotaformset': rotaformset,
+        'horarios': horarios,
+        })
 
-#show all transportes
-def showTransportes(request):
-    allTransportes = Transporte.objects.all()
-    context = {'allTransportes' : allTransportes,}
-    #template = loader.get_template('diaAbertoConf/ShowTransportes.html')
-    return render(request, 'diaAbertoConf/ShowTransportes.html', context)
-
-#gets a transporte with a specific id 
-def getTransporte(request, id):
-    dados_Transporte = Transporte.objects.get(id = id)
-    #add later
-    return 0
+#deletes a transporteUniversidade_Horario
+def deleteTransporte(request, id):
+    dados_TransporteUni_Horario = TransporteUniversitarioHorario.objects.get(id = id)
+    dados_TransporteUni_Horario.delete()
+    return HttpResponseRedirect(reverse('diaAbertoConf:allTransportes'))
 
 #updates the fields of a spcific transporte
 def updateTransporte(request, id):
@@ -60,75 +78,6 @@ def showUpdateTransporte(request, id):
     dados_Transporte = Transporte.objects.get(id = id)
     context = {'transporte' : dados_Transporte,}
     return render(request, 'diaAbertoConf/EditarTransporte.html', context)
-
-
-#deletes a transporte
-def deleteTransporte(request, id):
-    dados_transporte = Transporte.objects.get(id = id)
-    dados_transporte.delete()
-    return HttpResponseRedirect(reverse('diaAbertoConf:allTransportes'))
-
-#TransporteUniversitario_Horario CRUD- Create Read Update Delete
-#Creates new TransporteUniversitario_Horario, associates Horario to transporte 
-# and defines its Origen and Destino
-def createTransporteUniversitario_Horario(request):
-    if request.method == "POST":
-        form = TransporteUniversitarioHorarioForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('diaAbertoConf:gestaoTransportes'))
-        else:
-            form = TransporteForm()
-        #add later
-        return HttpResponseRedirect(reverse('diaAbertoConf:showCreateRotaTransporte'))
-
-def showCreateTransporteUniversitario_Horario(request):
-    dadosTransportes = Transporte.objects.all()
-    dadosHorarios = HorarioTransporte.objects.all()
-    context = { 'allTransportes': dadosTransportes,
-                'allHorarios': dadosHorarios,}
-    return render(request, 'diaAbertoConf/AdicionarTransporteUniversitario_Horario.html', context)
-
-#show all transporteUniversidade_Horarios
-def showTransporteUniversitario_Horarios(request):
-    allTransportesUni_Horario = TransporteUniversitarioHorario.objects.all()
-    for transporteUni_Horario in allTransportesUni_Horario:
-        transporteUni_Horario.transporte = 'aaa'
-        transporteUni_Horario.horario = 'aaa'
-
-    context = {'allRotas': allTransportesUni_Horario,}
-    return render(request, 'diaAbertoConf/showTransporteUniversitario_Horario.html', context)
-
-#gets a transporteUniversidade_Horario with a specific id 
-def getTransporteUniversidade_Horario(request, id):
-    dados_TransporteUni_Horario = TransporteUniversitarioHorario.objects.get(id = id)
-    #add later
-    return 0
-
-#upadates the fields of a spcific transporteUniversidade_Horario
-def updateTransporteUniversitario_Horario(request, id):
-    dados_TransporteUni_Horario = TransporteUniversitarioHorario.objects.get(id = id)
-    form = TransporteUniversitarioHorarioForm(request.POST, instance = dados_TransporteUni_Horario)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect(reverse('diaAbertoConf:allRotasTransporte'))
-    return HttpResponseRedirect(reverse('diaAbertoConf:showUpdateTransporteUniversitario_Horario', args=(),
-        kwargs={'id': dados_TransporteUni_Horario.id}))
-
-def showUpdateTransporteUniversitario_Horario(request, id):
-    dados_TransporteUni_Horario = TransporteUniversitarioHorario.objects.get(id = id)
-    dadosTransportes = Transporte.objects.all()
-    dadosHorarios = HorarioTransporte.objects.all()
-    context = {'rota' : dados_TransporteUni_Horario,
-                'allTransportes': dadosTransportes,
-                'allHorarios': dadosHorarios,}
-    return render(request, 'diaAbertoConf/EditarTransporteUniversitario_Horario.html', context)
-
-#deletes a transporteUniversidade_Horario
-def deleteTransporteUniversitario_Horario(request, id):
-    dados_TransporteUni_Horario = TransporteUniversitarioHorario.objects.get(id = id)
-    dados_TransporteUni_Horario.delete()
-    return HttpResponseRedirect(reverse('diaAbertoConf:allRotasTransporte'))
 
 #Horario Transporte CRUD- Create Read Update Delete
 #Creates new Horario Transporte
@@ -219,4 +168,5 @@ def newPrato(request,id):
             return HttpResponseRedirect(reverse('diaAbertoConf:showNewPratos',args=(),kwargs={'id': id}))
         else:
             form = PratoForm()
-        return render(request,'diaAbertoConf/newPratos.html',context)   
+        return render(request, 'diaAbertoConf/newPratos.html', context)   
+        
