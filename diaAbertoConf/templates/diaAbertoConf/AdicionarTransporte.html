@@ -11,7 +11,7 @@
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4>Adicionar Transporte</h4>
+                    <h4 style="text-align:center;">Adicionar Transporte</h4>
     		    </div>
             </div>
 			<hr class="mx-5">
@@ -60,7 +60,7 @@
 										<label>{{ rota.data.label}}</label>
 									</div>
     								<div class="col-sm-8">
-      									<input id="id_form-0-data" type="date" name="form-0-data" class="form-control" required>
+      									<input id="id_form-0-data" type="date" name="form-0-data" class="form-control date-Set" required min="{{diaAberto.data_inicio}}" max="{{diaAberto.data_fim}}">
     								</div>
   								</div>
 								<div class="form-group row">
@@ -72,13 +72,14 @@
 											<select class="form-control"><option>Selecione os Horários</option></select>
 											<div class="overSelect"></div>
 										</div>
-										<div id="checkboxes">
+										<div id="checkboxes" class="checkboxes">
 											{{rota.horarioid}}
     									</div>
     								</div>
   								</div>
 								<div class="form-group row">
-									<div class="col-sm-4">
+									<div class="col-sm-10">
+										<button class="remove-form-row btn btn-outline-danger mr-3">Remover Rota</button>
 										<button class="add-form-row btn btn-outline-success">Adicionar Rota</button>
 									</div>								
 								</div>
@@ -100,94 +101,6 @@
 
 	{% endblock %}
 	{% block js %}
-    	<!-- Optional JavaScript -->
-    	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-		<script type='text/javascript'>
-
-			function updateElementIndex(el, prefix, ndx) {
-			    var id_regex = new RegExp('(' + prefix + '-\\d+)');
-			    var replacement = prefix + '-' + ndx;
-			    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
-			    if (el.id) el.id = el.id.replace(id_regex, replacement);
-			    if (el.name) el.name = el.name.replace(id_regex, replacement);
-			}
-
-			function cloneMore(selector, prefix) {
-    			var newElement = $(selector).clone(true);
-    			var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
-    			newElement.find('input, ul').each(function() {
-					if($(this).is('input'))
-    			    	var name = $(this).attr('name').replace('-' + (total-1) + '-', '-' + total + '-');
-    			    //var id = 'id_' + name;
-					var id = $(this).attr('id').replace('-' + (total-1) + '-', '-' + total + '-');
-
-					if($(this).attr('type') === "checkbox"){
-						$(this).attr({'name': name, 'id': id}).prop('checked', false);
-					}else {
-						$(this).attr({'name': name, 'id': id}).val('');
-
-					}
-    			});
-    			total++;
-    			$('#id_' + prefix + '-TOTAL_FORMS').val(total);
-    			$(selector).after(newElement);
-    			var conditionRow = $('.rota-form-comp:not(:last)');
-    			conditionRow.find('.add-form-row')
-    			.removeClass('btn-outline-success').addClass('btn-outline-danger')
-    			.removeClass('add-form-row').addClass('remove-form-row')
-    			.html('Remover Rota');
-    			return false;
-			}
-
-			function deleteForm(prefix, btn) {
-				var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-			    if (total > 1){
-			        btn.closest('.rota-form-comp').remove();
-			        var forms = $('.rota-form-comp');
-			        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
-			        for (var i=0, formCount=forms.length; i<formCount; i++) {
-			            $(forms.get(i)).find('input, ul').each(function() {
-			                updateElementIndex(this, prefix, i);
-			            });
-			        }
-			    }
-			    return false;
-			}
-
-
-			$(document).on('click', '.add-form-row', function(e){
-    			e.preventDefault();
-    			cloneMore('.rota-form-comp:last', 'form');
-    			return false;
-			});
-
-			$(document).on('click', '.remove-form-row', function(e){
-			    e.preventDefault();
-			    deleteForm('form', $(this));
-			    return false;
-			});
-
-
-			var expanded = false;
-
-			$(document).on('click', '.selectBox', function(){
-				var checkboxes = $(this).nextAll('#checkboxes').first();
-				if(!expanded){
-					console.log("show");
-					checkboxes.show();
-					expanded = true;
-				}
-				else {
-					console.log("hide");
-					checkboxes.hide();
-					expanded = false;
-				}
-			})
-
-			$(document).on()
-
-		</script>
-	{% endblock %}
+		{% load static %}
+		<script src={% static "diaAbertoConf/Transporte.js" %}></script>
+	{% endblock %}	

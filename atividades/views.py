@@ -3,9 +3,9 @@ from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
-from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica
+from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica, Sessao
 
-from atividades.forms import EdificioForm, CampusForm, DepartamentoForm, LocalForm, AtividadeForm, UnidadeOrganicaForm, TematicaForm
+from atividades.forms import EdificioForm, CampusForm, DepartamentoForm, LocalForm, AtividadeForm, UnidadeOrganicaForm, TematicaForm, SessaoForm
 # Create your views here.
 
 def index(request):
@@ -353,7 +353,9 @@ def validAtividade(request, id):
     #add later
     return 0
 
-#Functions for the handling of tematicas
+#-----------------------------------------------------
+# Tematica CRUD- Create Read Update Delete
+#----------------------------------------------------------------
 #showAll
 def showTematicas(request):
     allTematicas = Tematica.objects.all()
@@ -394,5 +396,38 @@ def deleteTematica(request, id):
     dados.delete()
     return HttpResponseRedirect(reverse('atividades:allTematicas'))
    
+#-----------------------------------------------------------------------------
+# Sessao CRUD - Create Read Update Delete
+#-------------------------------------------------------------------------
+
+def showSessoes(request):
+    allSessoes = Sessao.objects.all()
+    return render(request, 'atividades/ShowHorarioSessao.html', {'allSessoes': allSessoes})
+
+def addSessao(request):
+
+    if request.method == "POST":
+        form = SessaoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('atividades:allSessoes')
+    
+    return render(request, 'atividades/AdicionarHorarioSessao.html')
+
+def updateSessao(request, id):
+    dados = Sessao.objects.get(id=id)
+
+    if request.method == "POST":
+        form = SessaoForm(request.POST, instance=dados)
+        if form.is_valid():
+            form.save()
+            return redirect('atividades:allSessoes')
+
+    return render(request,'atividades/EditarHorarioSessao.html' , {'sessao':dados})
+
+def deleteSessao(reques, id):
+    dados = Sessao.objects.get(id=id)
+    dados.delete()
+    return redirect('atividades:allSessoes')
 
     
