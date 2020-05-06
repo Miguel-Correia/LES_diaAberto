@@ -1,5 +1,10 @@
 {% extends "diaAbertoConf/Home.html" %}
-
+	
+	{% block css%}
+		{% load static %}
+		<link rel="stylesheet" type="text/css" href="{% static 'diaAbertoConf/style.css' %}">
+	{% endblock%}
+	
 	{% block content %}
     	<div class="mt-3 mx-2">
 			<nav aria-label="breadcrumb">

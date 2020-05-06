@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import ModelForm, TextInput, NumberInput, CheckboxSelectMultiple, formset_factory, modelformset_factory, Select
 from django.utils.translation import gettext_lazy as _
-from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Rota_Inscricao, Prato, Ementa, Inscricao
+from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Rota_Inscricao, Prato, Ementa
+from atividades.models import Inscricao
 
 class TransporteForm(ModelForm):
     class Meta:

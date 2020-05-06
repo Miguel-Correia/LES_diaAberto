@@ -41,46 +41,12 @@ class Rota(models.Model):
     class Meta:
         managed = True
         db_table = 'transporte_universitario_horario'
-
-#----------------CHANGE LATER-------------------------------------------------------
-
-class Escola(models.Model):
-    #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    morada = models.CharField(db_column='Morada', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    zip = models.IntegerField(db_column='Zip', blank=True, null=True)  # Field name made lowercase.
-    contacto = models.IntegerField(db_column='Contacto', blank=True, null=True)  # Field name made lowercase.
-    localidade = models.CharField(db_column='Localidade', max_length=255, blank=True, null=True)  # Field name made lowercase.
-
-    def __str__(self):
-        return str(self.nome)
-
-    class Meta:
-        managed = False
-        db_table = 'escola'
-
-
-class Inscricao(models.Model):
-    #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    escolaid = models.ForeignKey(Escola, models.DO_NOTHING, db_column='EscolaID', blank=True, null=True)  # Field name made lowercase.
-    dia = models.DateField(db_column='Dia', blank=True, null=True)  # Field name made lowercase.
-    #num_inscritos = models.IntegerField(db_column='Num_Inscritos', blank=True, null=True)
-
-    def __str__(self):
-        if self.escolaid:
-            return "Grupo " + str(self.id) + ", " + str(self.escolaid)
-        return "Grupo" + str(self.id) + ", Individual"
-
-    class Meta:
-        managed = True
-        db_table = 'inscricao'
-
-#----------------------------------------------------------------------------------------------------------------
+        
 
 class Rota_Inscricao(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     rotaid = models.ForeignKey(Rota, on_delete= models.CASCADE, db_column='Transporte_Universitario_HorarioID', null=True, blank=True)  # Field name made lowercase.
-    inscricaoid = models.ForeignKey(Inscricao, on_delete= models.CASCADE, db_column='InscricaoID', null=True, blank=True)  # Field name made lowercase.
+    inscricaoid = models.ForeignKey("atividades.Inscricao", on_delete= models.CASCADE, db_column='InscricaoID', null=True, blank=True)  # Field name made lowercase.
     num_passageiros = models.IntegerField(db_column='Num_passageiros', blank=True, null=True)
 
     class Meta:
