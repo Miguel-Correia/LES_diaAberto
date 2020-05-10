@@ -130,7 +130,7 @@
                         				    <td>{{ rota.destino}}</td>
                         				    <td>{{ rota.horarioid}}</td>
 											<td colspan="2"></td>
-											<td><a href="{% url 'diaAbertoConf:showInscAssociadas' id=rota.id %}">Inscrições Associadas</a></td>
+											<td><a href="{% url 'diaAbertoConf:showInscAssociadas' id=rota.id %}" class="btn btn-outline-primary">Grupos Associadas</a></td>
 										</tr>
 									{% endif %}
 								{% endfor %}

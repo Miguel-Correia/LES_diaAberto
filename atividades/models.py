@@ -91,6 +91,7 @@ class Atividade(models.Model):
     tipo_atividade = models.CharField(db_column='Tipo_atividade', max_length=255, blank=True, null=True)  # Field name made lowercase.
     public_alvo = models.CharField(db_column='Public_alvo', max_length=255, blank=True, null=True)  # Field name made lowercase.
     editavel = models.BooleanField(db_column='Editavel', blank=True, null=True)  # Field name made lowercase.
+    num_colaboradores = models.IntegerField(db_column='Num_Colaboradores', blank=True, null=True)
 
     class Meta:
         managed = True
@@ -115,6 +116,9 @@ class Tematica(models.Model):
 class Sessao(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     hora_de_inicio = models.TimeField(db_column='Hora_de_inicio', blank=True, null=True)  # Field name made lowercase.
+
+    def __str__(self):
+        return str(self.hora_de_inicio)
 
     class Meta:
         managed = False
@@ -156,9 +160,13 @@ class SessaoAtividade(models.Model):
     atividadeid = models.ForeignKey(Atividade, on_delete = models.CASCADE, db_column='AtividadeID')  # Field name made lowercase.
     data = models.DateField(db_column='Data', blank=True, null=True)  # Field name made lowercase.
 
+    def __str__(self):
+        return str(self.data) + ", " + str(self.sessaoid)
+
     class Meta:
         managed = False
         db_table = 'sessao_atividade'
+
 
 #-----------------------------REMOVE LATER-------------------------------------------------------
 

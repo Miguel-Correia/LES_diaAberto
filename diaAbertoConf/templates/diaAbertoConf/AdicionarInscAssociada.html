@@ -5,9 +5,9 @@
 			<div class="col-xs-3 col-sm-3 col-md-3">
 				<p class="text-muted">Dados da Transporte</p>
 				<hr>
-                <p>Tipo Transporte: {{ dados_rota.transporteid}}</p>
+                <p>Transporte: {{ dados_rota.transporteid}}</p>
                 <p>Capacidade: {{ dados_rota.transporteid.capacidade}}</p>
-                <p>Lugares Ocupados: 0</p>
+                <p>Lugares Ocupados: {{lugaresOcupados}}</p>
                 <hr>
                 <p class="text-muted">Dados da Rota</p>
                 <p>Origem: {{ dados_rota.origem}}</p>
@@ -20,13 +20,18 @@
 					<ol class="breadcrumb bg-white">
 						<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
                         <li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:allTransportes' %}">Transportes</a></li>
-						<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:showInscAssociadas' id=dados_rota.id%}">Inscrições Associadas</a></li>
-                        <li class="breadcrumb-item active">Associar Inscrição</li>
+						<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:showInscAssociadas' id=dados_rota.id%}">Grupos Associadas</a></li>
+                        <li class="breadcrumb-item active">Associar Grupo</li>
 					</ol>
 				</nav>
 
                 <form action = "{% url 'diaAbertoConf:createInscAssociadas' id=dados_rota.id %}" method="post">
                 	{% csrf_token %}
+					{% if error %}
+					<div class="alert alert-danger">
+               			{{ error }}
+            		</div>
+					{% endif %}
   					{{formset.management_form}}
                     {% for form in formset %}
                     <div class="rota-form-comp"> 

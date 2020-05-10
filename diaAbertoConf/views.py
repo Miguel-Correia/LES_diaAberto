@@ -216,46 +216,82 @@ def showInscAssociada(request, id):
     dados_rota = Rota.objects.get(id=id)
     dados_rotaInsc = Rota_Inscricao.objects.filter(rotaid = dados_rota.id)
 
+    lugaresOcupados = 0
+    for rotaInsc in dados_rotaInsc:
+        lugaresOcupados += rotaInsc.num_passageiros
+
     context = { 'dados_rota': dados_rota,
-                'dados_rotaInsc': dados_rotaInsc,}
+                'dados_rotaInsc': dados_rotaInsc,
+                'lugaresOcupados': lugaresOcupados}
 
     return render(request, 'diaAbertoConf/ShowInscAssociada.html', context)
 
 def createInscAssociada(request, id):
-
     dados_rota = Rota.objects.get(id=id)
+    dados_rotaInsc = Rota_Inscricao.objects.filter(rotaid = dados_rota.id)
 
-    if request.method == "GET":
-        #form = RotaInscForm(request.GET or None, choices = [(insc.id, insc) for insc in Inscricao.objects.filter(dia = dados_rota.data)])
-        #RotasInscFormset = modelformset_factory(Rota_Inscricao, form)
+    error = ""
+
+    lugaresOcupados = 0
+    for rotaInsc in dados_rotaInsc:
+        lugaresOcupados += rotaInsc.num_passageiros
+
+    if request.method == "GET":  
         formset = RotasInscFormset(queryset=Rota_Inscricao.objects.none(), form_kwargs={'choices':[(insc.id, insc) for insc in Inscricao.objects.filter(dia = dados_rota.data)]})
     elif request.method =="POST":
-        formset = RotasInscFormset(request.POST, form_kwargs={'choices':[(insc.id, insc) for insc in Inscricao.objects.filter(dia = dados_rota.data)]})
+        formset = RotasInscFormset(request.POST, form_kwargs={'choices':[(insc.id, insc) for insc in Inscricao.objects.filter(dia = dados_rota.data)]})        
+                
         if formset.is_valid():
+            num_passageiros = 0
             for form in formset:
-                v = form.save(commit=False)
-                v.rotaid = dados_rota
-                v.save()
-            return redirect('diaAbertoConf:showInscAssociadas', id=dados_rota.id)
+                num_passageiros += form.cleaned_data['num_passageiros']
+
+            if num_passageiros + lugaresOcupados > dados_rota.transporteid.capacidade:
+                error = "Lugares insufecientes para o número de passageiros"
+            else:
+                for form in formset:
+                    v = form.save(commit=False)
+                    v.rotaid = dados_rota
+                    v.save()
+                return redirect('diaAbertoConf:showInscAssociadas', id=dados_rota.id)
+
     context = { 'dados_rota': dados_rota,
-                'formset':formset}
+                'formset':formset,
+                'lugaresOcupados': lugaresOcupados,
+                'error':error}
 
     return render(request, 'diaAbertoConf/AdicionarInscAssociada.html', context)
 
 def updateInscAssociada(request, id, idRota_Insc):
     dados_rota = Rota.objects.get(id=id)
     dadosRota_Insc = Rota_Inscricao.objects.get(id=idRota_Insc)
+
+    error = ""
+
+    all_rotaInsc = Rota_Inscricao.objects.filter(rotaid = dados_rota.id)
+    lugaresOcupados = -dadosRota_Insc.num_passageiros
+    for rotaInsc in all_rotaInsc:
+        lugaresOcupados += rotaInsc.num_passageiros
+
     if request.method == "GET":
-        form = RotaInscForm(initial={'inscricaoid': dadosRota_Insc.inscricaoid.id, 'num_passageiros': dadosRota_Insc.num_passageiros}, choices =[(insc.id, insc) for insc in Inscricao.objects.filter(dia = dados_rota.data)])
+        form = RotaInscForm(initial={'inscricaoid': dadosRota_Insc.inscricaoid.id, 'num_passageiros': dadosRota_Insc.num_passageiros}, choices =[(insc.id, insc) for insc in Inscricao.objects.filter(dia = dados_rota.data)])   
     elif request.method == "POST":
         form = RotaInscForm(request.POST, instance=dadosRota_Insc, choices =[(insc.id, insc) for insc in Inscricao.objects.filter(dia = dados_rota.data)])
+        
         if form.is_valid():
-            form.save()
-            return redirect('diaAbertoConf:showInscAssociadas', id=dados_rota.id)
+            num_passageiros = form.cleaned_data['num_passageiros']
+
+            if num_passageiros + lugaresOcupados > dados_rota.transporteid.capacidade:
+                error = "Lugares insufecientes para o número de passageiros"
+            else:
+                form.save()
+                return redirect('diaAbertoConf:showInscAssociadas', id=dados_rota.id)
     
     context = { 'dados_rota': dados_rota,
                 'dadosRota_Insc': dadosRota_Insc,
-                'form': form}
+                'form': form,
+                'lugaresOcupados': lugaresOcupados,
+                'error': error}
     return render(request, 'diaAbertoConf/EditarInscAssociada.html', context)
 
 def deleteInscAssociada(reques,id, idRota_Insc):

@@ -132,12 +132,11 @@ class RotaInscForm(ModelForm):
             'num_passageiros': _('Número de Passageiros'),
         } 
 
-
     def __init__(self, *args, choices, **kwargs):
-        choices = choices
+        
         super(RotaInscForm, self).__init__(*args, **kwargs)
-
         self.fields['inscricaoid'].choices = choices
+
 
 RotasInscFormset = modelformset_factory(Rota_Inscricao, RotaInscForm, extra=1)
 

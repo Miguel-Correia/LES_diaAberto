@@ -7,7 +7,7 @@
 				<hr>
                 <p>Transporte: {{ dados_rota.transporteid}}</p>
                 <p>Capacidade: {{ dados_rota.transporteid.capacidade}}</p>
-                <p>Lugares Ocupados: 0</p>
+                <p>Lugares Ocupados: {{lugaresOcupados}}</p>
                 <hr>
                 <p class="text-muted">Dados da Rota</p>
                 <p>Origem: {{ dados_rota.origem}}</p>
@@ -20,16 +20,16 @@
 					<ol class="breadcrumb bg-white">
 						<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
                         <li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:allTransportes' %}">Transportes</a></li>
-						<li class="breadcrumb-item active">Inscrições Associadas</li>
+						<li class="breadcrumb-item active">Grupos Associadas</li>
 					</ol>
 				</nav>
 
-				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'diaAbertoConf:createInscAssociadas' id=dados_rota.id%}">+ Associar Inscrição</a>
+				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'diaAbertoConf:createInscAssociadas' id=dados_rota.id%}">+ Associar Grupo</a>
 
     	    	<table class="table">
                     <thead>
                         <tr>
-						    <th scope="col">Inscrição</th>
+						    <th scope="col">Grupo</th>
                             <th scope="col">Escola</th>
                             <th scope="col">Passageiros</th>
                             <th scope="col" colspan="2"></th>
