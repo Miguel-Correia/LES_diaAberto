@@ -8,10 +8,11 @@ class Tarefa(models.Model):
     sessao_atividade_inscricaoid_origem = models.ForeignKey("atividades.SessaoAtividadeInscricao", related_name='origem', on_delete=models.SET_NULL, db_column='Sessao_Atividade_InscricaoID_Origem', blank=True, null=True)  # Field name made lowercase.
     utilizadorid = models.ForeignKey("atividades.Utilizador", models.DO_NOTHING, db_column='UtilizadorID')  # Field name made lowercase.
     descricao = models.CharField(db_column='Descricao', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    localizacao_do_grupo = models.CharField(db_column='Localizacao_do_grupo', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    tipoTarefa = models.CharField(db_column='TarefaTransporte', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    origem = models.CharField(db_column='Origem', max_length=255, blank=True, null=True)  # Field name made lowercase.
     destino = models.CharField(db_column='Destino', max_length=255, blank=True, null=True)  # Field name made lowercase.
     horario = models.TimeField(db_column='Horario', blank=True, null=True)  # Field name made lowercase.
-    tipoTarefa = models.CharField(db_column='TarefaTransporte', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    data = models.DateField(db_column='Data', blank=True, null=True)
 
     class Meta:
         managed = True
