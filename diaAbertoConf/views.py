@@ -5,9 +5,9 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 
 
-from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Ementa, Prato, Rota_Inscricao
+from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Ementa, Prato, Rota_Inscricao, DiaAberto
 from atividades.models import Inscricao
-from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, RotasInscFormset, EmentaForm, PratoForm, formset_factory
+from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, RotasInscFormset, EmentaForm, PratoForm, DiaAbertoForm, formset_factory
 
 # Create your views here.
 def index(request):
