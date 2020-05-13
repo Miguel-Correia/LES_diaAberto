@@ -150,3 +150,43 @@ class PratoForm(ModelForm):
     class Meta:
         model = Prato
         fields =    '__all__'
+        
+class DiaAbertoForm(ModelForm):
+    class Meta:
+        model = DiaAberto
+        fields =    '__all__'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        dInico = cleaned_data.get("data_inicio")
+        dFim = cleaned_data.get("data_fim")
+       
+        dInicInsc=cleaned_data.get("data_inicio_inscricao")
+        dFimInsc=cleaned_data.get("data_fim_inscricao")
+        
+        dIpropAtiv=cleaned_data.get("data_inicio_propor_atividades")
+        dFpropAtiv=cleaned_data.get("data_fim_propor_atividades")
+
+        if dInico > dFim:
+            raise forms.ValidationError(
+                ('Data de fim deve ser depois ou no mesmo dia da data de inicio'),
+                code='invalid'
+            )   
+
+        if dInicInsc >= dFimInsc:
+            raise forms.ValidationError(
+                ('Data de fim do período de inscricao deve de ser depois  da data de inico do período de inscricao'),
+                code='invalid'
+            )  
+
+        if dIpropAtiv >= dFpropAtiv:
+            raise forms.ValidationError(
+                ('Data de fim do período de proposta de atividades deve de ser depois da data de inico do período de proposta de atividades'),
+                code='invalid'
+            )  
+
+        if dInicInsc < dIpropAtiv:
+            raise forms.ValidationError(
+                ('Data de incio do período de inscricao deve de ser depois  da data  de fim do período de proposta de atividades'),
+                code='invalid'
+            )                          
