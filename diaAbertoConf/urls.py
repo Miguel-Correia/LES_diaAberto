@@ -6,7 +6,8 @@ from . import views
 app_name =  'diaAbertoConf'
 urlpatterns = [
     path('', views.index, name='index'),
-
+    path('EditConfig', views.editConfDiaAberto, name='editConfig'),
+    
     path('Transportes/', views.showTransportes, name='allTransportes'),
     path('Transportes/create', views.createTransporte, name='createTransporte'),
     path('Transportes/delete/<int:id>', views.deleteTransporte, name= 'deleteTransporte'),
@@ -29,6 +30,10 @@ urlpatterns = [
     path('GestaoEmentas/add', views.newEmenta, name='newEmenta'),
     path('GestaoEmentas/create/createPratos/<int:id>',views.showNewPratos, name='showNewPratos'),
     path('GestaoEmentas/create/addPratos/<int:id>', views.newPrato, name='newPratos'),
+    path('GestaoEmentas/update/<int:id>', views.showEditEmenta, name='showEditEmenta'),
+    path('GestaoEmentas/updates/<int:id>', views.editEmenta, name= 'editEmenta'),
+    path('GestaoEmentas/update/update_Prato/<int:id>', views.editPrato, name= 'editPrato'),
+    path('GestaoEmentas/update/delete_Prato/<int:id>', views.deletePrato, name= 'deletePrato'),
     
 
 ]   
