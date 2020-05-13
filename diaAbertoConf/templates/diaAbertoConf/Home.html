@@ -28,15 +28,26 @@
         	  	<div class="collapse navbar-collapse" id="navbarNav">
 				{% block navContent %}
         	    	<ul class="navbar-nav mr-auto">
-        	      		<li class="nav-item">
-        	        		<a class="nav-link" href="{% url 'atividades:index'%}">Atividades</a>
+        	      		<li class="nav-item dropdown">
+        	        		<a class="nav-link dropdown-toggle" href="#" id="AtividadesNavbar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Atividades
+							</a>
+							<div class="dropdown-menu" aria-labelledby="AtividadesNavbar">
+        						<a class="dropdown-item" href="{% url 'atividades:allSessoes'%}">Horarios de Sessões</a>
+        					</div>
         	      		</li>
         	      		<li class="nav-item">
         	        		<a class="nav-link" href="#">Inscrições</a>
         	      		</li>
-        	      		<li class="nav-item">
-        	        		<a class="nav-link" href="{% url 'diaAbertoConf:allTransportes'%}">Transportes</a>
-        	      		</li>
+        	      		<li class="nav-item dropdown">
+        					<a class="nav-link dropdown-toggle" href="#" id="DiaAbertoConfNavbar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          						Transportes
+        					</a>
+        					<div class="dropdown-menu" aria-labelledby="DiaAbertoConfNavbar">
+        						<a class="dropdown-item" href="{% url 'diaAbertoConf:allTransportes'%}">Gestão de Transportes</a>
+        					  	<a class="dropdown-item" href="{% url 'diaAbertoConf:allHorarios'%}">Horários de Transportes</a>
+        					</div>
+      					</li>
         	      		<li class="nav-item">
         	        		<a class="nav-link" href="{% url 'diaAbertoConf:gestaoEmentas'%}">Almoços</a>
         	      		</li>
@@ -121,32 +132,33 @@
 						{% endblock %}
 					</div>
 				</div>
-			<div class="push"></div>
-			</div>
+				<div class="push"></div>
 			
-		
-		{% block js %}
+		</div>
+		<div class="footer">	
+			<footer id="footer" class="border-bottom px-5 py-3 bg-white">
+				<div class="row">
+					<div class="col-xs-4 col-sm-4 col-md-4 d-flex justify-content-start">
+					(c) 2020
+					</div>
+					<div class="col-xs-4 col-sm-4 col-md-4 d-flex justify-content-center">
+					Dia Aberto
+					</div>
+					<div class="col-xs-4 col-sm-4 col-md-4 d-flex justify-content-end">
+					Designed by Grupo 9
+					</div>
+				</div>
+			</footer>
+		</div>
+
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
  		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		{% block js %}
 		{% endblock %}
 	</body>
-	<div class="footer">	
-				<footer id="footer" class="border-bottom px-5 py-3 bg-white">
-					<div class="row">
-						<div class="col-xs-4 col-sm-4 col-md-4 d-flex justify-content-start">
-						(c) 2020
-						</div>
-						<div class="col-xs-4 col-sm-4 col-md-4 d-flex justify-content-center">
-						Dia Aberto
-						</div>
-						<div class="col-xs-4 col-sm-4 col-md-4 d-flex justify-content-end">
-						Designed by Grupo 9
-						</div>
-					</div>
-				</footer>
-			</div>
-</html>>
+</html>
+

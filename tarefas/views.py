@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from tarefas.models import Tarefa, TarefaSessaoAtividade, ColaboradorTarefa
 from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm
+from django.core.paginator import Paginator
+
 
 from atividades.models import UnidadeOrganica, SessaoAtividade, Inscricao, SessaoAtividadeInscricao, Utilizador
 

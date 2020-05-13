@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from django.core.paginator import Paginator
-
+from django.core.exceptions import ObjectDoesNotExist
 
 from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Ementa, Prato, Rota_Inscricao, DiaAberto
 from atividades.models import Inscricao
@@ -13,8 +13,11 @@ from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTr
 def index(request):
     #template = loader.get_template('diaAbertoConf/DiaAbertoConfMain.html')
     #return HttpResponse(template.render({}, request))
-    diaAberto_data = DiaAberto.objects.get(id=1)
-    context = {'diaAbertoData' : diaAberto_data}
+    try: 
+        diaAberto_data = DiaAberto.objects.get(id=1)
+        context = {'diaAbertoData' : diaAberto_data}
+    except ObjectDoesNotExist:
+        context ={}
     return render(request, 'diaAbertoConf/Home.html',context)
 
 def editConfDiaAberto(request):

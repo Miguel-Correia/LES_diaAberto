@@ -57,8 +57,8 @@ class Rota_Inscricao(models.Model):
 class Ementa(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     dia = models.DateField(db_column='Dia', blank=True, null=True)  # Field name made lowercase.
-    preco_economico = models.FloatField(db_column='Preco_economico_aluno', blank=True, null=True)  # Field name made lowercase.
-    preco_normal = models.FloatField(db_column='Preco_normal_aluno', blank=True, null=True)  # Field name made lowercase.
+    #preco_economico = models.FloatField(db_column='Preco_economico_aluno', blank=True, null=True)  # Field name made lowercase.
+    #preco_normal = models.FloatField(db_column='Preco_normal_aluno', blank=True, null=True)  # Field name made lowercase.
     #preco_economico_outro = models.FloatField(db_column='Preco_economico_outro', blank=True, null=True)  # Field name made lowercase.
     #preco_outro = models.FloatField(db_column='Preco_outro', blank=True, null=True)  # Field name made lowercase.
 
@@ -80,3 +80,26 @@ class Prato(models.Model):
     class Meta:
         #managed = False
         db_table = 'prato'
+
+
+class DiaAberto(models.Model):
+    #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    titulo = models.CharField(db_column='Titulo', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    descricao = models.CharField(db_column='Descricao', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    email = models.CharField(db_column='Email', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    contacto = models.IntegerField(db_column='Contacto', blank=True, null=True)  # Field name made lowercase.
+    data_inicio = models.DateField(db_column='Data_inicio', blank=True, null=True)  # Field name made lowercase.
+    data_fim = models.DateField(db_column='Data_fim', blank=True, null=True)  # Field name made lowercase.
+    #limite_de_inscricao_atividades = models.DateField(db_column='Limite_de_inscricao_atividades', blank=True, null=True)  # Field name made lowercase.
+    #limite_de_inscricao_participantes = models.DateField(db_column='Limite_de_inscricao_participantes', blank=True, null=True)  # Field name made lowercase.
+    data_inicio_inscricao = models.DateField(db_column='Data_inicio_inscricao', blank=True, null=True)
+    data_fim_inscricao = models.DateField(db_column='Data_fim_inscricao', blank=True, null=True)
+    data_inicio_propor_atividades = models.DateField(db_column='Data_inicio_propor_atividades', blank=True, null=True)
+    data_fim_propor_atividades = models.DateField(db_column='Data_fim_propor_atividades', blank=True, null=True)
+    preco_aluno= models.FloatField(db_column='Preco_aluno', blank=True, null=True)
+    preco_professor= models.FloatField(db_column='Preco_professor', blank=True, null=True)
+
+
+    class Meta:
+        #managed = False
+        db_table = 'dia_aberto'
