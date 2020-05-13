@@ -108,7 +108,7 @@ def updateTransporte(request, id):
     elif request.method == "POST":
         transporteform = TransporteForm(request.POST, instance=dados_Transporte)
         rotaformset = RotaFormSet(request.POST)
-
+        print(rotaformset)
         if transporteform.is_valid() and rotaformset.is_valid():
             transporteform.save()
 

@@ -8,10 +8,15 @@ from atividades.models import Atividade, SessaoAtividade
 class TarefaForm(ModelForm):
     class Meta:
         model = Tarefa
-        fields = ('descricao', 'tipoTarefa')
+        fields = ('descricao', 'tipoTarefa', 'nome')
         #exclude = ['utilizadorid']
 
         widgets= {
+            'nome': TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Introduza o nome da tarefa',
+                'required': 'required',
+            }),
             'descricao': Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Introduza a descrição da tarefa',
@@ -26,6 +31,7 @@ class TarefaForm(ModelForm):
         }
 
         labels= {
+            'nome': _('Nome'),
             'descricao': _('Descrição'),
             'tipoTarefa': _('Tipo de Tarefa')
         }
@@ -33,27 +39,26 @@ class TarefaForm(ModelForm):
 class TarefaAtividadeForm(forms.Form):
 
     
-    atividade = forms.ChoiceField(
+    atividade = forms.CharField(
         label = 'Atividade',
         widget = Select(attrs= {
             'class' : 'form-control',
-            'required' : 'required',
-        }),
+            
+        },choices = [])
     )
-    sessaoAtividade = forms.ChoiceField(
+    sessaoAtividade = forms.CharField(
         label = 'Sessão',
         widget = Select(attrs={
             'class' : 'form-control',
-            'required' : 'required',
-        })
+        },choices = [])
     )
 
     def __init__(self, *args, **kwargs):
         self.uoId = kwargs.pop('uoId') 
         super(TarefaAtividadeForm,self).__init__(*args,**kwargs)
-        self.fields['atividade'].choices = [(atividade.id, atividade.nome) for atividade in Atividade.objects.filter(unidadeorganicaid = self.uoId).filter(num_colaboradores__gt = 0)]
+        self.fields['atividade'].widget.choices = [(atividade.id, atividade.nome) for atividade in Atividade.objects.filter(unidadeorganicaid = self.uoId).filter(num_colaboradores__gt = 0)]
         firstAtividade = next(iter([atividade.id for atividade in Atividade.objects.filter(unidadeorganicaid = self.uoId).filter(num_colaboradores__gt = 0)]))
-        self.fields['sessaoAtividade'].choices = [(sessao.id, str(sessao)) for sessao in SessaoAtividade.objects.filter(atividadeid = firstAtividade)]
+        self.fields['sessaoAtividade'].widget.choices = [(sessao.id, str(sessao)) for sessao in SessaoAtividade.objects.filter(atividadeid = firstAtividade)]
 
 
 class TarefaTransporteForm(forms.Form):
@@ -65,38 +70,27 @@ class TarefaTransporteForm(forms.Form):
     horario = forms.TimeField(
         label = "Hora"
     )
-    inscricao = forms.ChoiceField(
+    inscricao = forms.CharField(
         label = "Grupo",
         widget = Select(attrs={
             'class' : 'form-control',
-            'required' : 'required',
         })
     )
-    sessaoAtividade_Origem = forms.ChoiceField(
+    sessaoAtividade_origem = forms.CharField(
         label = "Atividade atual",
         widget = Select(attrs={
             'class' : 'form-control',
-            'required' : 'required',
         })
     )
-    sessaoAtividade_Destino = forms.ChoiceField(
+    sessaoAtividade_destino = forms.CharField(
         label = "Proxima atividade",
         widget = Select(attrs={
             'class' : 'form-control',
-            'required' : 'required',
         })
     )
     origem = forms.CharField(
         label= "Origem",
-        widget = TextInput(attrs={
-            'class' : 'form-control',
-            'required' : 'required',
-        })
     )
     destino = forms.CharField(
         label= "Destino",
-        widget = TextInput(attrs={
-            'class' : 'form-control',
-            'required' : 'required',
-        })
     )

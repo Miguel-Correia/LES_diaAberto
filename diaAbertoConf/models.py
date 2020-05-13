@@ -2,7 +2,6 @@ from django.db import models
 from datetime import datetime
 # Create your models here.
 
-
 class Transporte(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     #hora_chegada = models.TimeField(db_column='Hora_de_chegada', blank=True, null=True)  # Field name made lowercase.

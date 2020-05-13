@@ -1,5 +1,0 @@
-[client]
-database = "les"
-user = "root"
-password = ""
-default-character-set = utf8
