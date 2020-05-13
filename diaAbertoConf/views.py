@@ -11,7 +11,26 @@ from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTr
 
 # Create your views here.
 def index(request):
-    return render(request, 'diaAbertoConf/Home.html')
+    #template = loader.get_template('diaAbertoConf/DiaAbertoConfMain.html')
+    #return HttpResponse(template.render({}, request))
+    diaAberto_data = DiaAberto.objects.get(id=1)
+    context = {'diaAbertoData' : diaAberto_data}
+    return render(request, 'diaAbertoConf/Home.html',context)
+
+def editConfDiaAberto(request):
+    diaAberto_data = DiaAberto.objects.get(id=1)
+    form = DiaAbertoForm(None)
+
+    if request.method == 'POST':
+        form = DiaAbertoForm( request.POST, instance=diaAberto_data)
+        if form.is_valid():
+            form.save()
+            return   HttpResponseRedirect(reverse('diaAbertoConf:index'))
+
+    context = {'diaAberto_data' : diaAberto_data,
+                'form' : form}
+
+    return render(request, 'diaAbertoConf/editConfig.html',context)
 
 #---------------------------------------------------------
 #Transporte CRUD- Create Read Update Delete
@@ -344,5 +363,45 @@ def newPrato(request,id):
             return HttpResponseRedirect(reverse('diaAbertoConf:showNewPratos',args=(),kwargs={'id': id}))
         else:
             form = PratoForm()
-        return render(request, 'diaAbertoConf/newPratos.html', context)   
+        return render(request,'diaAbertoConf/newPratos.html',context)   
+
+
+def showEditEmenta(request, id):
+    diaAberto_data = DiaAberto.objects.get(id=1)
+    dados_Ementa = Ementa.objects.get(id = id)
+    dados_Pratos = Prato.objects.filter(ementaid = id)
+    context = {'ementa' : dados_Ementa, 'pratos' : dados_Pratos, 'diaAbertoData' : diaAberto_data}
+    return render(request, 'diaAbertoConf/editEmenta.html', context)        
+
+def editEmenta(request, id):
+    diaAberto_data = DiaAberto.objects.get(id=1)
+    dados_Ementa = Ementa.objects.get(id = id)
+    dados_Pratos = Prato.objects.filter(ementaid = dados_Ementa.id)
+    form = EmentaForm(request.POST, instance = dados_Ementa)
+    if form.is_valid():
+        form.save()
+        return  HttpResponseRedirect(reverse('diaAbertoConf:gestaoEmentas'))
+    context = {'ementa' : dados_Ementa, 'pratos' : dados_Pratos,'diaAbertoData' : diaAberto_data}
+    return render(request, 'diaAbertoConf/editEmenta.html', context)
+
+def editPrato(request,id):
+    dados_Prato= Prato.objects.get(id = id)
+    form = PratoForm(request.POST, instance=dados_Prato)
+    if form.is_valid():
+        form.save()
+        dados_Ementa = Ementa.objects.get(id=dados_Prato.ementaid)
+        dados_Pratos_Ementa = Prato.objects.filter(ementaid = dados_Ementa.id)
+        context = {'ementa' : dados_Ementa, 'pratos' : dados_Pratos_Ementa}  
+        return render(request, 'diaAbertoConf/editEmenta.html', context)
+    else:
+       return  HttpResponseRedirect(reverse('diaAbertoConf:gestaoEmentas')) 
+
+def deletePrato(request, id):
+    diaAberto_data = DiaAberto.objects.get(id=1)
+    dados_Prato = Prato.objects.get(id = id)
+    dados_Ementa = Ementa.objects.get(id=dados_Prato.ementaid.id)
+    dados_Prato.delete()
+    dados_Pratos_Ementa = Prato.objects.filter(ementaid = dados_Ementa.id)
+    context = {'ementa' : dados_Ementa, 'pratos' : dados_Pratos_Ementa, 'diaAbertoData' : diaAberto_data}  
+    return render(request, 'diaAbertoConf/editEmenta.html', context)
         
