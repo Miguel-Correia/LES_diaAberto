@@ -115,3 +115,13 @@ def getSessoes_InscricaoNext(request, inscricaoid, hora):
             sessoesInsc.append((sessaoInsc.id, str(sessaoInsc.sessao_atividadeid.atividadeid.nome) + ", " + str(sessaoInsc.sessao_atividadeid.sessaoid)))
     
     return JsonResponse(dict(sessoesInsc))
+
+def showTarefas(request):
+    allTarefas = Tarefa.objects.all()
+
+    paginator = Paginator(allTarefas, 5) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {'page_obj': page_obj,}
+    return render(request, 'tarefas/showTarefas.html', context)
