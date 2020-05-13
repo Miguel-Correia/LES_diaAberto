@@ -13,7 +13,9 @@ class Tarefa(models.Model):
     destino = models.CharField(db_column='Destino', max_length=255, blank=True, null=True)  # Field name made lowercase.
     horario = models.TimeField(db_column='Horario', blank=True, null=True)  # Field name made lowercase.
     data = models.DateField(db_column='Data', blank=True, null=True)
-
+    estado = models.BooleanField(db_column='Estado', max_length=255, blank=True, null=True)
+    nome =  models.CharField(db_column='Nome', max_length=255, blank=True, null=True)
+    
     class Meta:
         managed = True
         db_table = 'tarefa'
