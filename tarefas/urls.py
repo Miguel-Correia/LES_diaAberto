@@ -8,8 +8,10 @@ urlpatterns = [
     path('',views.showTarefas, name='showTarefas'),
     path('create', views.createTarefa, name='createTarefa'),
     path('getSessoes/<int:atividadeid>', views.getSessoes, name='getSessoes'),
-    path('getInscricoesByDate/<str:date>', views.getInscricoesByDate, name='getInscricoesByDate'),
-    path('getSessoes_Inscricao/<int:inscricaoid>/<str:hora>', views.getSessoes_Inscricao, name='getSessoes_Inscricao'),
+    path('getSessoesByDate/<str:date>', views.getSessoesBydate, name='getSessoesByDate'),
+    path('getSessoesNext/<int:sessao_atividadeid>/<str:date>', views.getSessoesNext, name='getSessoesNext'),
+    path('getHoraFim/<int:sessao_atividadeid>', views.getHoraFim, name='getHoraFim'),
     path('getLocal_Sessao/<int:sessao_atividadeid>', views.getLocal_Sessao, name='getLocal_Sessao'),
-    path('getSessoes_InscricaoNext/<int:inscricaoid>/<str:hora>', views.getSessoes_InscricaoNext, name='getSessoes_InscricaoNext'),
+    path('getGrupos/<int:sessao_atividade_origem>/<int:sessao_atividade_destino>/<str:dia>', views.getGrupos, name='getGrupos'),
+    
 ]

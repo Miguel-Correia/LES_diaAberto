@@ -29,34 +29,6 @@ class TransporteForm(ModelForm):
             'capacidade' : _('Capacidade'),
         }
 
-""" class RotaForm(ModelForm):
-    class Meta:
-        model = Rota
-        fields = '__all__'
-
-        widgets = {
-            'horarioid': CheckboxSelectMultiple(choices = [(horario.id, horario) for horario in HorarioTransporte.objects.all()]),
-            'origem': TextInput(attrs={
-                'class' : 'form-control',
-                'placeholder' : 'Introduza uma origem',
-                'required' : 'required',
-            }),
-            'destino': TextInput(attrs={
-                'class' : 'form-control',
-                'placeholder' : 'Introduza um destino',
-                'required' : 'required',
-            }),
-        }
-        labels = {
-            'horarioid': _('Horario'),
-            'origem': _('Origem'),
-            'destino': _('Destino'),
-            'data': _('Data'),
-        }
-
-RotaFormSet = modelformset_factory(Rota, RotaForm, extra=1)  """
-
-
 class RotaForm(forms.Form):
     horarioid = forms.MultipleChoiceField(
         label = 'Horario', 

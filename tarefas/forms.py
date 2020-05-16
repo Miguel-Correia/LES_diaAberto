@@ -1,8 +1,8 @@
 from django import forms
-from django.forms import ModelForm, Textarea, RadioSelect, Select, TextInput
+from django.forms import ModelForm, Textarea, RadioSelect, Select, TextInput, formset_factory
 from django.utils.translation import gettext_lazy as _
 
-from tarefas.models import Tarefa, TarefaSessaoAtividade, ColaboradorTarefa
+from tarefas.models import Tarefa
 from atividades.models import Atividade, SessaoAtividade
 
 class TarefaForm(ModelForm):
@@ -63,18 +63,11 @@ class TarefaAtividadeForm(forms.Form):
 
 class TarefaTransporteForm(forms.Form):
 
-
     dia = forms.DateField(
         label = "Dia"
     )
     horario = forms.TimeField(
         label = "Hora"
-    )
-    inscricao = forms.CharField(
-        label = "Grupo",
-        widget = Select(attrs={
-            'class' : 'form-control',
-        })
     )
     sessaoAtividade_origem = forms.CharField(
         label = "Atividade atual",
@@ -94,3 +87,13 @@ class TarefaTransporteForm(forms.Form):
     destino = forms.CharField(
         label= "Destino",
     )
+
+class TarefaGruposForm(forms.Form):
+    inscricao = forms.CharField(
+        label = "Grupo",
+        widget = Select(attrs={
+            'class' : 'form-control',
+        })
+    )
+
+TarefaGruposFormset = formset_factory(TarefaGruposForm, extra=1)
