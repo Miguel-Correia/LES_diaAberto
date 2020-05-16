@@ -7,6 +7,8 @@ app_name =  'tarefas'
 urlpatterns = [
     path('',views.showTarefas, name='showTarefas'),
     path('create', views.createTarefa, name='createTarefa'),
+    path('delete/<int:id>', views.deleteTarefa, name= 'deleteTarefa'),
+
     path('getSessoes/<int:atividadeid>', views.getSessoes, name='getSessoes'),
     path('getSessoesByDate/<str:date>', views.getSessoesBydate, name='getSessoesByDate'),
     path('getSessoesNext/<int:sessao_atividadeid>/<str:date>', views.getSessoesNext, name='getSessoesNext'),

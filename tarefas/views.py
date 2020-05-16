@@ -46,6 +46,7 @@ def createTarefa(request):
 
             for form in formSetTarefaGrupos:
                 InscTarefa = InscricaoTarefa(inscricaoid = Inscricao.objects.get(id=form.cleaned_data['inscricao']), tarefaid = t)
+                InscTarefa.save()
 
         elif formTarefa.is_valid() and formTarefaAtividade.is_valid():
             t = formTarefa.save(commit=False)
@@ -144,3 +145,8 @@ def showTarefas(request):
 
     context = {'page_obj': page_obj,}
     return render(request, 'tarefas/showTarefas.html', context)
+
+def deleteTarefa(request, id):
+    tarefa = Tarefa.objects.get(id = id)
+    tarefa.delete()
+    return redirect('tarefas:showTarefas')

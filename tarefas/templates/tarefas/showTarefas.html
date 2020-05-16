@@ -80,7 +80,7 @@
 								<td><a type="button" class="btn btn-outline-success mr-2 mb-4" href="">Atribuir</a><td>
 								{% endif %}
                         	    <td><a href="#">Editar</a></td>
-                        	    <td><a href="#">Remover</a></td>
+                        	    <td><a href="{% url 'tarefas:deleteTarefa' id=tarefa.id%}">Remover</a></td>
                         	</tr>
 						{% endfor %}
                     </tbody>
