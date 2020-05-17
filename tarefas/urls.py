@@ -8,6 +8,7 @@ urlpatterns = [
     path('',views.showTarefas, name='showTarefas'),
     path('create', views.createTarefa, name='createTarefa'),
     path('delete/<int:id>', views.deleteTarefa, name= 'deleteTarefa'),
+    path('atribuir/<int:id>', views.atribuirTarefa, name='atribuirTarefa'),
 
     path('getSessoes/<int:atividadeid>', views.getSessoes, name='getSessoes'),
     path('getSessoesByDate/<str:date>', views.getSessoesBydate, name='getSessoesByDate'),

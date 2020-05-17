@@ -3,7 +3,7 @@ import datetime
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from tarefas.models import Tarefa, ColaboradorTarefa, InscricaoTarefa
-from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm, TarefaGruposForm, TarefaGruposFormset
+from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm, TarefaGruposForm, TarefaGruposFormset, ColaboradorTarefaForm
 from django.core.paginator import Paginator
 
 
@@ -54,6 +54,8 @@ def createTarefa(request):
             #Change for logged in user
             t.utilizadorid = Utilizador.objects.get(id=1)
             t.sessao_atividadeid = SessaoAtividade.objects.get(id=formTarefaAtividade.cleaned_data['sessaoAtividade'])
+            t.horario = t.sessao_atividadeid.sessaoid.hora_de_inicio
+            t.data = t.sessao_atividadeid.data
             t.save()
             
         return redirect('tarefas:showTarefas')
@@ -145,6 +147,46 @@ def showTarefas(request):
 
     context = {'page_obj': page_obj,}
     return render(request, 'tarefas/showTarefas.html', context)
+
+def atribuirTarefa(request, id):
+    tarefa = Tarefa.objects.get(id=id)
+    uo_id = tarefa.utilizadorid.unidade_organicaid
+    resultColaboradores = []
+    
+    #change later depending on other group user_type numeration
+    colaboradores = Utilizador.objects.filter(unidade_organicaid = uo_id).filter(user_type = 3)
+
+    for colab in colaboradores:
+        busy = False
+        for colabTarefa in ColaboradorTarefa.objects.filter(utilizadorid = colab):
+            if(colabTarefa.tarefaid.horario == tarefa.horario and colabTarefa.tarefaid.data == tarefa.data):
+                busy = True
+                break
+        if not busy:
+            resultColaboradores.append(colab)
+
+    tarefaGrupos = None
+    if tarefa.tipoTarefa == 'Transporte':
+        tarefaGrupos = InscricaoTarefa.objects.filter(tarefaid = tarefa.id)
+
+    if request.method == 'POST':
+        form = ColaboradorTarefaForm(request.POST)
+        if form.is_valid():
+            colabT = form.save(commit=False)
+            colabT.tarefaid = tarefa
+            colabT.save()
+
+            tarefa.estado = True
+            tarefa.save()
+            return redirect('tarefas:showTarefas')
+
+    context = {
+        'colaboradores': resultColaboradores,
+        'dadosTarefa': tarefa,
+        'dadosTarefaGrupos': tarefaGrupos,
+    }
+    return render(request, 'tarefas/AtribuirTarefa.html', context)
+
 
 def deleteTarefa(request, id):
     tarefa = Tarefa.objects.get(id = id)
