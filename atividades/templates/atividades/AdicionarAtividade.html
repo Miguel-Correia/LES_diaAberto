@@ -1,102 +1,294 @@
-<!doctype html>
-<html lang="en">
-    <head>
+{% extends "diaAbertoConf/Home.html" %}
 
-	    <!-- Required meta tags -->
-	    <meta charset="utf-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-	    <!-- Bootstrap CSS -->
-	    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-	    <title>Dia Aberto Ualg | Gestão Atividades</title>
-    </head>
-    <body>
-    	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    	    <a class="navbar-brand" href="{% url 'atividades:index' %}">Atividades Dia Aberto Ualg</a>
-    	    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    		    <ul class="navbar-nav mr-auto">
-    		        <li class="nav-item">
-    			        <a class="nav-link" href="{% url 'atividades:gestaoatividades' %}">Gestão de Atividades</a>
-    		        </li>
-    		    </ul>
-    	    </div>
-    	</nav>
-    	<nav aria-label="breadcrumb">
-    	    <ol class="breadcrumb">
-    		    <li class="breadcrumb-item"><a href="#">Página Inicial</a></li>
-    		    <li class="breadcrumb-item"><a href="{% url 'atividades:index' %}">Atividades Dia Aberto</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'atividades:gestaoatividades' %}">Gestão de Atividades</a></li>
-    		    <li class="breadcrumb-item active" aria-current="page">Atividades</li>
-    	    </ol>
-    	</nav>
-
-    	<p></p>
-
-
-    	<div class="container">
+	{% block content %}
+    	<div class="mt-3 mx-2">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb bg-white">
+					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
+					<li class="breadcrumb-item"><a href="{% url 'atividades:allAtividades' %}">Atividades</a></li>
+					<li class="breadcrumb-item active">Adicionar Atividade</li>
+				</ol>
+			</nav>
     	    <div class = "row">
-    		    <div class = "col-sm-8 ">
-                    <h2>Adicionar atividade</h2>
+    		    <div class = "col-sm-4 offset-sm-4">
+                    <h4 style="text-align:center;">Adicionar Atividade</h4>
     		    </div>
+    		    <div class = "col-sm-4 offset-sm-4">
+    		    {% if saved %}
+                    <div class="alert alert-primary" role="alert">
+                        A atividade foi guardada com sucesso!
+                    </div>
+                {% endif %}
             </div>
+            </div>
+			<hr class="mx-5">
     	    <div class = "row">
-    		    <div class = "col-sm-6 ">
-                    <hr>
-					<form>
+    		    <div class = "col-sm-6 offset-sm-3">
+					<form action = "{% url 'atividades:addAtividade' %}" method="post">
+						{% csrf_token %}
+ 						<div class="form-group row">
+							<div class="col-sm-4 col-form-label">
+    							{{form.nome.label}}
+							</div>
+                            <div class="col-sm-8">
+                                {{form.nome}}
+                            </div>
+  						</div>
   						<div class="form-group row">
-    						<label for="nome" class="col-sm-4 col-form-label">Nome</label>
+							<div class="col-sm-4 col-form-label">
+    							{{form.tipo_atividade.label}}
+							</div>
     						<div class="col-sm-8">
-      							<input id="nome" type="text" name="nome" class="form-control">
+      							{{form.tipo_atividade}}
     						</div>
   						</div>
                         <div class="form-group row">
-                            <label for="tipo" class="col-sm-4 col-form-label">Tipo de atividade</label>
-                            <div class="col-sm-8">
-                                <input id="tipo" type="text" name="tipo" class="form-control">
+                            <div class="col-sm-4 col-form-label">
+                                {{form.descricao.label}}
                             </div>
-                        </div>
-  						<div class="form-group row">
-    						<label for="descricao" class="col-sm-4 col-form-label">Descrição</label>
-    						<div class="col-sm-8">
-      							<textarea rows = "10" cols = "30" name="descricao" class="form-control"> </textarea>
-    						</div>
-  						</div>
-                        <div class="form-group row">
-                            <label for="publico" class="col-sm-4 col-form-label">Público alvo</label>
                             <div class="col-sm-8">
-                                <input id="publico" type="text" name="publico" class="form-control">
+                                {{form.descricao}}
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="duracao" class="col-sm-4 col-form-label">Duração</label>
+                            <div class="col-sm-4 col-form-label">
+                                {{form.public_alvo.label}}
+                            </div>
                             <div class="col-sm-8">
-                                <input id="duracao" type="number" name="duracao" class="form-control">
+                                {{form.public_alvo}}
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="participantes" class="col-sm-4 col-form-label">Limite de participantes</label>
+                            <div class="col-sm-4 col-form-label">
+                                {{form.limite_de_participantes.label}}
+                            </div>
                             <div class="col-sm-8">
-                                <input id="participantes" type="number" name="participantes" class="form-control">
+                                {{form.limite_de_participantes}}
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="local" class="col-sm-4 col-form-label">Local</label>
+                            <div class="col-sm-4 col-form-label">
+                                {{form.duracao.label}}
+                            </div>
                             <div class="col-sm-8">
-                                <select id = "local" class = "form-control"><option>Local 1</option><option>Local 2</option><option>Local 3</option></select>
+                                {{form.duracao}}
                             </div>
                         </div>
-						<button type="submit" class="btn btn-primary">Guardar</button>
+                        <div class="form-group row">
+                            <div class="col-sm-4 col-form-label">
+                                {{form.localid.label}}
+                            </div>
+                            <div class="col-sm-8">
+                                {{form.localid}}
+                            </div>
+                        </div>
+                        <!-- <div class="form-group row">
+                            <div class="col-sm-4 col-form-label">
+                                <label for="unidadeorganicaid">Unidade Orgânica</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <select name="unidadeorganicaid" id = "unidadeorganicaid" class = "form-control">
+                                {% for unidade_organica in allUnidadeOrganicas %}
+                                    <option value="{{unidade_organica.id}}">{{unidade_organica.nome}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div> -->
+                        <!-- <div class="form-group row">
+                            <div class="col-sm-4 col-form-label">
+                                <label for="localid">Local</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <select id="localid" type="text" name="localid" class="form-control">
+                                    {% for local in allLocais %}
+                                    <option value="{{local.id}}">{{local}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div> -->
+                        <hr>
+                        {{ AtividadeTematicaFormset.management_form }}
+                        {% for form in AtividadeTematicaFormset %}
+                        <div class = "tematica-form-comp">
+                        <div class="form-group row">
+                            <div class="col-sm-4 col-form-label">
+                                {{form.tematicaid.label}}
+                            </div>
+                            <div class="col-sm-8">
+                                {{form.tematicaid}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <button class="btn btn-outline-danger remove-form-row">Remover temática</button>
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-outline-success add-form-row">Adicionar temática</button>
+                            </div>
+                        </div>
+                        </div>
+                        <hr>
+                        {% endfor %}
+                        {{ AtividadeMaterialFormset.management_form }}
+                        {% for form in AtividadeMaterialFormset %}
+                        <div class = "material-form-comp">
+                        <div class="form-group row">
+                            <div class="col-sm-2 col-form-label">
+                                {{form.materialid.label}}
+                            </div>
+                            <div class="col-sm-4">
+                                {{form.materialid}}
+                            </div>
+                            <div class="col-sm-2 col-form-label">
+                                {{form.quantidade.label}}
+                            </div>
+                            <div class="col-sm-4">
+                                {{form.quantidade}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <button class="btn btn-outline-danger remove-form-row">Remover material</button>
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-outline-success add-form-row">Adicionar material</button>
+                            </div>
+                        </div>
+                        </div>
+                        {% endfor %}
+                        <hr>
+                        {{ AtividadeSessaoFormset.management_form }}
+                        {% for form in AtividadeSessaoFormset %}
+                        <div class = "material-form-comp">
+                        <div class="form-group row">
+                            <div class="col-sm-2 col-form-label">
+                                {{form.sessaoid.label}}
+                            </div>
+                            <div class="col-sm-4">
+                                {{form.sessaoid}}
+                            </div>
+                            <div class="col-sm-2 col-form-label">
+                                {{form.data.label}}
+                            </div>
+                            <div class="col-sm-4">
+                                {{form.data}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <button class="btn btn-outline-danger remove-form-row">Remover sessão</button>
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-outline-success add-form-row">Adicionar sessão</button>
+                            </div>
+                        </div>
+                        </div>
+                        {% endfor %}
+                        <hr>
+						<div class="form-group row">
+							<div class="col-sm-2">
+								<a type="button" class="btn btn-secondary" href="{% url 'atividades:allAtividades' %}">Cancelar</a>
+							</div>
+							<div class="col-sm-2">
+								<button type="submit" class="btn btn-primary">Guardar</button>
+							</div>
+						</div>
 					</form>
     		    </div>
     	    </div>
     	</div>
 
-
+	{% endblock %}
+	{% block js %}
     	<!-- Optional JavaScript -->
     	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
     	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    </body>
-</html>
+
+        <script type='text/javascript'>
+
+function updateElementIndex(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
+    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+}
+
+function cloneMore(selector, prefix) {
+    var newElement = $(selector + ':last').clone(true);
+    var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+    newElement.find('input, select').each(function() {
+
+        var name = $(this).attr('name').replace('-' + (total-1) + '-', '-' + total + '-');
+        var id = $(this).attr('id').replace('-' + (total-1) + '-', '-' + total + '-');
+
+        $(this).attr({'name': name, 'id': id}).val('');
+
+    });
+    newElement.find('label').each(function() {
+        var forValue = $(this).attr('for');
+        if (forValue) {
+          forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+          $(this).attr({'for': forValue});
+        }
+    });
+    total++;
+    $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+    $(selector + ':last').after(newElement);
+    var conditionRow = $(selector + ':not(:last)');
+    conditionRow.find('.add-form-row').hide();
+    conditionRow.find('.remove-form-row').show();
+    return false;
+}
+
+function deleteForm(prefix, btn, selector) {
+    var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    if (total > 1){
+        btn.closest(selector).remove();
+        var forms = $(selector);
+        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find('input, select, label').each(function() {
+                updateElementIndex(this, prefix, i);
+            });
+
+            if(i+1 == forms.length){
+                //console.log("hi")
+                $(forms.get(i)).find(".add-form-row").show();
+            }
+        }
+    }
+    return false;
+}
+
+$(document).on('click', '.add-form-row', function(e){
+    e.preventDefault();
+    if($(this).parents().hasClass('tematica-form-comp'))
+    {
+        //console.log($(this).parents('.tematica-form-comp'));
+        cloneMore('.tematica-form-comp', 'formTematica');
+    }
+    else if($(this).parents().hasClass('material-form-comp'))
+    {
+        cloneMore('.material-form-comp', 'formMaterial');
+    }
+    return false;
+});
+
+$(document).on('click', '.remove-form-row', function(e){
+    e.preventDefault();
+    if($(this).parents().hasClass('tematica-form-comp'))
+    {
+        deleteForm('formTematica', $(this), '.tematica-form-comp');
+    }
+    else if($(this).parents().hasClass('material-form-comp'))
+    {
+        deleteForm('formMaterial', $(this), '.material-form-comp');
+    }
+    return false;
+});
+</script>
+		
+	{% endblock %}

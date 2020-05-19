@@ -1,99 +1,281 @@
-<!doctype html>
-<html lang="en">
-    <head>
+{% extends "diaAbertoConf/Home.html" %}
 
-	    <!-- Required meta tags -->
-	    <meta charset="utf-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	{% block content %}
+    	<div class = "row mx-4 my-4">
+			<div class="col-xs-3 col-sm-3 col-md-3">
+				<p class="text-muted">Filtros Atividades</p>
+				<form>
+					<hr>
+					<div class="form-group row">
+						<div class="input-group">
+						  <div class="input-group-prepend">
+						    <span class="input-group-text"><i class="fas fa-search"></i></span>
+						  </div>
+						  <input type="text" class="form-control" placeholder="DEFINIR">
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="input-group">
+						  <div class="input-group-prepend">
+						    <span class="input-group-text"><i class="fas fa-search"></i></span>
+						  </div>
+						  <input type="text" class="form-control" placeholder="DEFINIR">
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="input-group">
+						  <div class="input-group-prepend">
+						    <span class="input-group-text"><i class="fas fa-search"></i></span>
+						  </div>
+						  <input type="text" class="form-control" placeholder="DEFINIR">
+						</div>
+					</div>
+					<hr>
+					<div class="form-group row">
+						<label class="text-muted">De:</label>
+						<div class="input-group">
+						  <div class="input-group-prepend">
+						    <span class="input-group-text"><i class="far fa-clock"></i></span>
+						  </div>
+						  <input type="time" class="form-control">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="text-muted">Até:</label>
+						<div class="input-group">
+						  <div class="input-group-prepend">
+						    <span class="input-group-text"><i class="far fa-clock"></i></span>
+						  </div>
+						  <input type="time" class="form-control">
+						</div>
+					</div>
+					<hr>
+					<div class="form-group row">
+						<div class="input-group">
+						  <div class="input-group-prepend">
+						    <span class="input-group-text"><i class="far fa-calendar"></i></span>
+						  </div>
+						  <input type="date" class="form-control">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-xs-9 col-sm-9 col-md-9">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb bg-white">
+						<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
+						<li class="breadcrumb-item active">Atividades</li>
+					</ol>
+				</nav>
 
-	    <!-- Bootstrap CSS -->
-	    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:showCreateAtividade' saved='0' %}"> + Adicionar Atividade</a>
 
-	    <title>Dia Aberto Ualg | Gestão Atividades</title>
-    </head>
-    <body>
-    	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    	    <a class="navbar-brand" href="{% url 'atividades:index' %}">Atividades Dia Aberto Ualg</a>
-    	    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    		    <ul class="navbar-nav mr-auto">
-    		        <li class="nav-item">
-    			        <a class="nav-link" href="{% url 'atividades:gestaoAtividades' %}">Gestão de Atividades</a>
-    		        </li>
-    		    </ul>
-    	    </div>
-    	</nav>
-    	<nav aria-label="breadcrumb">
-    	    <ol class="breadcrumb">
-    		    <li class="breadcrumb-item"><a href="#">Página Inicial</a></li>
-    		    <li class="breadcrumb-item"><a href="{% url 'atividades:index' %}">Atividades Dia Aberto</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'atividades:gestaoAtividades' %}">Gestão de Atividades</a></li>
-    		    <li class="breadcrumb-item active" aria-current="page">Atividades</li>
-    	    </ol>
-    	</nav>
+    	    	<!-- <table class="table table-hover"> -->
+    	    		<table class="table">
+                    <thead>
+                        <tr>
+                        	<th scope="col"></th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Tipo de atividade</th>
+                            <!-- <th scope="col">Local</th> -->
+                            <!-- <th scope="col">Utilizador</th> -->
+                            <!-- <th scope="col">Unidade Orgânica</th> -->
+                            <!-- <th scope="col">Validada</th> -->
+                            <!-- <th scope="col">Limite de participantes</th> -->
+                            <!-- <th scope="col">Duração</th> -->
+                            <th scope="col">Estado</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <!-- <th scope="col"></th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+						{% for atividade in page_obj %}
+                        	<!-- <tr class="clickable-row" data-href="{% url 'atividades:showDetailsAtividade' id=atividade.id %}"> -->
+                        		<tr>
+                        		<td><i class="fas fa-chevron-right"></i></td>
+                        	    <td>{{ atividade.nome }}</td>
+                        	    <td>{{ atividade.tipo_atividade }}</td>
+                        	    <!-- <td>{{ atividade.localid.nome }}</td> -->
+                        	    <!-- <td>{{ atividade.validada }}</td> -->
+                        	    <!-- <td>{{ atividade.limite_de_participantes }}</td> -->
+                        	    <!-- <td>{{ atividade.duracao }}</td> -->
+                        	    {% if atividade.validada == 1 %}
+                        	    <td><h5><span class="badge badge-success">Aceite</span></h5></td>
+                        	    {% elif atividade.validada == 0 %}
+                        	    <td><h5><span class="badge badge-danger">Recusada</span></h5></td>
+                        	    {% elif atividade.validada == -1 %}
+                        	    <td><h5><span class="badge badge-warning">Pendente</span></h5></td>
+                        	    {% endif %}
+                        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:showUpdateAtividade' id=atividade.id %}"></a></td>
+                        	    <!-- <td><a href="{% url 'atividades:deleteAtividade' id=atividade.id %}" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteAtividade' id=atividade.id %}"></a></td> -->
+                        	    <td><a href="" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteAtividade' id=atividade.id %}"></a></td>
+                        	    <!-- <td><a class="btn btn-outline-primary fas fa-info" href="{% url 'atividades:showDetailsAtividade' id=atividade.id %}"></a></td> -->
 
-    	<p></p>
-    
+                    <div class="modal fade" id="Modal">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                      
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                          <h4 class="modal-title">Aviso</h4>
+                                          <button type="button" class="close" data-dismiss="modal">×</button>
+                                        </div>
+                                        
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                          Tem a certeza que pretende remover?
+                                        </div>
+                                        
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <form id="deleteModal" action="" method="post">
+                                                {% csrf_token %}
+                                          <button type="submit" class="btn btn-success" >Sim</button>
+                                          <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+                                      </form>
+                                        </div>        
+                                      </div>
+                                    </div>
+                                  </div>
 
-    	<div class="container">
-    	    <div class = "row">
-    		    <div class = "col-sm-6 ">
-                    <h2>Atividades</h2>
-                    <hr>
-    		    </div>
-            </div>
-    	    <div class = "row">
-    		    <div class = "col-sm-10 ">
-    		    	<table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Nome</th>
-                                <th scope="col">Tipo de atividade</th>
-                                <th scope="col">Limite de participantes</th>
-                                <th scope="col">Estado</th>
-                                <th scope="col"></th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>...</td>
-                                <td>...</td>
-                                <td>...</td>
-                                <td>...</td>
-                                <td><a href="#">Editar</a></td>
-                                <td><a href="#">Remover</a></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>...</td>
-                                <td>...</td>
-                                <td>...</td>
-                                <td>...</td>
-                                <td><a href="#">Editar</a></td>
-                                <td><a href="#">Remover</a></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>...</td>
-                                <td>...</td>
-                                <td>...</td>
-                                <td>...</td>
-                                <td><a href="#">Editar</a></td>
-                                <td><a href="#">Remover</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-    		    </div>
-    	    </div>
-    	</div>
+                                  <div class="modal fade" id="myModal1">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                      
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                          <h4 class="modal-title">Aviso</h4>
+                                          <button type="button" class="close" data-dismiss="modal">×</button>
+                                        </div>
+                                        
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                          Tem a certeza que pretende aceitar a atividade?
+                                        </div>
+                                        
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                          <a href="{% url 'atividades:validAtividade' id=atividade.id %}" class="btn btn-success">Sim</a>
+                                          <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+                                        </div>        
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                </tr>
+                            </tbody>
+                    <tbody class="hide">
+										<tr>
+											<td colspan="1"></td>
+											<td>
+												<div>
+													<p>Descrição: {{ atividade.descricao}}</p>
+													<p>Público alvo: {{ atividade.public_alvo}}</p>
+													<p>Limite de participantes: {{ atividade.limite_de_participantes}}</p>
+													<p>Duração: {{ atividade.duracao}}</p>
+													<p>Local: {{ atividade.local}}</p>
+													<p>Temática:
+                        							{% for form in listTematica %}
+                        							{% if form.atividadeid.id == atividade.id %} 
+                        				    		{{form.tematicaid.nome}},
+                        				    		{% endif %}
+                        				    		{% endfor %}</p>
+                        				    		<p>Material:
+                        							{% for form in listMaterial %}
+                        							{% if form.atividadeid.id == atividade.id %} 
+                        				    		{{form.materialid.nome}},
+                        				    		{% endif %}
+                        				    		{% endfor %}</p>
+                        				    		{% if atividade.validada == -1 %}
+													<p><a href="" class="btn btn-outline-success validate" data-toggle="modal" data-target="#myModal1" data-id="{% url 'atividades:validAtividade' id=atividade.id %}">Aceitar atividade</a>
+													<a href="{% url 'atividades:recuseAtividade' id=atividade.id %}" class="btn btn-outline-danger">Recusar atividade</a>
+													{% endif %}</p>
+											</div>
+                        				</tr>
+                        				<!-- <tr>
+                        					{% if atividade.validada == -1 %}
+											<td colspan="4"></td>
+											<td><a href="" class="btn btn-outline-success validate" data-toggle="modal" data-target="#myModal1" data-id="{% url 'atividades:validAtividade' id=atividade.id %}">Aceitar atividade</a></td>
+											<td><a href="{% url 'atividades:recuseAtividade' id=atividade.id %}" class="btn btn-outline-danger">Recusar atividade</a></td>
+											{% endif %}
+										</tr> -->
+							<tbody>
+								{% endfor %}
+                    </tbody>
+                </table>
 
 
-    	<!-- Optional JavaScript -->
-    	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    </body>
-</html>
+
+				<div class="pagination d-flex justify-content-end">
+				    <span class="step-links">
+				        {% if page_obj.has_previous %}
+				            <a class="btn btn-outline-secondary fas fa-angle-double-left" href="?page=1"></a>
+				            <a class="btn btn-outline-secondary fas fa-angle-left" href="?page={{ page_obj.previous_page_number }}"></a>
+				        {% endif %}
+
+				        <span class="current">
+				            &nbsp{{ page_obj.number }}&nbsp
+				        </span>
+
+				        {% if page_obj.has_next %}
+				            <a class="btn btn-outline-secondary fas fa-angle-double-right" href="?page={{ page_obj.next_page_number }}"></a>
+				            <a class="btn btn-outline-secondary fas fa-angle-right" href="?page={{ page_obj.paginator.num_pages }}"></a>
+				        {% endif %}
+				    </span>
+				</div>
+			</div>
+        </div>
+
+        
+
+	{% endblock %}
+	
+	{% block js %}
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+        $(function () {
+            $('.delete').click(function (){
+                var data_var = $(this).data('id');
+                $("#deleteModal").attr("action", data_var);
+            })
+        });
+
+        /*$(".clickable-row").on('click', function(event) {
+        	event.stopPropagation();
+            var target = $(event.target);
+            if(!target.is('a'))
+        		window.location = $(this).data("href");
+    	});*/
+
+    	$(".hide").hide();
+
+			$("table").click(function(event) {
+    			event.stopPropagation();
+    			var target = $(event.target);
+				if(!target.is('a')){
+					if ( target.closest('tbody').find('i').hasClass('fas fa-chevron-right') ){
+						target.closest('tbody').next().show();
+        				target.closest('tbody').find('i').removeClass();
+						target.closest('tbody').find('i').addClass('fas fa-chevron-down');	
+
+					}else if( target.closest('tbody').find('i').hasClass('fas fa-chevron-down') ){
+						target.closest('tbody').next().hide();
+        				target.closest('tbody').find('i').removeClass();
+						target.closest('tbody').find('i').addClass('fas fa-chevron-right');	
+						
+					}    				
+				}
+			})
+
+			$('.validate').click(function (){
+                var data_var = $(this).data('id');
+                $("#validateModal").attr("action", data_var);
+                console.log($(this).data('id'));
+            })
+     </script>
+     {% endblock %}

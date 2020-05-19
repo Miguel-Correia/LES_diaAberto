@@ -17,7 +17,7 @@
         <title>Dia Aberto Ualg</title>
     </head>
     <body>
-		<div class="bg-color">
+		<div style="background-image: linear-gradient(#2478d6 0%, #2478d6 50% ,#ffffff 50%, #ffffff 100%);">
 
         	<nav class="navbar navbar-expand-lg navbar-light bg-white">
         	  	<a href="{% url 'diaAbertoConf:index' %}"><img src="{% static "diaAbertoConf/logo-navbar.png" %}"></a>
@@ -27,10 +27,20 @@
         	  	<div class="collapse navbar-collapse" id="navbarNav">
 				{% block navContent %}
         	    	<ul class="navbar-nav mr-auto">
-        	      		<li class="nav-item">
-        	        		<a class="nav-link" href="#">Atividades</a>
-        	      		</li>
-        	      		<li class="nav-item">
+        	      		<li class="nav-item dropdown">
+        					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Atividades
+        					</a>
+        					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          						<a class="dropdown-item" href="{% url 'atividades:allAtividades'%}">Atividades</a>
+          						<a class="dropdown-item" href="{% url 'atividades:allEdificios'%}">Edifícios</a>
+          						<a class="dropdown-item" href="{% url 'atividades:allCampus'%}">Campus</a>
+          						<a class="dropdown-item" href="{% url 'atividades:allLocais'%}">Locais</a>
+          						<a class="dropdown-item" href="{% url 'atividades:allUnidadeOrganicas'%}">Unidade Orgânicas</a>
+          						<a class="dropdown-item" href="{% url 'atividades:allDepartamentos'%}">Departamentos</a>
+          						<a class="dropdown-item" href="#">Temáticas</a>
+          						<a class="dropdown-item" href="#">Materiais</a>
+     					 </li>        	      		
+     					 <li class="nav-item">
         	        		<a class="nav-link" href="#">Inscrições</a>
         	      		</li>
         	      		<li class="nav-item">
@@ -109,7 +119,7 @@
         	    </div>
         	</div>
 
-			<footer class="border-top px-5 py-3 bg-white">
+			<footer class=" border-top px-5 py-3 bg-white">
 				<div class="row">
 					<div class="col-xs-4 col-sm-4 col-md-4 d-flex justify-content-start">
 					(c) 2020
