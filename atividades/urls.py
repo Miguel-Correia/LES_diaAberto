@@ -62,5 +62,9 @@ urlpatterns = [
     path('GestaoAtividades/Tematicas/update/<int:id>', views.showUpdateTematica, name='showUpdateTematica'),
     path('GestaoAtividades/Tematicas/updates/<int:id>', views.updateTematica, name='updateTematica'),
 
+    path('GestaoAtividades/Sessoes', views.showSessoes, name='allSessoes'),
+    path('GestaoAtividades/Sessoes/create', views.addSessao, name='addSessao'),
+    path('GestaoAtividades/Sessoes/update/<int:id>', views.updateSessao, name='updateSessao'),
+    path('GestaoAtividades/Sessoes/delete/<int:id>', views.deleteSessao, name="deleteSessao")
   
 ]

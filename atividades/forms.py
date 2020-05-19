@@ -3,6 +3,7 @@ from django import forms
 from django.forms import ModelForm, TextInput, NumberInput, Select, Textarea, modelformset_factory, formset_factory 
 from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica, Material, AtividadeTematica, AtividadeMaterial, SessaoAtividade, Sessao
 
+
 class EdificioForm(ModelForm):
     class Meta:
         model = Edificio
@@ -92,6 +93,7 @@ class TematicaForm(ModelForm):
     class Meta:
         model = Tematica
         fields =    '__all__'
+
 
 # AtividadeTematicaFormset = modelformset_factory(
 #     AtividadeTematica,
@@ -201,3 +203,8 @@ AtividadeSessaoFormset = formset_factory(AtividadeSessaoForm, extra=1)
 #         } 
 
 # AtividadeSessaoFormset = modelformset_factory(SessaoAtividade, AtividadeSessaoForm, extra=1)
+
+class SessaoForm(ModelForm):
+    class Meta:
+        model = Sessao
+        fields =    '__all__'

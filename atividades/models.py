@@ -97,6 +97,7 @@ class Atividade(models.Model):
     tipo_atividade = models.CharField(db_column='Tipo_atividade', max_length=255, blank=True, null=True)  # Field name made lowercase.
     public_alvo = models.CharField(db_column='Public_alvo', max_length=255, blank=True, null=True)  # Field name made lowercase.
     editavel = models.BooleanField(db_column='Editavel', blank=True, null=True)  # Field name made lowercase.
+    num_colaboradores = models.IntegerField(db_column='Num_Colaboradores', blank=True, null=True)
 
     class Meta:
         managed = True
@@ -127,6 +128,9 @@ class Tematica(models.Model):
 class Sessao(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     hora_de_inicio = models.TimeField(db_column='Hora_de_inicio', blank=True, null=True)  # Field name made lowercase.
+
+    def __str__(self):
+        return str(self.hora_de_inicio)
 
     class Meta:
         managed = False
@@ -168,6 +172,51 @@ class SessaoAtividade(models.Model):
     atividadeid = models.ForeignKey(Atividade, on_delete = models.CASCADE, db_column='AtividadeID')  # Field name made lowercase.
     data = models.DateField(db_column='Data', blank=True, null=True)  # Field name made lowercase.
 
+    def __str__(self):
+        return str(self.data) + ", " + str(self.sessaoid)
+
     class Meta:
         managed = False
         db_table = 'sessao_atividade'
+
+
+#-----------------------------REMOVE LATER-------------------------------------------------------
+
+class Escola(models.Model):
+    #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    morada = models.CharField(db_column='Morada', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    zip = models.IntegerField(db_column='Zip', blank=True, null=True)  # Field name made lowercase.
+    contacto = models.IntegerField(db_column='Contacto', blank=True, null=True)  # Field name made lowercase.
+    localidade = models.CharField(db_column='Localidade', max_length=255, blank=True, null=True)  # Field name made lowercase.
+
+    def __str__(self):
+        return str(self.nome)
+
+    class Meta:
+        managed = False
+        db_table = 'escola'
+
+class Inscricao(models.Model):
+    #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    escolaid = models.ForeignKey(Escola, models.DO_NOTHING, db_column='EscolaID', blank=True, null=True)  # Field name made lowercase.
+    dia = models.DateField(db_column='Dia', blank=True, null=True)  # Field name made lowercase.
+
+    def __str__(self):
+        if self.escolaid:
+            return "Grupo " + str(self.id) + ", " + str(self.escolaid)
+        return "Grupo" + str(self.id) + ", Individual"
+
+    class Meta:
+        managed = False
+        db_table = 'inscricao'
+
+class SessaoAtividadeInscricao(models.Model):
+    #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    sessao_atividadeid = models.ForeignKey(SessaoAtividade, models.DO_NOTHING, db_column='Sessao_AtividadeID')  # Field name made lowercase.
+    inscricaoid = models.ForeignKey(Inscricao, models.DO_NOTHING, db_column='InscricaoID')  # Field name made lowercase.
+    num_alunos = models.IntegerField(db_column='Num_alunos', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'sessao_atividade_inscricao'
