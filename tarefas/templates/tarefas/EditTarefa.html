@@ -111,7 +111,7 @@
 								<a type="button" class="btn btn-secondary" href="{% url 'tarefas:showTarefas' %}">Cancelar</a>
 							</div>
 							<div class="col-sm-2">
-								<button class="btn btn-outline-danger fas fa-trash-alt" href="" data-toggle="modal" data-target="#Modal" data-id="{% url 'tarefa:editTarefa' id=tarefa.id %}">Guardar</button>
+								<a class="btn btn-primary" href="" data-toggle="modal" data-target="#Modal" data-id="{% url 'tarefas:editTarefa' id=tarefa.id %}">Guardar</a>
 							</div>
 							<div class="modal" id="Modal">
 								<div class="modal-dialog">
@@ -124,12 +124,10 @@
 											<!-- Modal body -->
 											<div class="modal-body">
 												<p>Tem a certeza que pretende guardar as alteracoes?</p>
-                                                						<p>A tarefa passara ao estado de 'Nao Atribuida'</p>
+                                                <p>A tarefa passara ao estado de 'Nao Atribuida'</p>
 											</div>
 											<!-- Modal footer -->
 											<div class="modal-footer">
-												<form id="deleteModal" action="" method="post">
-													{% csrf_token %}
 												<button type="submit" class="btn btn-success" >Sim</button>
 												<button type="button" class="btn btn-danger" data-dismiss="modal">Nao</button>
 											</div>
