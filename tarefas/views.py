@@ -198,13 +198,47 @@ def deleteTarefa(request, id):
     tarefa.delete()
     return redirect('tarefas:showTarefas')
 
-def editTarefa(request, id)
+def editTarefa(request, id):
     dados_Tarefa= Tarefa.objects.get(id = id)
+    tarefa_Transporte_Form = None
+    tarefa_Atividade_Form = None
+
     if request.method == "GET" :
         if dados_Tarefa.tipoTarefa == 'Transporte':
-            tarefa_Transporte_Form= TarefaTransporteForm()
-       elif dados_Tarefa.tipoTarefa == 'Atividade':
-           tarefa_Atividade_Form= TarefaAtividadeForm(initial={'atividade':dados_Tarefa.sessao_atividadeid.atividadeid,'sessaoAtividade':dados_Tarefa.sessao_atividadeid},uoId = UnidadeOrganica.objects.get(id=1))
-       tarefaForm = TarefaForm(instance=dados_Tarefa)
-    context={'formTarefa': tarefaForm, 'formTarefaAtividade': tarefa_Atividade_Form}   
+            tarefa_Transporte_Form = TarefaTransporteForm()
+        elif dados_Tarefa.tipoTarefa == 'Atividade':
+            tarefa_Atividade_Form = TarefaAtividadeForm(
+               initial={'atividade':dados_Tarefa.sessao_atividadeid.atividadeid.id,'sessaoAtividade':dados_Tarefa.sessao_atividadeid.id}, 
+               uoId = UnidadeOrganica.objects.get(id=1), 
+               sA = dados_Tarefa.sessao_atividadeid.atividadeid.id
+            )
+
+        tarefaForm = TarefaForm(instance=dados_Tarefa)
+    
+    if request.method == "POST":
+        tarefaForm = TarefaForm(request.POST, instance=dados_Tarefa)
+        if dados_Tarefa.tipoTarefa == 'Transporte':
+            pass
+        elif dados_Tarefa.tipoTarefa == 'Atividade':
+            tarefa_Atividade_Form = TarefaAtividadeForm(request.POST, uoId = UnidadeOrganica.objects.get(id=1))
+            if tarefaForm.is_valid() and tarefa_Atividade_Form.is_valid():
+                t = tarefaForm.save(commit=False)
+                t.tipoTarefa = 'Atividade'
+                t.estado = 'False'
+                t.sessao_atividadeid = SessaoAtividade.objects.get(id=tarefa_Atividade_Form.cleaned_data['sessaoAtividade'])
+                t.horario = t.sessao_atividadeid.sessaoid.hora_de_inicio
+                t.data = t.sessao_atividadeid.data
+                t.save()
+
+                for colab in ColaboradorTarefa.objects.filter(tarefaid=t.id):
+                    colab.delete()
+
+                return redirect('tarefas:showTarefas')
+
+        
+    
+    context={'formTarefa': tarefaForm, 
+             'formTarefaAtividade': tarefa_Atividade_Form,
+             'formTarefaTransporte': tarefa_Transporte_Form, 
+             'tarefa': dados_Tarefa}   
     return render(request,'tarefas/EditTarefa.html', context)

@@ -17,7 +17,7 @@
     	    <hr class="mx-5">
     	    <div class = "row">
     		    <div class = "col-sm-6  offset-sm-3">
-					<form action = "{% url 'tarefas:editTarefa' %}" method="post">
+					<form action = "{% url 'tarefas:editTarefa' id=tarefa.id%}" method="post">
 						{% csrf_token %}
 						<div class="form-group row">
     						<label class="form-check-label col-sm-3"> {{formTarefa.nome.label}} </label>
@@ -32,81 +32,80 @@
     						</div>
   						</div>
                         <hr>
-                        {%if formTarefa.tipoTarefa == 'Atividade'%}
-						<div class="TarefaAtividade" style="display:none">
-							<div class="form-group row">
-                        	    <label class="form-check-label col-sm-3"> {{formTarefaAtividade.atividade.label}} </label>
-    							<div class="col-sm-8">
-                        	        {{formTarefaAtividade.atividade}}
-    							</div>
-  							</div>
-							<div class="form-group row">
-                        	    <label class="form-check-label col-sm-3"> {{formTarefaAtividade.sessaoAtividade.label}} </label>
-    							<div class="col-sm-8">
-                        	        {{formTarefaAtividade.sessaoAtividade}}
-    							</div>
-  							</div>
-							<hr>
-						</div>
-                        {%else%}
-						<div class="TarefaTransporte" style="display:none">
-							<div class="form-group row">
-                        	    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.dia.label}} </label>
-    							<div class="col-sm-8">
-                        	        <input id="dia" type="date" name="dia" class="form-control date-Set" min="{{diaAberto.data_inicio}}" max="{{diaAberto.data_fim}}">
-    							</div>
-  							</div>
-							<div class="form-group row">
-                        	    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.sessaoAtividade_origem.label}} </label>
-    							<div class="col-sm-8">
-                        	        {{formTarefaTransporte.sessaoAtividade_origem}}
-    							</div>
-  							</div>
-							<div class="form-group row">
-                        	    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.origem.label}} </label>
-    							<div class="col-sm-8">
-									<input type="text" name="origem" class="form-control" id="id_origem">    							
-								</div>
-  							</div>
-							<div class="form-group row">
-                        	    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.sessaoAtividade_destino.label}} </label>
-    							<div class="col-sm-8">
-                        	        {{formTarefaTransporte.sessaoAtividade_destino}}
-    							</div>
-  							</div>
-							<div class="form-group row">
-                        	    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.destino.label}} </label>
-    							<div class="col-sm-8">
-									<input type="text" name="destino" class="form-control" id="id_destino">    							
-								</div>
-  							</div>
-							<div class="form-group row">
-                        	    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.horario.label}} </label>
-    							<div class="col-sm-8">
-						      		<input id="horario" type="time" name="horario" class="form-control">
-    							</div>
-  							</div>
-							{{formSetTarefaGrupos.management_form}}
-							{% for grupo in formSetTarefaGrupos %}
-							<div class="tarefaGrupo-form-comp">
-								<hr>
+                        {% if tarefa.tipoTarefa == 'Atividade' %}
+							<div class="TarefaAtividade">
 								<div class="form-group row">
-                        		    <label class="form-check-label col-sm-3"> {{grupo.inscricao.label}} </label>
+                        		    <label class="form-check-label col-sm-3"> {{formTarefaAtividade.atividade.label}} </label>
     								<div class="col-sm-8">
-                        		        {{grupo.inscricao}}
+                        		        {{formTarefaAtividade.atividade}}
     								</div>
   								</div>
 								<div class="form-group row">
-									<div class="col-sm-10">
-										<button class="remove-form-row btn btn-outline-danger mr-3">Remover Grupo</button>
-										<button class="add-form-row btn btn-outline-success">Adicionar Grupo</button>
-									</div>								
-								</div>
+                        		    <label class="form-check-label col-sm-3"> {{formTarefaAtividade.sessaoAtividade.label}} </label>
+    								<div class="col-sm-8">
+                        		        {{formTarefaAtividade.sessaoAtividade}}
+    								</div>
+  								</div>
 							</div>
-							{% endfor %}
-                            {%endif%}
-							<hr>
-						</div>
+                        {% else %}
+							<div class="TarefaTransporte">
+								<div class="form-group row">
+                        		    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.dia.label}} </label>
+    								<div class="col-sm-8">
+                        		        <input id="dia" type="date" name="dia" class="form-control date-Set" min="{{diaAberto.data_inicio}}" max="{{diaAberto.data_fim}}">
+    								</div>
+  								</div>
+								<div class="form-group row">
+                        		    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.sessaoAtividade_origem.label}} </label>
+    								<div class="col-sm-8">
+                        		        {{formTarefaTransporte.sessaoAtividade_origem}}
+    								</div>
+  								</div>
+								<div class="form-group row">
+                        		    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.origem.label}} </label>
+    								<div class="col-sm-8">
+										<input type="text" name="origem" class="form-control" id="id_origem">    							
+									</div>
+  								</div>
+								<div class="form-group row">
+                        		    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.sessaoAtividade_destino.label}} </label>
+    								<div class="col-sm-8">
+                        		        {{formTarefaTransporte.sessaoAtividade_destino}}
+    								</div>
+  								</div>
+								<div class="form-group row">
+                        		    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.destino.label}} </label>
+    								<div class="col-sm-8">
+										<input type="text" name="destino" class="form-control" id="id_destino">    							
+									</div>
+  								</div>
+								<div class="form-group row">
+                        		    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.horario.label}} </label>
+    								<div class="col-sm-8">
+						    	  		<input id="horario" type="time" name="horario" class="form-control">
+    								</div>
+  								</div>
+								{{formSetTarefaGrupos.management_form}}
+								{% for grupo in formSetTarefaGrupos %}
+								<div class="tarefaGrupo-form-comp">
+									<hr>
+									<div class="form-group row">
+                        			    <label class="form-check-label col-sm-3"> {{grupo.inscricao.label}} </label>
+    									<div class="col-sm-8">
+                        			        {{grupo.inscricao}}
+    									</div>
+  									</div>
+									<div class="form-group row">
+										<div class="col-sm-10">
+											<button class="remove-form-row btn btn-outline-danger mr-3">Remover Grupo</button>
+											<button class="add-form-row btn btn-outline-success">Adicionar Grupo</button>
+										</div>								
+									</div>
+								</div>
+								{% endfor %}
+							</div>
+                        {% endif %}
+						<hr>
 						<div class="form-group row">
 							<div class="col-sm-2">
 								<a type="button" class="btn btn-secondary" href="{% url 'tarefas:showTarefas' %}">Cancelar</a>

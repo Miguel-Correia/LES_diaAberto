@@ -54,11 +54,19 @@ class TarefaAtividadeForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        self.uoId = kwargs.pop('uoId') 
+        self.uoId = kwargs.pop('uoId')
+        try: 
+            self.selectedAtividade = kwargs.pop('sA')
+        except KeyError:
+            self.selectedAtividade = None
         super(TarefaAtividadeForm,self).__init__(*args,**kwargs)
+
         self.fields['atividade'].widget.choices = [(atividade.id, atividade.nome) for atividade in Atividade.objects.filter(unidadeorganicaid = self.uoId).filter(num_colaboradores__gt = 0)]
-        firstAtividade = next(iter([atividade.id for atividade in Atividade.objects.filter(unidadeorganicaid = self.uoId).filter(num_colaboradores__gt = 0)]))
-        self.fields['sessaoAtividade'].widget.choices = [(sessao.id, str(sessao)) for sessao in SessaoAtividade.objects.filter(atividadeid = firstAtividade)]
+        if self.selectedAtividade:
+            self.fields['sessaoAtividade'].widget.choices = [(sessao.id, str(sessao)) for sessao in SessaoAtividade.objects.filter(atividadeid = self.selectedAtividade)]
+        else:
+            firstAtividade = next(iter([atividade.id for atividade in Atividade.objects.filter(unidadeorganicaid = self.uoId).filter(num_colaboradores__gt = 0)]))
+            self.fields['sessaoAtividade'].widget.choices = [(sessao.id, str(sessao)) for sessao in SessaoAtividade.objects.filter(atividadeid = firstAtividade)]
 
 
 class TarefaTransporteForm(forms.Form):
