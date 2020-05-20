@@ -17,7 +17,7 @@
         <title>Dia Aberto Ualg</title>
     </head>
     <body>
-		<div style="background-image: linear-gradient(#2478d6 0%, #2478d6 50% ,#ffffff 50%, #ffffff 100%);">
+		<div class="bg-color">
 
 
         	<nav class="navbar navbar-expand-lg navbar-light bg-white">
@@ -29,8 +29,8 @@
 				{% block navContent %}
         	    	<ul class="navbar-nav mr-auto">
         	      		<li class="nav-item dropdown">
-<<<<<<< HEAD
-        					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Atividades
+        					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Atividades
         					</a>
         					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
           						<a class="dropdown-item" href="{% url 'atividades:allAtividades'%}">Atividades</a>
@@ -104,46 +104,42 @@
 				{% endblock %}
         	  	</div>
         	</nav>
-            <div class="wrapper">
-				<div class="mt-5 mx-5 px-3 mb-4">
-					<div class="card body">	
-						{% block content %}
-							<div class="row pt-5 mt-3 mb-4 mx-2">
-								<div class="col-xs-7 col-sm-7 col-md-7 px-5">
-									<h2 class="card-title d-flex justify-content-center">{{diaAbertoData.titulo}}</h2>
-									<h5 class="card-subtitle mb-4 d-flex justify-content-center">
-										{% if diaAbertoData.data_fim == diaAbertoData.data_inicio %}
-										{{diaAbertoData.data_inicio}}
-										{% else %}
-										De {{diaAbertoData.data_inicio}}  A {{diaAbertoData.data_fim}}
-										{% endif %}
-									</h5>
-									<p>Período de inscricoes de participantes de {{diaAbertoData.data_inicio_inscricao}} a {{diaAbertoData.data_fim_inscricao}}</p>
-									<p>Período de proposta de atividades de  {{diaAbertoData.data_inicio_propor_atividades}} a {{diaAbertoData.data_fim_propor_atividades}}</p>
-								</div>
-								<div class="col-xs-4 col-sm-4 col-md-4">
-									<img src="{% static "diaAbertoConf/logo-large.png" %}" height="100%" width="100%">
-								</div>
+			<div class="mt-5 mx-5 px-3 mb-4">
+				<div class="card body">	
+					{% block content %}
+						<div class="row pt-5 mt-3 mb-4 mx-2">
+							<div class="col-xs-7 col-sm-7 col-md-7 px-5">
+								<h2 class="card-title d-flex justify-content-center">{{diaAbertoData.titulo}}</h2>
+								<h5 class="card-subtitle mb-4 d-flex justify-content-center">
+									{% if diaAbertoData.data_fim == diaAbertoData.data_inicio %}
+									{{diaAbertoData.data_inicio}}
+									{% else %}
+									De {{diaAbertoData.data_inicio}}  A {{diaAbertoData.data_fim}}
+									{% endif %}
+								</h5>
+								<p>Período de inscricoes de participantes de {{diaAbertoData.data_inicio_inscricao}} a {{diaAbertoData.data_fim_inscricao}}</p>
+								<p>Período de proposta de atividades de  {{diaAbertoData.data_inicio_propor_atividades}} a {{diaAbertoData.data_fim_propor_atividades}}</p>
 							</div>
-							<div class="row jumbotron bg-light mx-4">
-									<div class="col-xs-7 col-sm-7 col-md-7">
-										<p>{{diaAbertoData.descricao}}</p>
-									</div>
-									<div class="col-xs-7 col-sm-7 col-md-7">
-										Contacto de suporte: <a href="">{{diaAbertoData.email}}</a> ou <a href="">{{diaAbertoData.contacto}}</a>
-									</div>
-									<div class="col-xs-4 col-sm-4 col-md-4 d-flex justify-content-end">
-										<img src="{% static "diaAbertoConf/ualg-logo.png" %}" height="90%" width="90%">
-									</div>
+							<div class="col-xs-4 col-sm-4 col-md-4">
+								<img src="{% static "diaAbertoConf/logo-large.png" %}" height="100%" width="100%">
 							</div>
-						{% endblock %}
-					</div>
+						</div>
+						<div class="row jumbotron bg-light mx-4">
+								<div class="col-xs-7 col-sm-7 col-md-7">
+									<p>{{diaAbertoData.descricao}}</p>
+								</div>
+								<div class="col-xs-7 col-sm-7 col-md-7">
+									Contacto de suporte: <a href="">{{diaAbertoData.email}}</a> ou <a href="">{{diaAbertoData.contacto}}</a>
+								</div>
+								<div class="col-xs-4 col-sm-4 col-md-4 d-flex justify-content-end">
+									<img src="{% static "diaAbertoConf/ualg-logo.png" %}" height="90%" width="90%">
+								</div>
+						</div>
+					{% endblock %}
 				</div>
-				<div class="push"></div>
+			</div>
 			
-		</div>
-		<div class="footer">	
-			<footer id="footer" class="border-bottom px-5 py-3 bg-white">
+			<footer class="border-bottom px-5 py-3 bg-white">
 				<div class="row">
 					<div class="col-xs-4 col-sm-4 col-md-4 d-flex justify-content-start">
 					(c) 2020
@@ -157,7 +153,6 @@
 				</div>
 			</footer>
 		</div>
-
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 
