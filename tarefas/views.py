@@ -187,6 +187,11 @@ def atribuirTarefa(request, id):
     }
     return render(request, 'tarefas/AtribuirTarefa.html', context)
 
+def updateTarefa(request, id):
+    if request.method == 'GET':
+        pass
+    elif request.method == 'POST':
+        pass
 
 def deleteTarefa(request, id):
     tarefa = Tarefa.objects.get(id = id)
