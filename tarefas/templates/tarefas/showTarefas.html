@@ -112,13 +112,13 @@
 						</tbody>
 						<tbody class="hide">
 							<tr>
-								<td colspan="2"></td>
+								<td></td>
                         		<td>{{ tarefa.data|date:"d/m/Y"}}</td>
                             	<td>{{ tarefa.horario}}</td>
 								<td>{{ tarefa.origem}}</td>
                         		<td>{{ tarefa.destino}}</td>
-								{% if tarefa.estado == FALSE %}
-								<td><a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'tarefas:atribuirTarefa' id=tarefa.id %}">Atribuir</a><td>
+								{% if not tarefa.estado %}
+								<td><a type="button" class="btn btn-outline-primary mr-2 mb-4" href="{% url 'tarefas:atribuirTarefa' id=tarefa.id %}">Atribuir</a><td>
 								{%endif%}
 							</tr>
 						</tbody>	
