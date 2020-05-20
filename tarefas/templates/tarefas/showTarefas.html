@@ -58,51 +58,70 @@
 
 				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'tarefas:createTarefa' %}"> + Adicionar Tarefa</a>
 
-                <table class="table">
+               <table class="table">
                     <thead>
                         <tr>
+							<th scope="col"></th>
                             <th scope="col">Tarefa</th>
                             <th scope="col">Tipo</th>
                             <th scope="col">Estado</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
-							<th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
 						{% for tarefa in page_obj %}
+						<tbody>
                         	<tr>
+								<td><i class="fas fa-chevron-right"></i></td>
                         	    <td>{{ tarefa.nome}}</td>
                         	    <td>{{ tarefa.tipoTarefa}}</td>
 								{% if tarefa.estado%}
 								<td>Atribuida<td>
 								{% else %}
-								<td><a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'tarefas:atribuirTarefa' id=tarefa.id %}">Atribuir</a><td>
+								<td>Nao Atribuida<td>
 								{% endif %}
                         	    <td><a class="btn btn-outline-success far fa-edit" href="#" ></a></td>
                         	    <td><a class="btn btn-outline-danger fas fa-trash-alt" href="" data-toggle="modal" data-target="#Modal" data-id="{% url 'tarefas:deleteTarefa' id=tarefa.id %}"></a></td>
 								<div class="modal" id="Modal">
-									<div class="modal-dialog">
-										<div class="modal-content">
-										<!-- Modal Header -->
-										<div class="modal-header">
-											<h4 class="modal-title">Aviso</h4>
-											<button type="button" class="close" data-dismiss="modal">×</button>
+											<div class="modal-dialog">
+												<div class="modal-content">
+
+												<!-- Modal Header -->
+												<div class="modal-header">
+													<h4 class="modal-title">Aviso</h4>
+													<button type="button" class="close" data-dismiss="modal">×</button>
+												</div>
+
+												<!-- Modal body -->
+												<div class="modal-body">
+													Tem a certeza que pretende eliminar este item?
+												</div>
+
+												<!-- Modal footer -->
+												<div class="modal-footer">
+													<form id="deleteModal" action="" method="post">
+														{% csrf_token %}
+													<button type="submit" class="btn btn-success" >Sim</button>
+													<button type="button" class="btn btn-danger" data-dismiss="modal">Nao</button>
+												</div>
+
+											</div>
 										</div>
-										<!-- Modal body -->
-										<div class="modal-body">
-											Tem a certeza que pretende eliminar este item?
-										</div>
-										<!-- Modal footer -->
-										<div class="modal-footer">
-											<form id="deleteModal" action="" method="post">
-												{% csrf_token %}
-											<button type="submit" class="btn btn-success" >Sim</button>
-											<button type="button" class="btn btn-danger" data-dismiss="modal">Nao</button>
-										</div>
-									</div>
-								</div>
 							</tr>
+						</tbody>
+						<tbody class="hide">
+							<tr>
+								<td colspan="2"></td>
+                        		<td>{{ tarefa.data|date:"d/m/Y"}}</td>
+                            	<td>{{ tarefa.horario}}</td>
+								<td>{{ tarefa.origem}}</td>
+                        		<td>{{ tarefa.destino}}</td>
+								{% if tarefa.estado == FALSE %}
+								<td><a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'tarefas:atribuirTarefa' id=tarefa.id %}">Atribuir</a><td>
+								{%endif%}
+							</tr>
+						</tbody>	
 						{% endfor %}
                     </tbody>
                 </table>
