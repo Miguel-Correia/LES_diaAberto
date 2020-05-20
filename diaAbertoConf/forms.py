@@ -33,7 +33,7 @@ class RotaForm(forms.Form):
     horarioid = forms.MultipleChoiceField(
         label = 'Horario', 
         widget=forms.CheckboxSelectMultiple(),
-        choices = [(horario.id, horario) for horario in HorarioTransporte.objects.all()]
+        choices = []
         )
     origem = forms.CharField(
         label = 'Origem',
@@ -58,6 +58,10 @@ class RotaForm(forms.Form):
     data = forms.DateField(
         label = 'Data'
     )
+
+    def __init__(self, *args, **kwargs):
+        super(RotaForm, self).__init__(*args, **kwargs)
+        self.fields['horarioid'].choices = [(horario.id, horario) for horario in HorarioTransporte.objects.all()]  
 
 RotaFormSet = formset_factory(RotaForm, extra=1)
 
