@@ -197,3 +197,14 @@ def deleteTarefa(request, id):
     tarefa = Tarefa.objects.get(id = id)
     tarefa.delete()
     return redirect('tarefas:showTarefas')
+
+def editTarefa(request, id)
+    dados_Tarefa= Tarefa.objects.get(id = id)
+    if request.method == "GET" :
+        if dados_Tarefa.tipoTarefa == 'Transporte':
+            tarefa_Transporte_Form= TarefaTransporteForm()
+       elif dados_Tarefa.tipoTarefa == 'Atividade':
+           tarefa_Atividade_Form= TarefaAtividadeForm(initial={'atividade':dados_Tarefa.sessao_atividadeid.atividadeid,'sessaoAtividade':dados_Tarefa.sessao_atividadeid},uoId = UnidadeOrganica.objects.get(id=1))
+       tarefaForm = TarefaForm(instance=dados_Tarefa)
+    context={'formTarefa': tarefaForm, 'formTarefaAtividade': tarefa_Atividade_Form}   
+    return render(request,'tarefas/EditTarefa.html', context)
