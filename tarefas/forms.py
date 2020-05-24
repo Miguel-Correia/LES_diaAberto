@@ -96,6 +96,22 @@ class TarefaTransporteForm(forms.Form):
         label= "Destino",
     )
 
+    def __init__(self, *args, **kwargs):
+        try: 
+            self.sessao_o = kwargs.pop('sessao_o')
+            self.sessao_d = kwargs.pop('sessao_d')
+        except KeyError:
+            self.sessao_o = None
+            self.sessao_d = None
+        super(TarefaTransporteForm,self).__init__(*args,**kwargs)
+
+        if self.sessao_o and self.sessao_d:
+            self.fields['sessaoAtividade_origem'].widget.choices = self.sessao_o
+            self.fields['sessaoAtividade_destino'].widget.choices = self.sessao_d
+
+        
+
+
 class TarefaGruposForm(forms.Form):
     inscricao = forms.CharField(
         label = "Grupo",
@@ -103,6 +119,15 @@ class TarefaGruposForm(forms.Form):
             'class' : 'form-control',
         })
     )
+
+    def __init__(self, *args, **kwargs):
+        try: 
+            self.available_grupos = kwargs.pop('available_grupos')
+        except KeyError:
+            self.available_grupos = None
+        super(TarefaGruposForm, self).__init__(*args, **kwargs)
+        if self.available_grupos:
+            self.fields['inscricao'].widget.choices = self.available_grupos
 
 TarefaGruposFormset = formset_factory(TarefaGruposForm, extra=1)
 

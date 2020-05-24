@@ -67,6 +67,7 @@
                             <th scope="col">Estado</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
+							<th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -81,33 +82,35 @@
 								{% else %}
 								<td>Nao Atribuida<td>
 								{% endif %}
-                        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'tarefas:editTarefa' id=tarefa.id %}" ></a></td>
+                        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'tarefas:updateTarefa' id=tarefa.id %}" ></a></td>
                         	    <td><a class="btn btn-outline-danger fas fa-trash-alt" href="{% url 'tarefas:deleteTarefa' id=tarefa.id %}" data-toggle="modal" data-target="#Modal" data-id="{% url 'tarefas:deleteTarefa' id=tarefa.id %}"></a></td>
-								<div class="modal" id="Modal">
-											<div class="modal-dialog">
-												<div class="modal-content">
+									<div class="modal" id="Modal">
+												<div class="modal-dialog">
+													<div class="modal-content">
 
-												<!-- Modal Header -->
-												<div class="modal-header">
-													<h4 class="modal-title">Aviso</h4>
-													<button type="button" class="close" data-dismiss="modal">×</button>
+													<!-- Modal Header -->
+														<div class="modal-header">
+															<h4 class="modal-title">Aviso</h4>
+															<button type="button" class="close" data-dismiss="modal">×</button>
+														</div>
+
+														<!-- Modal body -->
+														<div class="modal-body">
+															Tem a certeza que pretende eliminar este item?
+														</div>
+
+														<!-- Modal footer -->
+														<div class="modal-footer">
+															<form id="deleteModal" action="" method="post">
+																{% csrf_token %}
+															<button type="submit" class="btn btn-success" >Sim</button>
+															<button type="button" class="btn btn-danger" data-dismiss="modal">Nao</button>
+															</form>
+														</div>
+
+													</div>
 												</div>
-
-												<!-- Modal body -->
-												<div class="modal-body">
-													Tem a certeza que pretende eliminar este item?
-												</div>
-
-												<!-- Modal footer -->
-												<div class="modal-footer">
-													<form id="deleteModal" action="" method="post">
-														{% csrf_token %}
-													<button type="submit" class="btn btn-success" >Sim</button>
-													<button type="button" class="btn btn-danger" data-dismiss="modal">Nao</button>
-												</div>
-
-											</div>
-										</div>
+									</div>
 							</tr>
 						</tbody>
 						<tbody class="hide">
