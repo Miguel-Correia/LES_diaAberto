@@ -28,6 +28,9 @@
         	  	<div class="collapse navbar-collapse" id="navbarNav">
 				{% block navContent %}
         	    	<ul class="navbar-nav mr-auto">
+						<li class="nav-item">
+        	        		<a class="nav-link" href="#">Inscrições</a>
+        	      		</li>
         	      		<li class="nav-item dropdown">
         					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								Atividades
@@ -39,13 +42,14 @@
           						<a class="dropdown-item" href="{% url 'atividades:allLocais'%}">Locais</a>
           						<a class="dropdown-item" href="{% url 'atividades:allUnidadeOrganicas'%}">Unidade Orgânicas</a>
           						<a class="dropdown-item" href="{% url 'atividades:allDepartamentos'%}">Departamentos</a>
-          						<a class="dropdown-item" href="#">Temáticas</a>
+          						<a class="dropdown-item" href="{% url 'atividades:allTematicas'%}">Temáticas</a>
           						<a class="dropdown-item" href="#">Materiais</a>
           						<a class="dropdown-item" href="{% url 'atividades:allSessoes'%}">Horários de Sessões</a>
-     					 </li>        	      		
-     					 <li class="nav-item">
-        	        		<a class="nav-link" href="#">Inscrições</a>
-        	      		</li>
+							</div>
+     					</li>
+						<li class="nav-item">
+        	        		<a class="nav-link" href="{% url 'diaAbertoConf:editConfig' %}">Configuração do Dia Aberto</a>
+        	      		</li>        	      		
         	      		<li class="nav-item dropdown">
         					<a class="nav-link dropdown-toggle" href="#" id="DiaAbertoConfNavbar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           						Transportes
@@ -60,9 +64,6 @@
         	      		</li>
 						<li class="nav-item">
         	        		<a class="nav-link" href="{% url 'tarefas:showTarefas' %}">Tarefas</a>
-        	      		</li>
-						  <li class="nav-item">
-        	        		<a class="nav-link" href="{% url 'diaAbertoConf:editConfig' %}">Configuração do Dia Aberto</a>
         	      		</li>
 					</ul>
 				{% endblock %}

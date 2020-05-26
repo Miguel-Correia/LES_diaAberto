@@ -506,34 +506,26 @@ def showTematicas(request):
     context = {'allTematicas': allTematicas,}
     return render(request, 'atividades/ShowTematicas.html', context)
 
-#show Create
-def showCreateTematica(request):
-    return render(request, 'atividades/AdicionarTematica.html')
-
 #Add tematica
 def addTematica(request):
+    form = AtividadeForm()
     if request.method == "POST":
         form = TematicaForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('atividades:gestaoAtividades'))
-        else:
-            form = AtividadeForm()
-        return render(request, 'atividades/AdicionarTematica.html')
-
-def showUpdateTematica(request, id):
-    dados = Tematica.objects.get(id = id)
-    context = {'tematica': dados,}
-    return render(request, 'atividades/EditarTematica.html', context)
+            return redirect('atividades:allTematicas')
+    return render(request, 'atividades/AdicionarTematica.html')
 
 def updateTematica(request, id):
     dados = Tematica.objects.get(id = id)
-    form = TematicaForm(request.POST, instance = dados)
-    if form.is_valid():
-        form.save()
-        return  HttpResponseRedirect(reverse('atividades:allTematicas'))
-    return HttpResponseRedirect(reverse('atividades:showUpdateTematica', args=(),
-        kwargs={'id': dados.id}))
+    if request.method == "POST":
+        form = TematicaForm(request.POST, instance = dados)
+        if form.is_valid():
+            form.save()
+            return  redirect('atividades:allTematicas')
+    
+    context = {'tematica': dados,}
+    return render(request, 'atividades/EditarTematica.html', context)
 
 def deleteTematica(request, id):
     dados = Tematica.objects.get(id = id)
