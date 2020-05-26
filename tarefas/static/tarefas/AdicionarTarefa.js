@@ -231,8 +231,17 @@ $('input[name=tipoTarefa').change(function(){
     if($(this).val() == 'Atividade'){
         $('.TarefaAtividade').show();
         $('.TarefaTransporte').hide();
+
+        $('.tarefaGrupo-form-comp:not(:first)').remove()
+        $('.tarefaGrupo-form-comp').find(".add-form-row").show();
+
         $('.TarefaTransporte').find('input, select').each(function(){
-            $(this).val('');
+            if(!$(this).is('input[name$=_FORMS]'))
+                $(this).val('');
+            
+            if($(this).is('input[name$=form-TOTAL_FORMS]'))
+                $(this).val(1)
+             
             
             if($(this).is('select')){
                 $(this).find('option').each(function(){

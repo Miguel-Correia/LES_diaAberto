@@ -78,9 +78,9 @@
                         	    <td>{{ tarefa.nome}}</td>
                         	    <td>{{ tarefa.tipoTarefa}}</td>
 								{% if tarefa.estado%}
-								<td>Atribuida<td>
+								<td><h5><span class="badge badge-success">Atribuída</span></h5></td>
 								{% else %}
-								<td>Nao Atribuida<td>
+								<td><h5><span class="badge badge-warning">Não Atribuída</span></h5></td>
 								{% endif %}
                         	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'tarefas:updateTarefa' id=tarefa.id %}" ></a></td>
                         	    <td><a class="btn btn-outline-danger fas fa-trash-alt" href="{% url 'tarefas:deleteTarefa' id=tarefa.id %}" data-toggle="modal" data-target="#Modal" data-id="{% url 'tarefas:deleteTarefa' id=tarefa.id %}"></a></td>
@@ -137,17 +137,17 @@
                 <div class="pagination d-flex justify-content-end">
 				    <span class="step-links">
 				        {% if page_obj.has_previous %}
-				            <a class="btn btn-primary btn-sm" href="?page=1">Primeiro</a>
-				            <a class="btn btn-outline-primary btn-sm" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+				            <a class="btn btn-outline-secondary  fas fa-angle-double-left " href="?page=1"></a>
+				            <a class="btn btn-outline-secondary  fas fa-angle-left" href="?page={{ page_obj.previous_page_number }}"></a>
 				        {% endif %}
 
 				        <span class="current">
-				            {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+						&nbsp {{ page_obj.number }} &nbsp
 				        </span>
 
 				        {% if page_obj.has_next %}
-				            <a class="btn btn-outline-primary btn-sm" href="?page={{ page_obj.next_page_number }}">Proximo</a>
-				            <a class="btn btn-primary btn-sm" href="?page={{ page_obj.paginator.num_pages }}">Ultimo</a>
+				            <a class="btn btn-outline-secondary  fas fa-angle-right" href="?page={{ page_obj.next_page_number }}"></a>
+				            <a class="btn btn-outline-secondary  fas fa-angle-double-right" href="?page={{ page_obj.paginator.num_pages }}"></a>
 				        {% endif %}
 				    </span>
 				</div> 
