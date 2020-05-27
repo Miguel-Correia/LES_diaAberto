@@ -63,32 +63,39 @@ $(document).on('click', '.remove-form-row', function(e){
 //----------------------------------------------------
 function cleanForm(){
     $('.TarefaTransporte').find('select').find('option').each(function(){
-        $(this).remove();
+            $(this).remove();
     })
     $('.TarefaTransporte').find('input[name=horario]').val('');		
     $('.TarefaTransporte').find('input[name=destino]').val('');		
-    $('.TarefaTransporte').find('input[name=origem]').val('');		
+    $('.TarefaTransporte').find('input[name=origem]').val('');	
 
 }
 
 function addGrupos(){
-    sessaoAtividade_origem = $('select[name=sessaoAtividade_origem]').val();
-    sessaoAtividade_destino = $('select[name=sessaoAtividade_destino]').val();
-    dia = $('input[name=dia]').val();
-    request_url = '/Tarefas/getGrupos/' + sessaoAtividade_origem + '/' + sessaoAtividade_destino + '/' + dia;
-    console.log(sessaoAtividade_origem + "->" + sessaoAtividade_destino)
 
-    $.ajax({
-        url: request_url,
-        dataType: "json",
-        success: function(data){
-            $.each(data, function(index, text){
-                $('select[name$=inscricao]').append(
-                    $('<option></option>').val(index).html(text)
-                )
-            })
-        }
+    $('select[name$=inscricao]').find('option').each(function(){
+        $(this).remove();
     })
+
+    if ($('select[name=sessaoAtividade_destino]').val()){
+        sessaoAtividade_origem = $('select[name=sessaoAtividade_origem]').val();
+        sessaoAtividade_destino = $('select[name=sessaoAtividade_destino]').val();
+        dia = $('input[name=dia]').val();
+        request_url = '/Tarefas/getGrupos/' + sessaoAtividade_origem + '/' + sessaoAtividade_destino + '/' + dia;
+        console.log(sessaoAtividade_origem + "->" + sessaoAtividade_destino)
+
+        $.ajax({
+            url: request_url,
+            dataType: "json",
+            success: function(data){
+                $.each(data, function(index, text){
+                    $('select[name$=inscricao]').append(
+                        $('<option></option>').val(index).html(text)
+                    )
+                })
+            }
+        })
+    }
 }
 
 function addLocal(prefix){
@@ -155,26 +162,33 @@ function addHora(){
     
 }
 
-$('input[name=dia]').change(function(){
+function addAtividadeAtual(){
     cleanForm();
 
-    date = $(this).val();
-    request_url = '/Tarefas/getSessoesByDate/' + date;
-    
-    $.ajax({
-        url: request_url,
-        dataType:"json",
-        success: function(data){
-            $.each(data, function(index, text){
-                $('select[name=sessaoAtividade_origem]').append(
-                    $('<option></option>').val(index).html(text)
-                )
-            })
-            addLocal('origem');
-            addProximaAtividade();
-            addHora();
-        }
-    });
+    date = $('input[name=dia]').val();
+    console.log(date)
+    if(date){
+        request_url = '/Tarefas/getSessoesByDate/' + date;
+        
+        $.ajax({
+            url: request_url,
+            dataType:"json",
+            success: function(data){
+                $.each(data, function(index, text){
+                    $('select[name=sessaoAtividade_origem]').append(
+                        $('<option></option>').val(index).html(text)
+                    )
+                })
+                addLocal('origem');
+                addProximaAtividade();
+                addHora();
+            }
+        });
+    }
+}
+
+$('input[name=dia]').change(function(){
+    addAtividadeAtual()
 })
 
 
@@ -182,7 +196,7 @@ $('select[name=sessaoAtividade_origem]').change(function(){
     addLocal('origem');
     addProximaAtividade();
     addHora();
-    addGrupos();
+    //addGrupos();
 })
 
 $('select[name=sessaoAtividade_destino]').change(function(){
@@ -217,8 +231,17 @@ $('input[name=tipoTarefa').change(function(){
     if($(this).val() == 'Atividade'){
         $('.TarefaAtividade').show();
         $('.TarefaTransporte').hide();
+
+        $('.tarefaGrupo-form-comp:not(:first)').remove()
+        $('.tarefaGrupo-form-comp').find(".add-form-row").show();
+
         $('.TarefaTransporte').find('input, select').each(function(){
-            $(this).val('');
+            if(!$(this).is('input[name$=_FORMS]'))
+                $(this).val('');
+            
+            if($(this).is('input[name$=form-TOTAL_FORMS]'))
+                $(this).val(1)
+             
             
             if($(this).is('select')){
                 $(this).find('option').each(function(){
@@ -233,3 +256,4 @@ $('input[name=tipoTarefa').change(function(){
         })
     }
 })
+
