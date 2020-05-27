@@ -48,6 +48,7 @@ class Local(models.Model):
     descricao = models.CharField(db_column='Descricao', max_length=255, blank=True, null=True)  # Field name made lowercase.
     indoor = models.BooleanField(db_column='Indoor', blank=True, null=True)  # Field name made lowercase.
     campusid = models.ForeignKey(Campus, on_delete = models.CASCADE, db_column='CampusID', blank=True, null=True)  # Field name made lowercase.
+    mapa_sala = models.ImageField(upload_to='mapas_salas', blank=True, null=True)
 
     def __str__ (self):
         if self.indoor:
@@ -220,3 +221,9 @@ class SessaoAtividadeInscricao(models.Model):
     class Meta:
         managed = False
         db_table = 'sessao_atividade_inscricao'
+
+# class Image(models.Model):
+#     mapa_sala= models.FileField(upload_to='images/', null=True, verbose_name="")
+
+#     def __str__(self):
+#         return str(self.mapa_sala)

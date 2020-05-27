@@ -31,8 +31,8 @@ class ColaboradorTarefa(models.Model):
         db_table = 'utilizador_tarefa'
 
 class InscricaoTarefa(models.Model):
-    inscricaoid = models.ForeignKey("atividades.Inscricao", on_delete=models.CASCADE, db_column='InscricaoID')
-    tarefaid = models.ForeignKey(Tarefa, on_delete=models.CASCADE, db_column='TarefaID')
+    inscricaoid = models.ForeignKey("atividades.Inscricao", on_delete=models.CASCADE, db_column='InscricaoID', blank=True, null=True)
+    tarefaid = models.ForeignKey(Tarefa, on_delete=models.CASCADE, db_column='TarefaID', blank=True, null=True)
 
     class Meta:
         managed = True
