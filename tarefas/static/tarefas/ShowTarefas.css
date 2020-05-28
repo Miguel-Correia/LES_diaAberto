@@ -1,0 +1,14 @@
+table { 
+    border-collapse: collapse !important; 
+}
+
+.tableBorderH:hover{
+    border-bottom: solid gray;
+}
+
+.tableBorder{
+    border-bottom: solid gray !important;
+}
+
+
+
