@@ -138,33 +138,6 @@
               {% endfor %}
               <hr>
             <div class="form-group row">
-                {% if atividade.validada == 0 %}
-                <div class="col-sm-8">
-                    <a type="button" class="btn btn-secondary" href="{% url 'atividades:allAtividades' %}">Página anterior</a>
-                </div>
-                <div class="col-sm-3">
-                    <a href="" class="btn btn-outline-success validate" data-toggle="modal" data-target="#myModal" data-id="{% url 'atividades:validAtividade' id=atividade.id %}">Aceitar atividade</a>
-                </div>
-                {% endif %}
-                {% if atividade.validada == 1 %}
-                <div class="col-sm-8">
-                    <a type="button" class="btn btn-secondary" href="{% url 'atividades:allAtividades' %}">Página anterior</a>
-                </div>
-                <div class="col-sm-4">
-                    <a href="" class="btn btn-outline-danger validate" data-toggle="modal" data-target="#myModal2" data-id="{% url 'atividades:recuseAtividade' id=atividade.id %}">Recusar atividade</a>
-                </div>
-                {% endif %}
-                {% if atividade.validada == -1 %}
-                <div class="col-sm-5">
-                    <a type="button" class="btn btn-secondary" href="{% url 'atividades:allAtividades' %}">Página anterior</a>
-                </div>
-                <div class="col-sm-3">
-                    <a href="" class="btn btn-outline-success validate" data-toggle="modal" data-target="#myModal" data-id="{% url 'atividades:validAtividade' id=atividade.id %}">Aceitar atividade</a>
-                </div>
-                <div class="col-sm-4">
-                    <a href="" class="btn btn-outline-danger validate" data-toggle="modal" data-target="#myModal2" data-id="{% url 'atividades:recuseAtividade' id=atividade.id %}">Recusar atividade</a>
-                </div>
-                {% endif %}            
             </div>
         </div>
                         <div class="modal fade" id="myModal">

@@ -90,8 +90,8 @@ class DiaAberto(models.Model):
     contacto = models.IntegerField(db_column='Contacto', blank=True, null=True)  # Field name made lowercase.
     data_inicio = models.DateField(db_column='Data_inicio', blank=True, null=True)  # Field name made lowercase.
     data_fim = models.DateField(db_column='Data_fim', blank=True, null=True)  # Field name made lowercase.
-    #limite_de_inscricao_atividades = models.DateField(db_column='Limite_de_inscricao_atividades', blank=True, null=True)  # Field name made lowercase.
-    #limite_de_inscricao_participantes = models.DateField(db_column='Limite_de_inscricao_participantes', blank=True, null=True)  # Field name made lowercase.
+    # limite_de_inscricao_atividades = models.DateField(db_column='Limite_de_inscricao_atividades', blank=True, null=True)  # Field name made lowercase.
+    # limite_de_inscricao_participantes = models.DateField(db_column='Limite_de_inscricao_participantes', blank=True, null=True)  # Field name made lowercase.
     data_inicio_inscricao = models.DateField(db_column='Data_inicio_inscricao', blank=True, null=True)
     data_fim_inscricao = models.DateField(db_column='Data_fim_inscricao', blank=True, null=True)
     data_inicio_propor_atividades = models.DateField(db_column='Data_inicio_propor_atividades', blank=True, null=True)

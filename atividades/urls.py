@@ -19,6 +19,9 @@ urlpatterns = [
     path('GestaoAtividades/Atividades/updates/<int:id>', views.updateAtividade, name='updateAtividade'),
     path('GestaoAtividades/Atividades/valid/<int:id>', views.validAtividade, name='validAtividade'),
     path('GestaoAtividades/Atividades/recuse/<int:id>', views.recuseAtividade, name='recuseAtividade'),
+    path('GestaoAtividades/Atividades/atribuir/<int:id>', views.atribuirLocal, name='atribuirLocal'),
+    path('getEdificio/<int:campusid>', views.getEdificio, name='getEdificio'),
+    path('getLocal/<int:edificioid>', views.getLocal, name='getLocal'),
     
     path('GestaoAtividades/Edificios/', views.showEdificios, name='allEdificios'),
     path('GestaoAtividades/Edificios/create/<int:saved>', views.showCreateEdificio, name='showCreateEdificio'),

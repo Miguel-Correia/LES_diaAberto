@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from django import forms
-from django.forms import ModelForm, TextInput, NumberInput, Select, Textarea, modelformset_factory, formset_factory 
+from django.forms import ModelForm, TextInput, NumberInput, Select, Textarea, modelformset_factory, formset_factory, MultipleChoiceField, DateField
 from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica, Material, AtividadeTematica, AtividadeMaterial, SessaoAtividade, Sessao
 
 
@@ -27,12 +27,12 @@ class DepartamentoForm(ModelForm):
 class LocalForm(ModelForm):
     class Meta:
         model = Local
-        fields =    ['campusid', 'indoor', 'descricao', 'sala', 'andar']
+        fields =    ['campusid', 'indoor', 'descricao', 'sala', 'andar', 'mapa_sala']
 
 class AtividadeForm(ModelForm):
     class Meta:
         model = Atividade
-        fields =    ['nome', 'descricao', 'duracao', 'limite_de_participantes', 'tipo_atividade', 'public_alvo', 'localid']
+        fields =    ['nome', 'descricao', 'duracao', 'limite_de_participantes', 'tipo_atividade', 'public_alvo', 'num_colaboradores']
         choices = (('Laboratorial', 'Laboratorial'),('Prática', 'Prática'), ('Teórica', 'Teórica'),)
         widgets = {
             'nome' : TextInput(attrs={
@@ -62,6 +62,13 @@ class AtividadeForm(ModelForm):
                 'required' : 'required',
             }),
 
+            'num_colaboradores' : NumberInput(attrs={
+                'class' : 'form-control',
+                'placeholder' : 'Introduza o número de colaboradores',
+                'min' : 0,
+                'required' : 'required',
+            }),
+
             'tipo_atividade' : Select(attrs={
                 'class' : 'form-control',
                 'required' : 'required',
@@ -72,12 +79,6 @@ class AtividadeForm(ModelForm):
                 'placeholder' : 'Introduza o público alvo',
                 'required' : 'required',
             }),
-
-            'localid' : Textarea(attrs={
-                'class' : 'form-control',
-                'placeholder' : 'Indique qual o tipo de local',
-                'required' : 'required',
-            }),
         }
         labels = {
             'nome' : _('Nome'),
@@ -86,7 +87,7 @@ class AtividadeForm(ModelForm):
             'limite_de_participantes' : _('Limite de participantes'),
             'tipo_atividade' : _('Tipo de atividade'),
             'public_alvo' : _('Público alvo'),
-            'localid' : _('Local'),
+            'num_colaboradores' : _('Colaboradores')
         }
 
 class TematicaForm(ModelForm):
@@ -169,42 +170,52 @@ class AtividadeMaterialForm(ModelForm):
 
 AtividadeMaterialFormset = modelformset_factory(AtividadeMaterial, AtividadeMaterialForm, extra=1)
 
-class AtividadeSessaoForm(forms.Form):
-    sessaoid = forms.MultipleChoiceField(
-        label = 'Sessão', 
-        widget=forms.CheckboxSelectMultiple(),
-        choices = [(sessao.id, sessao.hora_de_inicio) for sessao in Sessao.objects.all()]
-        )
-    data = forms.DateField(
-        label = 'Data'
-    )
+# class AtividadeSessaoForm(forms.Form):
+#     sessaoid = forms.MultipleChoiceField(
+#         label = 'Sessão', 
+#         widget=forms.CheckboxSelectMultiple(),
+#         choices = [(sessao.id, sessao.hora_de_inicio) for sessao in Sessao.objects.all()]
+#         )
+#     data = forms.DateField(
+#         label = 'Data'
+#     )
 
-AtividadeSessaoFormset = formset_factory(AtividadeSessaoForm, extra=1)
+# AtividadeSessaoFormset = formset_factory(AtividadeSessaoForm, extra=1)
 
-# class AtividadeSessaoForm(ModelForm):
+class AtividadeSessaoForm(ModelForm):
 
-#     class Meta:
-#         model = SessaoAtividade
-#         fields = ['sessaoid', 'data']
-#         widgets = { 
-#             'sessaoid': MultipleChoiceField(
-#                 choices= [(sessao.id, sessao.hora_de_inicio) for sessao in Sessao.objects.all()],
-#                 attrs= {
-#                     'class' : 'form-control',
-#                 }),
-#             'data': DateField(attrs={
-#             'class': 'form-control',
-#             'placeholder' : 'Introduza uma data',
-#             }),
-#         }
-#         labels = {
-#             'sessaoid': ('Sessão'),
-#             'data' : ('Data'),
-#         } 
+    class Meta:
+        model = SessaoAtividade
+        fields = ['sessaoid', 'data']
+        widgets = { 
+            'sessaoid': Select(
+                choices= [(sessao.id, sessao.hora_de_inicio) for sessao in Sessao.objects.all()],
+                attrs= {
+                    'class' : 'form-control',
+                }),
+            # 'data' : DateField(attrs={
+            #     'class' : 'form-control',
+            #     'required' : 'required',
+            # }),
+        }
+        labels = {
+            'sessaoid': ('Sessão'),
+            'data' : ('Data'),
+        } 
 
-# AtividadeSessaoFormset = modelformset_factory(SessaoAtividade, AtividadeSessaoForm, extra=1)
+AtividadeSessaoFormset = modelformset_factory(SessaoAtividade, AtividadeSessaoForm, extra=1)
 
 class SessaoForm(ModelForm):
     class Meta:
         model = Sessao
         fields =    '__all__'
+
+# class AtividadeSessaoForm(ModelForm):
+#     class Meta:
+#         model = SessaoAtividade
+#         fields =    '__all__'
+
+# class ImageForm(forms.ModelForm):
+#     class Meta:
+#         model= Image
+#         fields= ["mapa_sala"]

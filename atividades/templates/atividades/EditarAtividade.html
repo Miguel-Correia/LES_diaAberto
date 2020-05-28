@@ -61,14 +61,6 @@
                     <input id="limite_de_participantes" type="number" name="limite_de_participantes" class="form-control" value ="{{atividade.limite_de_participantes}}" min="1" required>
                 </div>
               </div>
-              <div class="form-group row">
-              <div class="col-sm-4 col-form-label">
-                  <label for="localid">Local</label>
-              </div>
-                <div class="col-sm-8">
-                  <textarea rows="5" cols="3"  id="localid" type="text" name="descricao" class="form-control" required>{{atividade.localid}}</textarea>
-                </div>
-              </div>
               <!-- <div class="form-group row">
               <div class="col-sm-4 col-form-label">
                   <label for="unidadeorganicaid">Unidade Orgânica</label>
@@ -138,10 +130,8 @@
                   </div>
                 </div>
               <div class="form-group row">
-                <div class="col-sm-4">
-                  <button class="btn btn-outline-danger remove-form-row">Remover temática</button>
-                </div>
-                <div class="col-sm-4">
+                <div class="col-sm-10">
+                  <button class="btn btn-outline-danger remove-form-row mr-3">Remover temática</button>
                   <button class="btn btn-outline-success add-form-row">Adicionar temática</button>
                 </div>
               </div>
@@ -166,11 +156,35 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <div class="col-sm-4">
-                    <button class="btn btn-outline-danger remove-form-row">Remover material</button>
+                  <div class="col-sm-10">
+                    <button class="btn btn-outline-danger remove-form-row mr-3">Remover material</button>
+                    <button class="btn btn-outline-success add-form-row">Adicionar material</button>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+              <hr>
+              {{ AtividadeSessaoFormset.management_form }}
+              {% for form in AtividadeSessaoFormset %}
+              <div class = "sessao-form-comp">
+                <div class="form-group row">
+                  <div class="col-sm-2 col-form-label">
+                    {{form.sessaoid.label}}
                   </div>
                   <div class="col-sm-4">
-                    <button class="btn btn-outline-success add-form-row">Adicionar material</button>
+                    {{form.sessaoid}}
+                  </div>
+                  <div class="col-sm-2 col-form-label">
+                    {{form.data.label}}
+                  </div>
+                  <div class="col-sm-4">
+                    <input id="id_formSessao-{{forloop.counter0}}-data" type="date" name="formSessao-{{forloop.counter0}}-data" value="{{form.data.value |date:"Y-m-d"}}" class="form-control date-Set" required min="{{diaAberto.data_inicio}}" max="{{diaAberto.data_fim}}"> 
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-10">
+                    <button class="btn btn-outline-danger remove-form-row mr-3">Remover sessão</button>
+                    <button class="btn btn-outline-success add-form-row">Adicionar sessão</button>
                   </div>
                 </div>
               </div>
@@ -217,9 +231,7 @@
   {% block js %}
       <!-- Optional JavaScript -->
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      
 
         <script type='text/javascript'>
 
@@ -289,6 +301,10 @@ $(document).on('click', '.add-form-row', function(e){
     {
         cloneMore('.material-form-comp', 'formMaterial');
     }
+    else if($(this).parents().hasClass('sessao-form-comp'))
+    {
+        cloneMore('.sessao-form-comp', 'formSessao');
+    }
     return false;
 });
 
@@ -301,6 +317,10 @@ $(document).on('click', '.remove-form-row', function(e){
     else if($(this).parents().hasClass('material-form-comp'))
     {
         deleteForm('formMaterial', $(this), '.material-form-comp');
+    }
+    else if($(this).parents().hasClass('sessao-form-comp'))
+    {
+        deleteForm('formSessao', $(this), '.sessao-form-comp');
     }
     return false;
 });
