@@ -107,7 +107,7 @@
                         	    {% elif atividade.validada == -1 %}
                         	    <td><h5><span class="badge badge-warning ">Pendente</span></h5></td>
                         	    {% endif %}
-                        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:showUpdateAtividade' id=atividade.id %}"></a></td>
+                        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateAtividade' id=atividade.id %}"></a></td>
                         	    <td><a href="{% url 'atividades:deleteAtividade' id=atividade.id %}" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteAtividade' id=atividade.id %}"></a></td>
                         	    <!-- <td><a href="" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteAtividade' id=atividade.id %}"></a></td> -->
                         	    <!-- <td><a class="btn btn-outline-primary fas fa-info" href="{% url 'atividades:showDetailsAtividade' id=atividade.id %}"></a></td> -->

@@ -61,55 +61,6 @@
                     <input id="limite_de_participantes" type="number" name="limite_de_participantes" class="form-control" value ="{{atividade.limite_de_participantes}}" min="1" required>
                 </div>
               </div>
-              <!-- <div class="form-group row">
-              <div class="col-sm-4 col-form-label">
-                  <label for="unidadeorganicaid">Unidade Orgânica</label>
-              </div>
-                <div class="col-sm-8">
-                  <select name="unidadeorganicaid" id = "unidadeorganicaid" class = "form-control">
-                  {% for unidade_organica in allUnidadeOrganicas %}
-                  {% if unidade_organica.id == ativiadade.unidade_organica.id %}
-                  <option selected="selected" value="{{unidade_organica.id}}">{{unidade_organica.nome}}</option>
-                  {% else %}
-                  <option value="{{unidade_organica.id}}">{{unidade_organica.nome}}</option>
-                  {% endif %}
-                  {% endfor %}
-                  </select>
-                </div>
-              </div> -->
-  						<!-- <div class="form-group row">
-							<div class="col-sm-4 col-form-label">
-    							<label for="localid">Local</label>
-							</div>
-    						<div class="col-sm-8">
-      							<select name="localid" id = "localid" class = "form-control">
-                      {% for local in allLocais %}
-                        {% if local.id == atividade.localid.id %}
-                        <option selected="selected" value="{{local.id}}">{{local}}</option>
-                        {% else %}
-                        <option value="{{local.id}}">{{local}}</option>
-                        {% endif %}
-                      {% endfor %}
-                    </select>
-    						</div>
-  						</div> -->
-              
-              <!-- <div class="form-group row">
-              <div class="col-sm-4 col-form-label">
-                  <label for="validada">Validada</label>
-              </div>
-                <div class="col-sm-8">
-                    <input id="validada" type="text" name="validada" class="form-control" value ="{{atividade.validada}}" min="1" required>
-                </div>
-              </div>
-              <div class="form-group row">
-              <div class="col-sm-4 col-form-label">
-                  <label for="editavel">Editável</label>
-              </div>
-                <div class="col-sm-8">
-                    <input id="editavel" type="text" name="editavel" class="form-control" value ="{{atividade.editavel}}" min="1" required>
-                </div>
-              </div> -->
               <div class="form-group row">
               <div class="col-sm-4 col-form-label">
                   <label for="duracao">Duração</label>
@@ -120,74 +71,77 @@
               </div>
               {{ AtividadeTematicaFormset.management_form }}
               {% for form in AtividadeTematicaFormset %}
-              <div class = "tematica-form-comp">
-                <div class="form-group row">
-                  <div class="col-sm-4 col-form-label">
-                    {{form.tematicaid.label}}
+                <div class = "tematica-form-comp">
+                  <input name="formTematica-{{ forloop.counter0 }}-id" value="{{form.id.value}}" id="id_formTematica-{{ forloop.counter0 }}-id" type="hidden">
+                  <div class="form-group row">
+                    <div class="col-sm-4 col-form-label">
+                      {{form.tematicaid.label}}
+                    </div>
+                    <div class="col-sm-8">
+                      {{form.tematicaid}}
+                    </div>
                   </div>
-                  <div class="col-sm-8">
-                    {{form.tematicaid}}
+                  <div class="form-group row">
+                    <div class="col-sm-10">
+                      <button class="btn btn-outline-danger remove-form-row mr-3">Remover temática</button>
+                      <button class="btn btn-outline-success add-form-row">Adicionar temática</button>
+                    </div>
                   </div>
                 </div>
-              <div class="form-group row">
-                <div class="col-sm-10">
-                  <button class="btn btn-outline-danger remove-form-row mr-3">Remover temática</button>
-                  <button class="btn btn-outline-success add-form-row">Adicionar temática</button>
-                </div>
-              </div>
-              </div>
               {% endfor %}
               <hr>
               {{ AtividadeMaterialFormset.management_form }}
-              {% for form in AtividadeMaterialFormset %}
-              <div class = "material-form-comp">
-                <div class="form-group row">
-                  <div class="col-sm-2 col-form-label">
-                    {{form.materialid.label}}
+              {% for form in AtividadeMaterialFormset %}       
+                <div class = "material-form-comp">
+                  <input name="formMaterial-{{ forloop.counter0 }}-id" value="{{form.id.value}}" id="id_formMaterial-{{ forloop.counter0 }}-id" type="hidden">
+                  <div class="form-group row">
+                    <div class="col-sm-2 col-form-label">
+                      {{form.materialid.label}}
+                    </div>
+                    <div class="col-sm-4">
+                      {{form.materialid}}
+                    </div>
+                    <div class="col-sm-2 col-form-label">
+                      {{form.quantidade.label}}
+                    </div>
+                    <div class="col-sm-4">
+                      {{form.quantidade}}
+                    </div>
                   </div>
-                  <div class="col-sm-4">
-                    {{form.materialid}}
-                  </div>
-                  <div class="col-sm-2 col-form-label">
-                    {{form.quantidade.label}}
-                  </div>
-                  <div class="col-sm-4">
-                    {{form.quantidade}}
+                  <div class="form-group row">
+                    <div class="col-sm-10">
+                      <button class="btn btn-outline-danger remove-form-row mr-3">Remover material</button>
+                      <button class="btn btn-outline-success add-form-row">Adicionar material</button>
+                    </div>
                   </div>
                 </div>
-                <div class="form-group row">
-                  <div class="col-sm-10">
-                    <button class="btn btn-outline-danger remove-form-row mr-3">Remover material</button>
-                    <button class="btn btn-outline-success add-form-row">Adicionar material</button>
-                  </div>
-                </div>
-              </div>
               {% endfor %}
               <hr>
               {{ AtividadeSessaoFormset.management_form }}
               {% for form in AtividadeSessaoFormset %}
-              <div class = "sessao-form-comp">
-                <div class="form-group row">
-                  <div class="col-sm-2 col-form-label">
-                    {{form.sessaoid.label}}
+                <div class = "sessao-form-comp">
+                  <input name="formSessao-{{ forloop.counter0 }}-id" value="{{form.id.value}}" id="id_formSessao-{{ forloop.counter0 }}-id" type="hidden">
+                  <div class="form-group row">
+                    <div class="col-sm-2 col-form-label">
+                      {{form.sessaoid.label}}
+                    </div>
+                    <div class="col-sm-4">
+                      {{form.sessaoid}}
+                    </div>
+                    <div class="col-sm-2 col-form-label">
+                      {{form.data.label}}
+                    </div>
+                    <div class="col-sm-4">
+                      <input id="id_formSessao-{{forloop.counter0}}-data" type="date" name="formSessao-{{forloop.counter0}}-data" value="{{form.data.value |date:"Y-m-d"}}" class="form-control date-Set" required min="{{diaAberto.data_inicio}}" max="{{diaAberto.data_fim}}"> 
+                    </div>
                   </div>
-                  <div class="col-sm-4">
-                    {{form.sessaoid}}
-                  </div>
-                  <div class="col-sm-2 col-form-label">
-                    {{form.data.label}}
-                  </div>
-                  <div class="col-sm-4">
-                    <input id="id_formSessao-{{forloop.counter0}}-data" type="date" name="formSessao-{{forloop.counter0}}-data" value="{{form.data.value |date:"Y-m-d"}}" class="form-control date-Set" required min="{{diaAberto.data_inicio}}" max="{{diaAberto.data_fim}}"> 
+                  <div class="form-group row">
+                    <div class="col-sm-10">
+                      <button class="btn btn-outline-danger remove-form-row mr-3">Remover sessão</button>
+                      <button class="btn btn-outline-success add-form-row">Adicionar sessão</button>
+                    </div>
                   </div>
                 </div>
-                <div class="form-group row">
-                  <div class="col-sm-10">
-                    <button class="btn btn-outline-danger remove-form-row mr-3">Remover sessão</button>
-                    <button class="btn btn-outline-success add-form-row">Adicionar sessão</button>
-                  </div>
-                </div>
-              </div>
               {% endfor %}
               <hr>
 						<div class="form-group row">
