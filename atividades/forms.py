@@ -50,7 +50,7 @@ class AtividadeForm(ModelForm):
 
             'duracao' : NumberInput(attrs={
                 'class' : 'form-control',
-                'placeholder' : 'Introduza a duração da atividade',
+                'placeholder' : 'Introduza a duração da atividade em minutos',
                 'min' : 10,
                 'required' : 'required',
             }),
@@ -58,7 +58,7 @@ class AtividadeForm(ModelForm):
             'limite_de_participantes' : NumberInput(attrs={
                 'class' : 'form-control',
                 'placeholder' : 'Introduza um limite de participantes',
-                'min' : 0,
+                'min' : 1,
                 'required' : 'required',
             }),
 
@@ -138,13 +138,14 @@ class AtividadeTematicaForm(ModelForm):
                 choices= [(tematica.id, tematica.nome) for tematica in Tematica.objects.all()],
                 attrs= {
                     'class' : 'form-control',
+                    'required': 'required',
                 }),
         }
         labels = {
             'tematicaid': ('Temática'),
         } 
 
-AtividadeTematicaFormset = modelformset_factory(AtividadeTematica, AtividadeTematicaForm, extra=1)
+AtividadeTematicaFormset = formset_factory(AtividadeTematicaForm, extra=1)
 
 class AtividadeMaterialForm(ModelForm):
 
@@ -168,19 +169,7 @@ class AtividadeMaterialForm(ModelForm):
             'quantidade' : ('Quantidade'),
         } 
 
-AtividadeMaterialFormset = modelformset_factory(AtividadeMaterial, AtividadeMaterialForm, extra=1)
-
-# class AtividadeSessaoForm(forms.Form):
-#     sessaoid = forms.MultipleChoiceField(
-#         label = 'Sessão', 
-#         widget=forms.CheckboxSelectMultiple(),
-#         choices = [(sessao.id, sessao.hora_de_inicio) for sessao in Sessao.objects.all()]
-#         )
-#     data = forms.DateField(
-#         label = 'Data'
-#     )
-
-# AtividadeSessaoFormset = formset_factory(AtividadeSessaoForm, extra=1)
+AtividadeMaterialFormset = formset_factory(AtividadeMaterialForm, extra=1)
 
 class AtividadeSessaoForm(ModelForm):
 
@@ -203,7 +192,7 @@ class AtividadeSessaoForm(ModelForm):
             'data' : ('Data'),
         } 
 
-AtividadeSessaoFormset = modelformset_factory(SessaoAtividade, AtividadeSessaoForm, extra=1)
+AtividadeSessaoFormset = formset_factory(AtividadeSessaoForm, extra=1)
 
 class SessaoForm(ModelForm):
     class Meta:

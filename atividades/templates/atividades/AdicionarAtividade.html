@@ -24,7 +24,7 @@
 			<hr class="mx-5">
     	    <div class = "row">
     		    <div class = "col-sm-6 offset-sm-3">
-					<form action = "{% url 'atividades:addAtividade' %}" method="post">
+					<form action = "{% url 'atividades:createAtividade' %}" method="post">
 						{% csrf_token %}
  						<div class="form-group row">
 							<div class="col-sm-4 col-form-label">

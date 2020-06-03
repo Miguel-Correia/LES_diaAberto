@@ -12,14 +12,13 @@ urlpatterns = [
 
     path('GestaoAtividades/Atividades/', views.showAtividades, name='allAtividades'),
     path('GestaoAtividades/Atividades/<int:id>', views.showDetailsAtividade, name='showDetailsAtividade'),
-    path('GestaoAtividades/Atividades/create/<int:saved>', views.showCreateAtividade, name='showCreateAtividade'),
-    path('GestaoAtividades/Atividades/add', views.createAtividade, name='addAtividade'),
+    path('GestaoAtividades/Atividades/create', views.createAtividade, name='createAtividade'),
     path('GestaoAtividades/Atividades/delete/<int:id>', views.deleteAtividade, name='deleteAtividade'),
-    #path('GestaoAtividades/Atividades/update/<int:id>', views.showUpdateAtividade, name='showUpdateAtividade'),
     path('GestaoAtividades/Atividades/update/<int:id>', views.updateAtividade, name='updateAtividade'),
     path('GestaoAtividades/Atividades/valid/<int:id>', views.validAtividade, name='validAtividade'),
     path('GestaoAtividades/Atividades/recuse/<int:id>', views.recuseAtividade, name='recuseAtividade'),
     path('GestaoAtividades/Atividades/atribuir/<int:id>', views.atribuirLocal, name='atribuirLocal'),
+    
     path('getEdificio/<int:campusid>', views.getEdificio, name='getEdificio'),
     path('getLocal/<int:edificioid>', views.getLocal, name='getLocal'),
     
