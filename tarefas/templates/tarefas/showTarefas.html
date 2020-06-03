@@ -67,15 +67,39 @@
                     <thead>
                         <tr>
 							<th scope="col"></th>
-                            <th scope="col" class="Sortable Nome {{direction}} tableBorderH">Tarefa
+							{% if order_by == "nome" %}
+                            	<th scope="col" class="Sortable Nome {{direction}} tableBorderH"> Tarefa
 								{% if direction == 'asc'%} 
 									<i class="fas fa-caret-up fa-xs"></i>
 								{% elif direction == 'desc' %}
 									<i class="fas fa-caret-down fa-xs"></i>
 								{% endif %}
-							</th>
-                            <th scope="col" class="Sortable">Tipo</th>
-                            <th scope="col" class="Sortable">Estado</th>
+								</th>
+							{% else %}
+								<th scope="col" class="Sortable Nome tableBorderH"> Tarefa</th>
+							{% endif %}
+							{% if order_by == "tipoTarefa" %}								
+                            	<th scope="col" class="Sortable Tipo {{direction}} tableBorderH">Tipo
+								{% if direction == 'asc'%} 
+									<i class="fas fa-caret-up fa-xs"></i>
+								{% elif direction == 'desc' %}
+									<i class="fas fa-caret-down fa-xs"></i>
+								{% endif %}
+								</th>
+							{% else %}
+								<th scope="col" class="Sortable Tipo tableBorderH">Tipo</th>
+							{% endif %}
+							{% if order_by == "estado" %}
+								<th scope="col" class="Sortable Estado {{direction}} tableBorderH">Tipo
+								{% if direction == 'asc'%} 
+									<i class="fas fa-caret-up fa-xs"></i>
+								{% elif direction == 'desc' %}
+									<i class="fas fa-caret-down fa-xs"></i>
+								{% endif %}
+								</th>
+							{% else %}
+							    <th scope="col" class="Sortable Estado tableBorderH">Estado</th>
+							{% endif %}
                             <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
@@ -174,32 +198,4 @@
     {% block js %}
 		{% load static %}
 		<script src={% static "tarefas/ShowTarefas.js" %}></script>
-    	<script type="text/javascript">
-    	        $(function () {
-    	            $('.delete').click(function (){
-    	                var data_var = $(this).data('id');
-    	                $("#deleteModal").attr("action", data_var);
-    	            })
-    	        });
-
-				$(".hide").hide();
-
-				$("table").click(function(event) {
-    				event.stopPropagation();
-    				var target = $(event.target);
-					if(!target.is('a')){
-						if ( target.closest('tbody').find('i').hasClass('fas fa-chevron-right') ){
-							target.closest('tbody').next().show();
-    	    				target.closest('tbody').find('i').removeClass();
-							target.closest('tbody').find('i').addClass('fas fa-chevron-down');	
-
-						}else if( target.closest('tbody').find('i').hasClass('fas fa-chevron-down') ){
-							target.closest('tbody').next().hide();
-    	    				target.closest('tbody').find('i').removeClass();
-							target.closest('tbody').find('i').addClass('fas fa-chevron-right');	
-
-						}    				
-					}
-				})
-    	</script>
 	{% endblock%}

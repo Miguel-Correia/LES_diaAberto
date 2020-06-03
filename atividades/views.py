@@ -597,7 +597,7 @@ def validAtividade(request, id):
     #atividade = form.save(commit=False)
     dados_atividade.validada = 1 
     dados_atividade.save()
-    return HttpResponseRedirect(reverse('atividades:allAtividades'))
+    return redirect('atividades:allAtividades')
     # dados_atividade = Atividade.objects.get(id = id)
     # dados_atividade.delete()
     # return HttpResponseRedirect(reverse('atividades:allAtividades'))
@@ -609,7 +609,7 @@ def recuseAtividade(request, id):
     #atividade = form.save(commit=False)
     dados_atividade.validada = 0 
     dados_atividade.save()
-    return HttpResponseRedirect(reverse('atividades:allAtividades'))
+    return redirect('atividades:allAtividades')
     # dados_atividade = Atividade.objects.get(id = id)
     # dados_atividade.delete()
     # return HttpResponseRedirect(reverse('atividades:allAtividades'))
@@ -629,7 +629,7 @@ def atribuirLocal(request, id):
         allLocais = Local.objects.filter(edicifioid = allEdificios[0].id)
     except IndexError: 
         allLocais = None
-        
+
     if request.method == 'POST':
         dados_atividade.localid = Local.objects.get(id = request.POST.get("localid"))
         dados_atividade.validada = 1
