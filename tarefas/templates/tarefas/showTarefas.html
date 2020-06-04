@@ -32,7 +32,7 @@
 						  <div class="input-group-prepend">
 						    <span class="input-group-text"><i class="fas fa-search"></i></span>
 						  </div>
-						    <select id="tipoTarefa" name="tipo">
+						    <select id="tipoTarefa" name="tipo" class="form-control">
                                 <option value="" disabled selected>Tipo</option>
                                 <option value="Atividade">Atividade</option>
                                 <option value="Transporte">Transporte</option>
@@ -44,7 +44,7 @@
 						  <div class="input-group-prepend">
 						    <span class="input-group-text"><i class="fas fa-search"></i></span>
 						  </div>
-						    <select id="estado" name="estado">
+						    <select id="estado" name="estado" class="form-control">
                                 <option value="" disabled selected>Estado</option>
                                 <option value="Atribuida">Atribuida</option>
                                 <option value="NaoAtribuida">Nao Atribuidas</option>
@@ -110,41 +110,16 @@
 								<td><i class="fas fa-chevron-right"></i></td>
                     		    <td>{{ tarefa.nome}}</td>
                     		    <td>{{ tarefa.tipoTarefa}}</td>
-								{% if tarefa.estado%}
+								{% if tarefa.estado %}
 								<td><h5><span class="badge badge-success">Atribuída</span></h5></td>
 								{% else %}
 								<td><h5><span class="badge badge-warning">Não Atribuída</span></h5></td>
 								{% endif %}
                     		    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'tarefas:updateTarefa' id=tarefa.id %}" ></a></td>
-                    		    <td><a class="btn btn-outline-danger fas fa-trash-alt" href="{% url 'tarefas:deleteTarefa' id=tarefa.id %}" data-toggle="modal" data-target="#Modal" data-id="{% url 'tarefas:deleteTarefa' id=tarefa.id %}"></a></td>
-									
-								<div class="modal" id="Modal">
-									<div class="modal-dialog">
-										<div class="modal-content">
-										<!-- Modal Header -->
-											<div class="modal-header">
-												<h4 class="modal-title">Aviso</h4>
-												<button type="button" class="close" data-dismiss="modal">×</button>
-											</div>
-											<!-- Modal body -->
-											<div class="modal-body">
-												Tem a certeza que pretende eliminar este item?
-											</div>
-											<!-- Modal footer -->
-											<div class="modal-footer">
-												<form id="deleteModal" action="" method="post">
-													{% csrf_token %}
-												<button type="submit" class="btn btn-success" >Sim</button>
-												<button type="button" class="btn btn-danger" data-dismiss="modal">Nao</button>
-												</form>
-											</div>
-										</div>
-									</div>
-								</div>
-
+                    		    <td><button class="btn btn-outline-danger fas fa-trash-alt delete" data-toggle="modal" data-target="#Modal" data-id="{% url 'tarefas:deleteTarefa' id=tarefa.id %}"></button></td>									
 							</tr>
 						</tbody>
-						<tbody class="hide">
+						<tbody class="expand">
                     	    <tr>
                     	        <td colspan="2">
                     	            <p>Data: {{ tarefa.data|date:"d/m/Y"}}</p>
@@ -177,9 +152,7 @@
 							{% endif %}
 						{% endif %}
 
-				        <span class="current">
-						&nbsp {{ page_obj.number }} &nbsp
-				        </span>
+				        <span class="current">{{ page_obj.number }}</span>
 
 				        {% if page_obj.has_next %}
 							{% if order_by and direction %}
@@ -194,7 +167,32 @@
 				</div> 
             </div>    
         </div>
+
+		<div class="modal fade" id="Modal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				<!-- Modal Header -->
+					<div class="modal-header">
+						<h4 class="modal-title">Aviso</h4>
+						<button type="button" class="close" data-dismiss="modal">×</button>
+					</div>
+					<!-- Modal body -->
+					<div class="modal-body">
+						Tem a certeza que pretende eliminar este item?
+					</div>
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<form id="deleteModal" action="" method="post">
+							{% csrf_token %}
+						<button type="submit" class="btn btn-success" >Sim</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Nao</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 	{% endblock %}
+
     {% block js %}
 		{% load static %}
 		<script src={% static "tarefas/ShowTarefas.js" %}></script>

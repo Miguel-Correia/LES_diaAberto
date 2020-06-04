@@ -1,19 +1,19 @@
 $('th.Sortable').click(function(){
     if($(this).hasClass('Nome')){
         if($(this).hasClass('asc'))
-            window.location.href =  "?order_by=nome&direction=desc"
+            window.location.href =  "?page=" + $('span.current').html() + "&order_by=nome&direction=desc"
         else
-            window.location.href =  "?order_by=nome&direction=asc"
+            window.location.href =  "?page=" + $('span.current').html() + "&order_by=nome&direction=asc"
     }else if($(this).hasClass('Tipo')){
         if($(this).hasClass('asc'))
-            window.location.href =  "?order_by=tipoTarefa&direction=desc"
+            window.location.href =  "?page=" + $('span.current').html() + "&order_by=tipoTarefa&direction=desc"
         else
-            window.location.href =  "?order_by=tipoTarefa&direction=asc"
+            window.location.href =  "?page=" + $('span.current').html() + "&order_by=tipoTarefa&direction=asc"
     }else if($(this).hasClass('Estado')){
         if($(this).hasClass('asc'))
-            window.location.href =  "?order_by=estado&direction=desc"
+            window.location.href =  "?page=" + $('span.current').html() + "&order_by=estado&direction=desc"
         else
-            window.location.href =  "?order_by=estado&direction=asc"
+            window.location.href =  "?page=" + $('span.current').html() + "&order_by=estado&direction=asc"
     }
 })  
 
@@ -23,19 +23,19 @@ $(document).ready( function(){
     })
 })
 
-$(function () {
-    $('.delete').click(function (){
-        var data_var = $(this).data('id');
-        $("#deleteModal").attr("action", data_var);
-    })
-});
 
-$(".hide").hide();
+$('.delete').click(function (){
+    var data_var = $(this).data('id');
+    $("#deleteModal").attr("action", data_var);
+})
+
+
+$(".expand").hide();
 
 $("table").click(function(event) {
-    event.stopPropagation();
+    //event.stopPropagation();
     var target = $(event.target);
-    if(!target.is('a')){
+    if(!target.is('a') && !target.is('button')){
         if ( target.closest('tbody').find('i').hasClass('fas fa-chevron-right') ){
             target.closest('tbody').next().show();
             target.closest('tbody').find('i').removeClass();
