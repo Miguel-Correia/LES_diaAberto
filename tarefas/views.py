@@ -86,9 +86,24 @@ def showTarefas(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    allTarefaGrupos = {}
+    allTarefaColaboradores = {}
+
+    for tarefa in page_obj:
+        insc = InscricaoTarefa.objects.filter(tarefaid = tarefa.id)
+        if insc:
+            allTarefaGrupos[tarefa.id] = insc
+        
+        colab = ColaboradorTarefa.objects.filter(tarefaid = tarefa.id)
+        if colab:
+            allTarefaColaboradores[tarefa.id] = colab
+
+        
     context = { 'page_obj': page_obj,
                 'order_by': order_by,
                 'direction': direction,
+                'allTarefaGrupos': allTarefaGrupos,
+                'allTarefaColaboradores': allTarefaColaboradores,
             }
     return render(request, 'tarefas/showTarefas.html', context)
 
@@ -315,7 +330,7 @@ def getHoraFim(request, sessao_atividadeid):
 
 def getLocal_Sessao(request, sessao_atividadeid):
     sessaoAtividade = SessaoAtividade.objects.get(id=sessao_atividadeid)
-    local = sessaoAtividade.atividadeid.localid.descricao
+    local = str(sessaoAtividade.atividadeid.localid)
     return JsonResponse({'local': local})
 
 

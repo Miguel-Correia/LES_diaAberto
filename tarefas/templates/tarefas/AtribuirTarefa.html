@@ -6,30 +6,30 @@
 				<p class="text-muted">Dados da Tarefa</p>
 				<hr>
                 
-                <p>Nome: {{ dadosTarefa.nome}}</p>
-                Descrição: 
+                <p><b>Nome:</b>  {{ dadosTarefa.nome}}</p>
+                <b>Descrição:</b>  
                 <p>{{ dadosTarefa.descricao}}</p>
-                <p>Tipo de Tarefa: {{ dadosTarefa.tipoTarefa }}</p>
-                <p>Dia: {{ dadosTarefa.data}}</p>
-                <p>Horario: {{ dadosTarefa.horario }}</p>
+                <p><b>Tipo de Tarefa:</b>  {{ dadosTarefa.tipoTarefa }}</p>
+                <p><b>Dia:</b>  {{ dadosTarefa.data|date:"d/m/Y"}}</p>
+                <p><b>Horario:</b>  {{ dadosTarefa.horario|time:"H:i" }}</p>
                 <hr>
                 {% if dadosTarefa.tipoTarefa == 'Transporte' %}
-                    Atividade Origem: 
+                    <b>Atividade Origem:</b>  
                     <p>{{ dadosTarefa.sessao_atividadeid_origem.atividadeid.nome }}, {{ dadosTarefa.sessao_atividadeid_origem.sessaoid}}</p>
-                    Origem: 
+                    <b>Origem:</b>  
                     <p>{{ dadosTarefa.origem }}</p>
-                    Atividade Destino: 
+                    <b>Atividade Destino:</b>  
                     <p>{{ dadosTarefa.sessao_atividadeid_destino.atividadeid.nome }}, {{ dadosTarefa.sessao_atividadeid_destino.sessaoid}}</p>
-                    Destino: 
+                    <b>Destino:</b>  
                     <p>{{ dadosTarefa.destino }}</p>
-                    Grupos: 
+                    <b>Grupos:</b>  
                         {% for grupo in dadosTarefaGrupos %}
                             <p>{{grupo.inscricaoid}}</p>
                         {% endfor %}
                 {% else %}
-                    Atividade:
+                    <b>Atividade:</b> 
                     <p>{{ dadosTarefa.sessao_atividadeid.atividadeid.nome}}</p>
-                    Sessao: 
+                    <b>Sessao:</b> 
                     <p>{{ dadosTarefa.sessao_atividadeid}}</p>
                 {% endif %}	
             </div>
