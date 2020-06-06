@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.forms import formset_factory
+from django.db.models.functions import Lower
 
 from tarefas.models import Tarefa, ColaboradorTarefa, InscricaoTarefa
 from atividades.models import UnidadeOrganica, SessaoAtividade, Inscricao, SessaoAtividadeInscricao, Utilizador
@@ -72,13 +73,38 @@ def createTarefa(request):
     return render(request, 'tarefas/AdicionarTarefa.html', context)
 
 def showTarefas(request):
-    allTarefas = Tarefa.objects.all()
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    ordering = Lower(order_by)
+
+    if direction == 'desc':
+        ordering = '-{}'.format(order_by)
+
+    allTarefas = Tarefa.objects.all().order_by(ordering)
 
     paginator = Paginator(allTarefas, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    context = {'page_obj': page_obj, }
+    allTarefaGrupos = {}
+    allTarefaColaboradores = {}
+
+    for tarefa in page_obj:
+        insc = InscricaoTarefa.objects.filter(tarefaid = tarefa.id)
+        if insc:
+            allTarefaGrupos[tarefa.id] = insc
+        
+        colab = ColaboradorTarefa.objects.filter(tarefaid = tarefa.id)
+        if colab:
+            allTarefaColaboradores[tarefa.id] = colab
+
+        
+    context = { 'page_obj': page_obj,
+                'order_by': order_by,
+                'direction': direction,
+                'allTarefaGrupos': allTarefaGrupos,
+                'allTarefaColaboradores': allTarefaColaboradores,
+            }
     return render(request, 'tarefas/showTarefas.html', context)
 
 
@@ -304,7 +330,7 @@ def getHoraFim(request, sessao_atividadeid):
 
 def getLocal_Sessao(request, sessao_atividadeid):
     sessaoAtividade = SessaoAtividade.objects.get(id=sessao_atividadeid)
-    local = sessaoAtividade.atividadeid.localid.descricao
+    local = str(sessaoAtividade.atividadeid.localid)
     return JsonResponse({'local': local})
 
 

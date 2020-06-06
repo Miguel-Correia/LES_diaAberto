@@ -4,7 +4,7 @@ from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.core.paginator import Paginator
-from django.forms import modelformset_factory 
+from django.forms import modelformset_factory, formset_factory
 
 from .filters import UnidadeOrganicaFilter, DepartamentoFilter, LocalFilter, CampusFilter, EdificioFilter
 
@@ -358,12 +358,22 @@ def deleteLocal(request, id):
 
 #Creates new atvidade
 def createAtividade(request):
+
+    saved = False
+
+    form = AtividadeForm(request.GET or None)
+    tematicaformset = AtividadeTematicaFormset(request.GET or None, prefix='formTematica')
+    materialformset = AtividadeMaterialFormset(request.GET or None, prefix='formMaterial')
+    sessaoformset = AtividadeSessaoFormset(request.GET or None, prefix='formSessao')
+    
     if request.method == "POST":
+        
         form = AtividadeForm(request.POST)
-        FormsetT = AtividadeTematicaFormset(request.POST, prefix='formTematica')
-        FormsetM = AtividadeMaterialFormset(request.POST, prefix='formMaterial')
-        FormsetS = AtividadeSessaoFormset(request.POST, prefix='formSessao')
-        if form.is_valid() and FormsetM.is_valid() and FormsetT.is_valid() and FormsetS.is_valid():
+        tematicaformset = AtividadeTematicaFormset(request.POST, prefix='formTematica')
+        materialformset = AtividadeMaterialFormset(request.POST, prefix='formMaterial')
+        sessaoformset = AtividadeSessaoFormset(request.POST, prefix='formSessao') 
+        
+        if form.is_valid() and materialformset.is_valid() and tematicaformset.is_valid() and sessaoformset.is_valid():
             utilizador = Utilizador.objects.get(id = 1)
             atividade = form.save(commit=False)
             atividade.utilizadorid = utilizador
@@ -371,35 +381,40 @@ def createAtividade(request):
             atividade.validada = -1
             atividade.editavel = True
             atividade.save()
-            for form in FormsetM:
-                material = form.save(commit=False)
-                material.atividadeid = atividade
+            
+            for form in materialformset:
+                material = AtividadeMaterial(
+                    atividadeid = atividade,
+                    materialid = form.cleaned_data['materialid'],
+                    quantidade = form.cleaned_data['quantidade']
+                )
                 material.save()
-            for form in FormsetT:
-                tematica = form.save(commit=False)
-                tematica.atividadeid = atividade
+            for form in tematicaformset:
+                tematica = AtividadeTematica(
+                    atividadeid = atividade,
+                    tematicaid = form.cleaned_data['tematicaid']
+                )
                 tematica.save()
-            for form in FormsetS: 
-                sessao = form.save(commit=False) 
-                sessao.atividadeid = atividade
+            for form in sessaoformset: 
+                sessao = SessaoAtividade(
+                    atividadeid = atividade,
+                    sessaoid = form.cleaned_data['sessaoid'],
+                    data = form.cleaned_data['data']
+                )
                 sessao.save()
-            #     for sessao in form.cleaned_data['sessaoid']:
-            #         result = AtividadeSessao(
-            #             sessaoid= AtividadeSessap.objects.get(id=sessao),
-            #             data = form.cleaned_data['data'],
-            #         )
-            #         result.save()
-            return redirect('atividades:showCreateAtividade', saved=1)
-        else:
-            form = AtividadeForm()
-            return render(request, 'atividades/AdicionarAtividade.html')
-
-def showCreateAtividade(request, saved=0):
-    context = {'form' : AtividadeForm(), 'saved' : saved, 
-    'AtividadeTematicaFormset' : AtividadeTematicaFormset(queryset=AtividadeTematica.objects.none(), prefix='formTematica'), 
-    'AtividadeMaterialFormset' : AtividadeMaterialFormset(queryset=AtividadeMaterial.objects.none(), prefix='formMaterial'),
-    'AtividadeSessaoFormset' : AtividadeSessaoFormset(queryset=SessaoAtividade.objects.none(), prefix='formSessao')
-    }
+            saved = True
+            
+            form = AtividadeForm(request.GET or None)
+            tematicaformset = AtividadeTematicaFormset(request.GET or None, prefix='formTematica')
+            materialformset = AtividadeMaterialFormset(request.GET or None, prefix='formMaterial')
+            sessaoformset = AtividadeSessaoFormset(request.GET or None, prefix='formSessao')
+    
+    context = { 'form' : form, 
+                'saved' : saved, 
+                'AtividadeTematicaFormset' : tematicaformset, 
+                'AtividadeMaterialFormset' : materialformset,
+                'AtividadeSessaoFormset' : sessaoformset,
+            }  
     return render(request, 'atividades/AdicionarAtividade.html', context)
 
 #show all atividade
@@ -467,42 +482,121 @@ def getAtividade(request, id):
 
 #upadates the fields of a spcific atividade
 def updateAtividade(request, id):
+
     dados_Atividade = Atividade.objects.get(id = id)
-    allUnidadeOrganicas = UnidadeOrganica.objects.all()
-    allLocais = Local.objects.all()
-    #AtividadeTematicaFormset = modelformset_factory(AtividadeTematica, AtividadeTematicaForm, extra=0)
+    tematica = AtividadeTematica.objects.filter(atividadeid = id)
+    material = AtividadeMaterial.objects.filter(atividadeid = id)
+    sessao = SessaoAtividade.objects.filter(atividadeid = id)
 
-    form = AtividadeForm(request.POST, instance = dados_Atividade)
-    #FormsetT = AtividadeTematicaFormset(request.POST)
-    # FormsetM = AtividadeMaterialFormset(request.POST, prefix='formMaterial')
-    FormsetT = AtividadeTematicaFormset(request.POST, prefix='formTematica')
-    FormsetM = AtividadeMaterialFormset(request.POST, prefix='formMaterial')
-    FormsetS = AtividadeSessaoFormset(request.POST, prefix='formSessao')
-    if form.is_valid() and FormsetT.is_valid():
-        dados_Atividade.validada = -1
-        dados_Atividade.localid = None
-        form.save()
-        FormsetT.save()
-        return  HttpResponseRedirect(reverse('atividades:allAtividades'))
-    context = {'allLocais' : allLocais, 'allUnidadeOrganicas' : allUnidadeOrganicas, 'atividade' : dados_Atividade, 
-    'AtividadeTematicaFormset' : AtividadeTematicaFormset(queryset=AtividadeTematica.objects.filter(atividadeid = id)),
-    'AtividadeMaterialFormset' : AtividadeMaterialFormset(queryset=AtividadeMaterial.objects.filter(atividadeid = id)),
-    'AtividadeSessaoFormset' : AtividadeSessaoFormset(queryset=SessaoAtividade.objects.filter(atividadeid = id))}
+    AtividadeTematicaFormset = formset_factory(AtividadeTematicaForm, extra=0)
+    AtividadeMaterialFormset = formset_factory(AtividadeMaterialForm, extra=0)
+    AtividadeSessaoFormset = formset_factory(AtividadeSessaoForm, extra=0)
+
+    if request.method == 'GET':
+        form = AtividadeForm(instance=dados_Atividade)
+        tematicaformset = AtividadeTematicaFormset(initial = [{'tematicaid': t.tematicaid.id} for t in tematica], prefix='formTematica')
+        materialformset = AtividadeMaterialFormset(initial = [{'materialid': m.materialid.id, 'quantidade': m.quantidade} for m in material], prefix='formMaterial')
+        sessaoformset = AtividadeSessaoFormset(initial = [{'sessaoid': s.sessaoid.id, 'data': s.data} for s in sessao], prefix='formSessao')
+    elif request.method == 'POST':
+        form = AtividadeForm(request.POST, instance = dados_Atividade)
+
+        tematicaformset = AtividadeTematicaFormset(request.POST, initial = [{'tematicaid': t.tematicaid.id} for t in tematica], prefix='formTematica')
+        materialformset = AtividadeMaterialFormset(request.POST, initial = [{'materialid': m.materialid.id, 'quantidade': m.quantidade} for m in material], prefix='formMaterial')
+        sessaoformset = AtividadeSessaoFormset(request.POST, initial = [{'sessaoid': s.sessaoid.id, 'data': s.data} for s in sessao], prefix='formSessao')
+
+        if form.is_valid() and tematicaformset.is_valid() and materialformset.is_valid() and sessaoformset.is_valid():
+            f = form.save(commit=False)
+            f.validada = -1
+            f.localid = None
+            f.save()
+            
+            #Atividade Tematica
+            #Save and add
+            if len(tematicaformset) >= len(tematica):
+                for index, form in enumerate(tematicaformset):
+                    if index < len(tematica):
+                        tematica[index].tematicaid = form.cleaned_data['tematicaid']
+                        tematica[index].atividadeid = f
+                        tematica[index].save()
+                    else:
+                        new_tematica = AtividadeTematica(
+                            atividadeid = f,
+                            tematicaid = form.cleaned_data['tematicaid']
+                        )
+                        new_tematica.save()
+            #Save and delete
+            else:
+                for index, t in enumerate(tematica):
+                    if index < len(tematicaformset):
+                        t.tematicaid = tematicaformset[index].cleaned_data['tematicaid']
+                        t.atividadeid = f
+                        t.save()
+                    else:
+                        t.delete()
+            #Atividade Material
+            #Save and add
+            if len(materialformset) >= len(material):
+                for index, form in enumerate(materialformset):
+                    if index < len(material):
+                        material[index].materialid = form.cleaned_data['materialid']
+                        material[index].quantidade = form.cleaned_data['quantidade']
+                        material[index].atividadeid = f
+                        material[index].save()
+                    else:
+                        new_material = AtividadeMaterial(
+                            atividadeid = f,
+                            materialid = form.cleaned_data['materialid'],
+                            quantidade = form.cleaned_data['quantidade']
+                        )
+                        new_material.save()
+            #Save and delete
+            else:
+                for index, m in enumerate(material):
+                    if index < len(materialformset):
+                        m.materialid = materialformset[index].cleaned_data['materialid']
+                        m.quantidade = materialformset[index].cleaned_data['quantidade']
+                        m.atividadeid = f
+                        m.save()
+                    else:
+                        m.delete()
+            #Atividade Sessao
+            #Save and add
+            if len(sessaoformset) >= len(sessao):
+                for index, form in enumerate(sessaoformset):
+                    if index < len(sessao):
+                        sessao[index].sessaoid = form.cleaned_data['sessaoid']
+                        sessao[index].data = form.cleaned_data['data']
+                        sessao[index].atividadeid = f
+                        sessao[index].save()
+                    else:
+                        new_sessao = SessaoAtividade(
+                            atividadeid = f,
+                            sessaoid = form.cleaned_data['sessaoid'],
+                            data = form.cleaned_data['data']
+                        )
+                        new_sessao.save()
+            #Save and delete
+            else:
+                for index, s in enumerate(sessao):
+                    if index < len(sessaoformset):
+                        s.sessaoid = sessaoformset[index].cleaned_data['sessaoid']
+                        s.data = sessaoformset[index].cleaned_data['data']
+                        s.atividadeid = f
+                        s.save()
+                    else:
+                        s.delete()
+
+            return  redirect('atividades:allAtividades')
+
+    context = { 'atividade' : dados_Atividade, 
+                'AtividadeForm': form,
+                'AtividadeTematicaFormset' : tematicaformset,
+                'AtividadeMaterialFormset' : materialformset,
+                'AtividadeSessaoFormset' : sessaoformset,
+            }
+
     return render(request, 'atividades/EditarAtividade.html', context)
-
-def showUpdateAtividade(request, id):
-    AtividadeTematicaFormset = modelformset_factory(AtividadeTematica, AtividadeTematicaForm, extra=0)
-    AtividadeMaterialFormset = modelformset_factory(AtividadeMaterial, AtividadeMaterialForm, extra=0)
-    AtividadeSessaoFormset = modelformset_factory(SessaoAtividade, AtividadeSessaoForm, extra=0)
-    dados_Atividade = Atividade.objects.get(id = id)
-    allUnidadeOrganicas = UnidadeOrganica.objects.all()
-    allLocais = Local.objects.all()
-    context = {'allLocais' : allLocais, 'allUnidadeOrganicas' : allUnidadeOrganicas, 'atividade' : dados_Atividade, 
-    'AtividadeTematicaFormset' : AtividadeTematicaFormset(queryset=AtividadeTematica.objects.filter(atividadeid = id), prefix='formTematica'),
-    'AtividadeMaterialFormset' : AtividadeMaterialFormset(queryset=AtividadeMaterial.objects.filter(atividadeid = id), prefix='formMaterial'),
-    'AtividadeSessaoFormset' : AtividadeSessaoFormset(queryset=SessaoAtividade.objects.filter(atividadeid = id), prefix='formSessao')}
-    return render(request, 'atividades/EditarAtividade.html', context)
-
+    
 #deletes a atividade
 def deleteAtividade(request, id):
     dados_atividade = Atividade.objects.get(id = id)
@@ -524,7 +618,7 @@ def validAtividade(request, id):
     #atividade = form.save(commit=False)
     dados_atividade.validada = 1 
     dados_atividade.save()
-    return HttpResponseRedirect(reverse('atividades:allAtividades'))
+    return redirect('atividades:allAtividades')
     # dados_atividade = Atividade.objects.get(id = id)
     # dados_atividade.delete()
     # return HttpResponseRedirect(reverse('atividades:allAtividades'))
@@ -536,7 +630,7 @@ def recuseAtividade(request, id):
     #atividade = form.save(commit=False)
     dados_atividade.validada = 0 
     dados_atividade.save()
-    return HttpResponseRedirect(reverse('atividades:allAtividades'))
+    return redirect('atividades:allAtividades')
     # dados_atividade = Atividade.objects.get(id = id)
     # dados_atividade.delete()
     # return HttpResponseRedirect(reverse('atividades:allAtividades'))
@@ -547,8 +641,16 @@ def atribuirLocal(request, id):
     allTematicaAtividade = AtividadeTematica.objects.all()
     allMaterialAtividade = AtividadeMaterial.objects.all()
     allSessaoAtividade = SessaoAtividade.objects.all()
-    allEdificios = Edificio.objects.filter(campusid = allCampus[0].id)
-    allLocais = Local.objects.filter(edicifioid = allEdificios[0].id)
+    try:
+        allEdificios = Edificio.objects.filter(campusid = allCampus[0].id)
+    except IndexError:
+        allEdificios = None
+    
+    try:
+        allLocais = Local.objects.filter(edicifioid = allEdificios[0].id)
+    except IndexError: 
+        allLocais = None
+
     if request.method == 'POST':
         dados_atividade.localid = Local.objects.get(id = request.POST.get("localid"))
         dados_atividade.validada = 1
