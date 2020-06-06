@@ -25,6 +25,8 @@ class CampusFilter(django_filters.FilterSet):
 		fields = '__all__'
 
 class EdificioFilter(django_filters.FilterSet):
+	nome_edificio = CharFilter(field_name='nome_edificio', lookup_expr='icontains')
+	campusid__nome = CharFilter(field_name='campusid', lookup_expr='icontains')
 	class Meta:
 		model = Edificio
-		fields = '__all__'
+		fields = ['nome_edificio' ,'campusid__nome']

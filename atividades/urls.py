@@ -18,6 +18,8 @@ urlpatterns = [
     path('Atividades/valid/<int:id>', views.validAtividade, name='validAtividade'),
     path('Atividades/recuse/<int:id>', views.recuseAtividade, name='recuseAtividade'),
     path('Atividades/atribuir/<int:id>', views.atribuirLocal, name='atribuirLocal'),
+    path('getEdificio/<int:campusid>', views.getEdificio, name='getEdificio'),
+    path('getLocal/<int:edificioid>', views.getLocal, name='getLocal'),
     
     path('getEdificio/<int:campusid>', views.getEdificio, name='getEdificio'),
     path('getLocal/<int:edificioid>', views.getLocal, name='getLocal'),

@@ -48,6 +48,16 @@ def showCreateEdificio(request, saved=0):
 def showEdificios(request):
     allEdificios = Edificio.objects.all()
     allCampus = Campus.objects.all()
+    # if request.GET.get('campusid'):
+    #         searchCampus = request.GET.get('campusid')
+    #         campus = Campus.objects.filter(nome__icontains=searchCampus)
+    #         allEdificios = []
+    #         for c in campus:
+    #             edificios = Edificio.objects.filter(campusid=c.id)
+    #             allEdificios.extend(edificios)
+    # else:
+    #         myFilter = EdificioFilter(request.GET, queryset=allEdificios)
+    #         allEdificios = myFilter.qs
     myFilter = EdificioFilter(request.GET, queryset=allEdificios)
     allEdificios = myFilter.qs
     paginator = Paginator(allEdificios, 5) 
@@ -56,7 +66,7 @@ def showEdificios(request):
     nome_edificio = request.GET.get('nome_edificio')
     campusid = request.GET.get('campusid')
     context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'page_obj': page_obj,
-    'myFilter' : myFilter, 'nome_edificio' : nome_edificio, 'campusid' : campusid}
+ 'nome_edificio' : nome_edificio, 'campusid' : campusid}
     return render(request, 'atividades/ShowEdificios.html', context)
 
 #gets a edificios with a specific id 
@@ -260,6 +270,14 @@ def deleteDepartamento(request, id):
 
 #Creates new local
 def createLocal(request):
+    saved = False
+    allCampus = Campus.objects.all()
+
+    try:
+        allEdificios = Edificio.objects.filter(campusid = allCampus[0].id)
+    except IndexError:
+        allEdificios = None
+
     if request.method == "POST":
         form = LocalForm(request.POST, request.FILES)
         #image = ImageForm(request.POST, request.FILES)
@@ -283,10 +301,10 @@ def createLocal(request):
                 l.save()
             #form.save()
             #image.save()
-            return redirect('atividades:showCreateLocal', saved=1)
-        else:
-            form = LocalForm()
-            return render(request, 'atividades/AdicionarLocal.html')
+            saved = True
+    form = LocalForm()
+    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'saved' : saved}
+    return render(request, 'atividades/AdicionarLocal.html', context)
 
 def showCreateLocal(request, saved=0):
     allEdificios = Edificio.objects.all()
