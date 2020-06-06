@@ -6,9 +6,11 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 from django.forms import modelformset_factory 
 
+from .filters import UnidadeOrganicaFilter, DepartamentoFilter, LocalFilter, CampusFilter, EdificioFilter
+
 from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica, Utilizador, AtividadeTematica, AtividadeMaterial, Sessao, SessaoAtividade, Material
 
-from atividades.forms import EdificioForm, CampusForm, DepartamentoForm, LocalForm, AtividadeForm, UnidadeOrganicaForm, TematicaForm, AtividadeTematicaFormset, AtividadeMaterialFormset, AtividadeTematicaForm, AtividadeMaterialForm, AtividadeSessaoForm, AtividadeSessaoFormset, SessaoForm
+from atividades.forms import EdificioForm, CampusForm, DepartamentoForm, LocalForm, AtividadeForm, UnidadeOrganicaForm, TematicaForm, AtividadeTematicaFormset, AtividadeMaterialFormset, AtividadeTematicaForm, AtividadeMaterialForm, AtividadeSessaoForm, AtividadeSessaoFormset, SessaoForm, MaterialForm
 
 # Create your views here.
 
@@ -46,10 +48,15 @@ def showCreateEdificio(request, saved=0):
 def showEdificios(request):
     allEdificios = Edificio.objects.all()
     allCampus = Campus.objects.all()
+    myFilter = EdificioFilter(request.GET, queryset=allEdificios)
+    allEdificios = myFilter.qs
     paginator = Paginator(allEdificios, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'page_obj': page_obj,}
+    nome_edificio = request.GET.get('nome_edificio')
+    campusid = request.GET.get('campusid')
+    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'page_obj': page_obj,
+    'myFilter' : myFilter, 'nome_edificio' : nome_edificio, 'campusid' : campusid}
     return render(request, 'atividades/ShowEdificios.html', context)
 
 #gets a edificios with a specific id 
@@ -97,15 +104,15 @@ def showCreateCampus(request, saved=0):
 #show all campus
 def showCampus(request):#, ordena):
     allCampus = Campus.objects.all()
-    #if ordena == campus:
-    	#dados_campus = Campus.objets.order_by('nome')
+    myFilter = CampusFilter(request.GET, queryset=allCampus)
+    allCampus = myFilter.qs
     paginator = Paginator(allCampus, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    #campus_name = request.GET.get('campus_name')
-    #if campus_name != '' and campus_name is not None:
-        #allCampus = allCampus.filter(campus__iname=campus_name)
-    context = {'allCampus' : allCampus, 'page_obj': page_obj,}
+    nome = request.GET.get('nome')
+    localizacao = request.GET.get('localizacao')
+    context = {'allCampus' : allCampus, 'page_obj': page_obj,
+    'myFilter' : myFilter, 'nome' : nome, 'localizacao' : localizacao}
     return render(request, 'atividades/ShowCampus.html', context)
 
 #gets a campus with a specific id 
@@ -157,10 +164,14 @@ def showCreateUnidadeOrganica(request, saved=0):
 #show all unidade
 def showUnidadeOrganicas(request):
     allUnidadeOrganicas = UnidadeOrganica.objects.all()
+    myFilter = UnidadeOrganicaFilter(request.GET, queryset=allUnidadeOrganicas)
+    allUnidadeOrganicas = myFilter.qs
     paginator = Paginator(allUnidadeOrganicas, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context = {'allUnidadeOrganicas' : allUnidadeOrganicas, 'page_obj': page_obj,}
+    nome = request.GET.get('nome')
+    context = {'allUnidadeOrganicas' : allUnidadeOrganicas, 'page_obj': page_obj,
+    'myFilter' : myFilter, 'nome' : nome}
     return render(request, 'atividades/ShowUO.html', context)
 
 #gets a unidade with a specific id 
@@ -209,10 +220,15 @@ def showCreateDepartamento(request, saved=0):
 #show all departamntos
 def showDepartamentos(request):
     allDepartamentos = Departamento.objects.all()
+    myFilter = DepartamentoFilter(request.GET, queryset=allDepartamentos)
+    allDepartamentos = myFilter.qs
     paginator = Paginator(allDepartamentos, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context = {'allDepartamentos' : allDepartamentos, 'page_obj': page_obj,}
+    nome = request.GET.get('nome')
+    unidade_organicaid = request.GET.get('unidade_organicaid')
+    context = {'allDepartamentos' : allDepartamentos, 'page_obj': page_obj,
+    'myFilter' : myFilter, 'nome' : nome, 'unidade_organicaid' : unidade_organicaid}
     return render(request, 'atividades/ShowDepartamentos.html', context)
 
 #gets a departamento with a specific id 
@@ -282,10 +298,15 @@ def showCreateLocal(request, saved=0):
 def showLocais(request):
     allLocais = Local.objects.all()
     allCampus = Campus.objects.all()
+    myFilter = LocalFilter(request.GET, queryset=allLocais)
+    allLocais = myFilter.qs
     paginator = Paginator(allLocais, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context = {'allCampus': allCampus, 'allLocais' : allLocais, 'page_obj': page_obj,}
+    edicifioid = request.GET.get('edicifioid')
+    campusid = request.GET.get('campusid')
+    context = {'allCampus': allCampus, 'allLocais' : allLocais, 'page_obj': page_obj,
+    'myFilter' : myFilter, 'edicifioid' : edicifioid, 'campusid' : campusid}
     return render(request, 'atividades/ShowLocais.html', context)
 
 #gets a local with a specific id 
@@ -555,12 +576,13 @@ def showTematicas(request):
 #Add tematica
 def addTematica(request):
     form = AtividadeForm()
+    saved = False
     if request.method == "POST":
         form = TematicaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('atividades:allTematicas')
-    return render(request, 'atividades/AdicionarTematica.html')
+            saved = True
+    return render(request, 'atividades/AdicionarTematica.html', {'saved' : saved})
 
 def updateTematica(request, id):
     dados = Tematica.objects.get(id = id)
@@ -577,6 +599,50 @@ def deleteTematica(request, id):
     dados = Tematica.objects.get(id = id)
     dados.delete()
     return HttpResponseRedirect(reverse('atividades:allTematicas'))
+
+#-----------------------------------------------------
+# Material CRUD- Create Read Update Delete
+#----------------------------------------------------------------
+def createMaterial(request):
+    if request.method == "POST":
+        form = MaterialForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('atividades:showCreateMaterial', saved=1)
+        else:
+            form = MaterialForm()
+            return render(request, 'atividades/AdicionarMaterial.html')
+
+def showCreateMaterial(request, saved=0):
+    context = {'form' : MaterialForm(), 'saved' : saved}
+    return render(request, 'atividades/AdicionarMaterial.html', context)
+
+def showMateriais(request):
+    allMateriais = Material.objects.all()
+    paginator = Paginator(allMateriais, 5) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'allMateriais' : allMateriais, 'page_obj': page_obj,}
+    return render(request, 'atividades/ShowMateriais.html', context)
+
+def updateMaterial(request, id):
+    dados_Material = Material.objects.get(id = id)
+    form = MaterialForm(request.POST, instance = dados_Material)
+    if form.is_valid():
+        form.save()
+        return  HttpResponseRedirect(reverse('atividades:allMateriais'))
+    return render(request, 'atividades/EditarMaterial.html')
+
+def showUpdateMaterial(request, id):
+    dados_Material = Material.objects.get(id = id)
+    context = {'material' : dados_Material}
+    return render(request, 'atividades/EditarMaterial.html', context)
+
+def deleteMaterial(request, id):
+    dados_Material = Material.objects.get(id = id)
+    dados_Material.delete()
+    return HttpResponseRedirect(reverse('atividades:allMateriais'))
+
    
 #-----------------------------------------------------------------------------
 # Sessao CRUD - Create Read Update Delete

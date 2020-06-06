@@ -95,6 +95,11 @@ class TematicaForm(ModelForm):
         model = Tematica
         fields =    '__all__'
 
+class MaterialForm(ModelForm):
+    class Meta:
+        model = Material
+        fields =    '__all__'
+
 
 # AtividadeTematicaFormset = modelformset_factory(
 #     AtividadeTematica,

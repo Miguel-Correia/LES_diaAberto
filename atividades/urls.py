@@ -63,6 +63,13 @@ urlpatterns = [
     path('GestaoAtividades/Tematicas/delete/<int:id>', views.deleteTematica, name='deleteTematica'),
     path('GestaoAtividades/Tematicas/update/<int:id>', views.updateTematica, name='updateTematica'),
 
+   path('GestaoAtividades/Materiais/', views.showMateriais, name='allMateriais'),
+    path('GestaoAtividades/Materiais/create/<int:saved>', views.showCreateMaterial, name='showCreateMaterial'),
+    path('GestaoAtividades/Materiais/add', views.createMaterial, name='addMaterial'),
+    path('GestaoAtividades/Materiais/delete/<int:id>', views.deleteMaterial, name='deleteMaterial'),
+    path('GestaoAtividades/Materiais/update/<int:id>', views.showUpdateMaterial, name='showUpdateMaterial'),
+    path('GestaoAtividades/Materiais/updates/<int:id>', views.updateMaterial, name='updateMaterial'),
+
     path('GestaoAtividades/Sessoes', views.showSessoes, name='allSessoes'),
     path('GestaoAtividades/Sessoes/create', views.addSessao, name='addSessao'),
     path('GestaoAtividades/Sessoes/update/<int:id>', views.updateSessao, name='updateSessao'),
