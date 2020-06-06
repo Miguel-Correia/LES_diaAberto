@@ -12,6 +12,9 @@ class Campus(models.Model):
         managed = False
         db_table = 'campus'
 
+    def __str__(self):
+        return self.nome
+
 class Edificio(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     num_edificio = models.IntegerField(db_column='Num_edificio', blank=True, null=True)  # Field name made lowercase.
@@ -21,6 +24,9 @@ class Edificio(models.Model):
     class Meta:
         managed = True
         db_table = 'edicifio'
+
+    def __str__(self):
+        return self.nome_edificio
 
 class UnidadeOrganica(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.

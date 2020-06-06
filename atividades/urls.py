@@ -18,6 +18,8 @@ urlpatterns = [
     path('Atividades/valid/<int:id>', views.validAtividade, name='validAtividade'),
     path('Atividades/recuse/<int:id>', views.recuseAtividade, name='recuseAtividade'),
     path('Atividades/atribuir/<int:id>', views.atribuirLocal, name='atribuirLocal'),
+    path('getEdificio/<int:campusid>', views.getEdificio, name='getEdificio'),
+    path('getLocal/<int:edificioid>', views.getLocal, name='getLocal'),
     
     path('getEdificio/<int:campusid>', views.getEdificio, name='getEdificio'),
     path('getLocal/<int:edificioid>', views.getLocal, name='getLocal'),
@@ -61,6 +63,13 @@ urlpatterns = [
     path('Tematicas/create', views.addTematica, name='addTematica'),
     path('Tematicas/delete/<int:id>', views.deleteTematica, name='deleteTematica'),
     path('Tematicas/update/<int:id>', views.updateTematica, name='updateTematica'),
+
+   path('Materiais/', views.showMateriais, name='allMateriais'),
+    path('Materiais/create/<int:saved>', views.showCreateMaterial, name='showCreateMaterial'),
+    path('Materiais/add', views.createMaterial, name='addMaterial'),
+    path('Materiais/delete/<int:id>', views.deleteMaterial, name='deleteMaterial'),
+    path('Materiais/update/<int:id>', views.showUpdateMaterial, name='showUpdateMaterial'),
+    path('Materiais/updates/<int:id>', views.updateMaterial, name='updateMaterial'),
 
     path('Sessoes', views.showSessoes, name='allSessoes'),
     path('Sessoes/create', views.addSessao, name='addSessao'),

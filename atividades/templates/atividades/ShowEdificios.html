@@ -4,58 +4,27 @@
     	<div class = "row mx-4 my-4">
 			<div class="col-xs-3 col-sm-3 col-md-3">
 				<p class="text-muted">Filtros Edifícios</p>
-				<form>
+				<form method="get">
 					<hr>
 					<div class="form-group row">
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="fas fa-search"></i></span>
-						  </div>
-						  <input type="text" class="form-control" placeholder="DEFINIR">
+						<div class="col">
+							<div class="float-right">
+						  		<a href="{% url 'atividades:allEdificios' %}">Limpar filtros</a>
+							</div>
 						</div>
 					</div>
 					<div class="form-group row">
 						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="fas fa-search"></i></span>
+						  <div class="input-group-prepend"><button class="btn btn-secondary fas fa-search" type="submit"></button>
 						  </div>
-						  <input type="text" class="form-control" placeholder="DEFINIR">
+						  <input {% if nome_edificio %} value="{{nome_edificio}}" {% endif %} name="nome_edificio" id="id_nome_edificio" type="text" class="form-control" placeholder="Pesquisar por nome">
 						</div>
 					</div>
 					<div class="form-group row">
 						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="fas fa-search"></i></span>
+						  <div class="input-group-prepend"><button class="btn btn-secondary fas fa-search" type="submit"></button>
 						  </div>
-						  <input type="text" class="form-control" placeholder="DEFINIR">
-						</div>
-					</div>
-					<hr>
-					<div class="form-group row">
-						<label class="text-muted">De:</label>
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="far fa-clock"></i></span>
-						  </div>
-						  <input type="time" class="form-control">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="text-muted">Até:</label>
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="far fa-clock"></i></span>
-						  </div>
-						  <input type="time" class="form-control">
-						</div>
-					</div>
-					<hr>
-					<div class="form-group row">
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="far fa-calendar"></i></span>
-						  </div>
-						  <input type="date" class="form-control">
+						  <input {% if campusid %} value="{{campusid}}" {% endif %} name="campusid" id="id_campusid" type="text" class="form-control" placeholder="Pesquisar por campus">
 						</div>
 					</div>
 				</form>
