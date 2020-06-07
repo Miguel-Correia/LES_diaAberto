@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.forms import formset_factory
 from django.db.models.functions import Lower
 
+from tarefas.filters import TarefaFilter
 from tarefas.models import Tarefa, ColaboradorTarefa, InscricaoTarefa
 from atividades.models import UnidadeOrganica, SessaoAtividade, Inscricao, SessaoAtividadeInscricao, Utilizador
 from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm, TarefaGruposForm, TarefaGruposFormset, \
@@ -73,14 +74,18 @@ def createTarefa(request):
     return render(request, 'tarefas/AdicionarTarefa.html', context)
 
 def showTarefas(request):
+
+    #Filtering Results
+    tarefasFiltered = TarefaFilter(request.GET, queryset=Tarefa.objects.all())
+
+    #Ordering Results
     order_by = request.GET.get('order_by')
     direction = request.GET.get('direction')
     ordering = Lower(order_by)
-
     if direction == 'desc':
         ordering = '-{}'.format(order_by)
+    allTarefas = tarefasFiltered.qs.order_by(ordering)
 
-    allTarefas = Tarefa.objects.all().order_by(ordering)
 
     paginator = Paginator(allTarefas, 5)
     page_number = request.GET.get('page')
@@ -98,12 +103,12 @@ def showTarefas(request):
         if colab:
             allTarefaColaboradores[tarefa.id] = colab
 
-        
     context = { 'page_obj': page_obj,
                 'order_by': order_by,
                 'direction': direction,
                 'allTarefaGrupos': allTarefaGrupos,
                 'allTarefaColaboradores': allTarefaColaboradores,
+                
             }
     return render(request, 'tarefas/showTarefas.html', context)
 
