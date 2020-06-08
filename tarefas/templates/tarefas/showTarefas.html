@@ -10,51 +10,102 @@
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
 				<p class="text-muted">Filtros Tarefa</p>
 				<form id="formfilters" method="get">
-					<input id="id_order_by" name="order_by" value="{{order_by}}" type="hidden">
-					<input id="id_direction" name="direction" value="{{direction}}" type="hidden">
+					<input id="id_page" name="page" value="{{page_obj.number}}" type="hidden">
+					<input id="id_order_by" name="order_by" {% if order_by %} value="{{order_by}}" {% endif %} type="hidden">
+					<input id="id_direction" name="direction" {% if direction %} value="{{direction}}" {% endif %} type="hidden">
 					<hr>
 					<div class="form-group row">
+						<div class="col">
+							<div class="float-right">
+						  		<a href="{% url 'tarefas:showTarefas' %}">Limpar filtros</a>
+							</div>
+						</div>
+					</div>
+					<div class="form-group row">
 						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="fas fa-search"></i></span>
-						  </div>
-						  <input type="text" id="id_nome" name="nome" class="form-control" placeholder="Tarefa" value="">
+						  	<div class="input-group-prepend">
+						    	<span class="input-group-text"><i class="fas fa-search"></i></span>
+						  	</div>
+						  	<input type="text" id="id_nome" name="nome" class="form-control" placeholder="Tarefa" {% if nomeTarefaSearched %} value="{{nomeTarefaSearched}}"{% endif %}>
 						</div>
 					</div>
                     <div class="form-group row">
 						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="fas fa-search"></i></span>
-						  </div>
-						  <input type="text" class="form-control" placeholder="Colaborador">
+						  	<div class="input-group-prepend">
+						    	<span class="input-group-text"><i class="fas fa-search"></i></span>
+						  	</div>
+							<input type="text" class="form-control" placeholder="Colaborador">
 						</div>
 					</div>
-					<div class="form-group row">
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="fas fa-search"></i></span>
-						  </div>
-						    <select id="tipoTarefa" id="id_tipoTarefa" name="tipoTarefa" class="form-control" selected="">
-                                <option value="" disabled selected>Tipo de Tarefa</option>
-                                <option value="Atividade">Atividade</option>
-                                <option value="Transporte">Transporte</option>
-                            </select>
-						</div>
+					<div class="form-group row">						
+						<select id="id_tipoTarefa" name="tipoTarefa" class="form-control" >
+                            <option value="" disabled selected>Tipo de Tarefa</option>
+							{% if tipoTarefaSearched == 'Atividade' %}
+                            	<option value="Atividade" selected>Atividade</option>
+                            	<option value="Transporte">Transporte</option>
+							{% elif tipoTarefaSearched == 'Transporte'%}
+								<option value="Atividade" selected>Atividade</option>
+                            	<option value="Transporte">Transporte</option>
+							{% else %}
+								<option value="Atividade">Atividade</option>
+                            	<option value="Transporte">Transporte</option>
+							{% endif %}
+                        </select>
 					</div>
 					<div class="form-group row">
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="fas fa-search"></i></span>
-						  </div>
-						    <select id="estado" id="id_estado" name="estado" class="form-control"  selected="">
-                                <option value="" disabled selected>Estado</option>
-                                <option value="True">Atribuida</option>
-                                <option value="False">Não Atribuida</option>
-                            </select>
-						</div>
+						<select id="id_estado" name="estado" class="form-control">
+                            <option value="" disabled selected>Estado</option>
+							{% if estadoTarefaSearched == 'True' %}
+                            	<option value="True" selected>Atribuida</option>
+                            	<option value="False">Não Atribuida</option>
+							{% elif estadoTarefaSearched == 'False' %}
+								<option value="True">Atribuida</option>
+                            	<option value="False" selected>Não Atribuida</option>
+							{% else %}
+								<option value="True">Atribuida</option>
+                            	<option value="False">Não Atribuida</option>
+							{% endif %}
+                        </select>
 					</div>
 					<hr>
 					<div class="form-group row">
+						<label class="text-muted">De:</label>
+						<div class="input-group">
+						  	<div class="input-group-prepend">
+						    	<span class="input-group-text"><i class="far fa-calendar"></i></span>
+						  	</div>
+							<select id="id_data_inicial" name="data_inicial" class="form-control">
+                            	<option value="" disabled selected>Data inicial</option>
+								{% for dia in datasDiaAberto%}				
+									{% if dia|date:"m/d/Y" == data_inicialTarefaSearched %}				
+										<option selected value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
+									{% else %}
+										<option value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
+									{% endif %}								
+								{% endfor %}
+                        	</select>						
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="text-muted">Até:</label>
+						<div class="input-group">
+						  	<div class="input-group-prepend">
+						    	<span class="input-group-text"><i class="far fa-calendar"></i></span>
+						  	</div>
+						  	<select id="id_data_final" name="data_final" class="form-control">
+                            	<option value="" disabled selected>Data final</option>
+								{% for dia in datasDiaAberto%}
+									{% if dia|date:"m/d/Y" == data_finalTarefaSearched %}				
+										<option selected value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
+									{% else %}
+										<option value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
+									{% endif %}
+								{% endfor %}
+                        	</select>
+						</div>
+					</div>
+					<hr>
+					<div class="form-group row float-right">
 						<button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
 					</div>
 				</form>
@@ -193,25 +244,15 @@
                 <div class="pagination d-flex justify-content-end">
 				    <span class="step-links">
 				        {% if page_obj.has_previous %}
-							{% if order_by and direction %}
-				            	<a class="btn btn-outline-secondary  fas fa-angle-double-left " href="?page=1&order_by={{ order_by }}&direction={{ direction }}"></a>
-				            	<a class="btn btn-outline-secondary  fas fa-angle-left" href="?page={{ page_obj.previous_page_number }}&order_by={{ order_by }}&direction={{ direction }}"></a>
-				        	{% else %}
-								<a class="btn btn-outline-secondary  fas fa-angle-double-left " href="?page=1"></a>
-				            	<a class="btn btn-outline-secondary  fas fa-angle-left" href="?page={{ page_obj.previous_page_number }}"></a>
-							{% endif %}
+				            <button class="btn btn-outline-secondary  fas fa-angle-double-left page" data-page="1"></button>
+				            <button class="btn btn-outline-secondary  fas fa-angle-left page" data-page="{{page_obj.previous_page_number}}"></button>
 						{% endif %}
 
 				        <span class="current">{{ page_obj.number }}</span>
 
 				        {% if page_obj.has_next %}
-							{% if order_by and direction %}
-				            	<a class="btn btn-outline-secondary  fas fa-angle-right" href="?page={{ page_obj.next_page_number }}&order_by={{ order_by }}&direction={{ direction }}"></a>
-				            	<a class="btn btn-outline-secondary  fas fa-angle-double-right" href="?page={{ page_obj.paginator.num_pages }}&order_by={{ order_by }}&direction={{ direction }}"></a>
-				        	{% else %}
-								<a class="btn btn-outline-secondary  fas fa-angle-right" href="?page={{ page_obj.next_page_number }}"></a>
-				            	<a class="btn btn-outline-secondary  fas fa-angle-double-right" href="?page={{ page_obj.paginator.num_pages }}"></a>
-							{% endif %}
+							<button class="btn btn-outline-secondary  fas fa-angle-right page" data-page="{{page_obj.next_page_number}}"></button>
+				            <button class="btn btn-outline-secondary  fas fa-angle-double-right page" data-page="{{page_obj.paginator.num_pages}}"></button>
 						{% endif %}
 				    </span>
 				</div> 

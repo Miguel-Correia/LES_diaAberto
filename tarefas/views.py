@@ -8,6 +8,7 @@ from django.db.models.functions import Lower
 
 from tarefas.filters import TarefaFilter
 from tarefas.models import Tarefa, ColaboradorTarefa, InscricaoTarefa
+from diaAbertoConf.models import DiaAberto
 from atividades.models import UnidadeOrganica, SessaoAtividade, Inscricao, SessaoAtividadeInscricao, Utilizador
 from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm, TarefaGruposForm, TarefaGruposFormset, \
     ColaboradorTarefaForm
@@ -81,10 +82,13 @@ def showTarefas(request):
     #Ordering Results
     order_by = request.GET.get('order_by')
     direction = request.GET.get('direction')
-    ordering = Lower(order_by)
-    if direction == 'desc':
-        ordering = '-{}'.format(order_by)
-    allTarefas = tarefasFiltered.qs.order_by(ordering)
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        allTarefas = tarefasFiltered.qs.order_by(ordering)
+    else:
+        allTarefas = tarefasFiltered.qs
 
 
     paginator = Paginator(allTarefas, 5)
@@ -94,6 +98,7 @@ def showTarefas(request):
     allTarefaGrupos = {}
     allTarefaColaboradores = {}
 
+    #Gets all grupos and colaboradores that are in the tarefas of page_obj
     for tarefa in page_obj:
         insc = InscricaoTarefa.objects.filter(tarefaid = tarefa.id)
         if insc:
@@ -103,13 +108,33 @@ def showTarefas(request):
         if colab:
             allTarefaColaboradores[tarefa.id] = colab
 
+    #Gets all the dates of the diaAberto
+    daysDiaAberto = []
+    try:           
+        diaAberto = DiaAberto.objects.all()[0]
+        start_date = diaAberto.data_inicio
+        end_date = diaAberto.data_fim
+        current_date = start_date
+        daysDiaAberto.append(start_date)
+        while current_date <  end_date:
+            current_date += datetime.timedelta(days=1)
+            daysDiaAberto.append(current_date)
+    except IndexError:
+        pass
+    
     context = { 'page_obj': page_obj,
                 'order_by': order_by,
                 'direction': direction,
                 'allTarefaGrupos': allTarefaGrupos,
                 'allTarefaColaboradores': allTarefaColaboradores,
-                
+                'nomeTarefaSearched': request.GET.get('nome'),
+                'tipoTarefaSearched': request.GET.get('tipoTarefa'),
+                'estadoTarefaSearched': request.GET.get('estado'),
+                'data_inicialTarefaSearched': request.GET.get('data_inicial'),
+                'data_finalTarefaSearched':request.GET.get('data_final'),
+                'datasDiaAberto': daysDiaAberto               
             }
+
     return render(request, 'tarefas/showTarefas.html', context)
 
 
