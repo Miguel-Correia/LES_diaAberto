@@ -674,7 +674,15 @@ def atribuirLocal(request, id):
         dados_atividade.validada = 1
         dados_atividade.save()
         return redirect('atividades:allAtividades')
-    context = {'allLocais' : allLocais, 'allEdificios' : allEdificios, 'allCampus' : allCampus, 'atividade' : dados_atividade, 'listTematica' : allTematicaAtividade, 'listMaterial' : allMaterialAtividade, 'listSessao' : allSessaoAtividade}
+
+    context = { 'allLocais' : allLocais, 
+                'allEdificios' : allEdificios, 
+                'allCampus' : allCampus, 
+                'atividade' : dados_atividade, 
+                'listTematica' : allTematicaAtividade, 
+                'listMaterial' : allMaterialAtividade, 
+                'listSessao' : allSessaoAtividade
+            }
     return render(request, 'atividades/AtribuirLocal.html', context)
 
 def getEdificio(request, campusid):
