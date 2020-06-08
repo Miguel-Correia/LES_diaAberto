@@ -64,9 +64,9 @@ def showEdificios(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     nome_edificio = request.GET.get('nome_edificio')
-    campusid = request.GET.get('campusid')
+    campusid__nome = request.GET.get('campusid__nome')
     context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'page_obj': page_obj,
- 'nome_edificio' : nome_edificio, 'campusid' : campusid}
+ 'nome_edificio' : nome_edificio, 'campusid__nome' : campusid__nome}
     return render(request, 'atividades/ShowEdificios.html', context)
 
 #gets a edificios with a specific id 

@@ -26,7 +26,7 @@ class CampusFilter(django_filters.FilterSet):
 
 class EdificioFilter(django_filters.FilterSet):
 	nome_edificio = CharFilter(field_name='nome_edificio', lookup_expr='icontains')
-	campusid__nome = CharFilter(field_name='campusid', lookup_expr='icontains')
+	campusid__nome = CharFilter(field_name='campusid__nome', lookup_expr='icontains')
 	class Meta:
 		model = Edificio
 		fields = ['nome_edificio' ,'campusid__nome']
