@@ -9,14 +9,16 @@
         <div class = "row mx-4 my-4">
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
 				<p class="text-muted">Filtros Tarefa</p>
-				<form>
+				<form id="formfilters" method="get">
+					<input id="id_order_by" name="order_by" value="{{order_by}}" type="hidden">
+					<input id="id_direction" name="direction" value="{{direction}}" type="hidden">
 					<hr>
 					<div class="form-group row">
 						<div class="input-group">
 						  <div class="input-group-prepend">
 						    <span class="input-group-text"><i class="fas fa-search"></i></span>
 						  </div>
-						  <input type="text" class="form-control" placeholder="Tarefa">
+						  <input type="text" id="id_nome" name="nome" class="form-control" placeholder="Tarefa" value="">
 						</div>
 					</div>
                     <div class="form-group row">
@@ -32,8 +34,8 @@
 						  <div class="input-group-prepend">
 						    <span class="input-group-text"><i class="fas fa-search"></i></span>
 						  </div>
-						    <select id="tipoTarefa" name="tipo" class="form-control">
-                                <option value="" disabled selected>Tipo</option>
+						    <select id="tipoTarefa" id="id_tipoTarefa" name="tipoTarefa" class="form-control" selected="">
+                                <option value="" disabled selected>Tipo de Tarefa</option>
                                 <option value="Atividade">Atividade</option>
                                 <option value="Transporte">Transporte</option>
                             </select>
@@ -44,12 +46,16 @@
 						  <div class="input-group-prepend">
 						    <span class="input-group-text"><i class="fas fa-search"></i></span>
 						  </div>
-						    <select id="estado" name="estado" class="form-control">
+						    <select id="estado" id="id_estado" name="estado" class="form-control"  selected="">
                                 <option value="" disabled selected>Estado</option>
-                                <option value="Atribuida">Atribuida</option>
-                                <option value="NaoAtribuida">Nao Atribuidas</option>
+                                <option value="True">Atribuida</option>
+                                <option value="False">Não Atribuida</option>
                             </select>
 						</div>
+					</div>
+					<hr>
+					<div class="form-group row">
+						<button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
 					</div>
 				</form>
 			</div>
@@ -90,7 +96,7 @@
 								<th scope="col" class="Sortable Tipo tableBorderH" style="width: 25%">Tipo</th>
 							{% endif %}
 							{% if order_by == "estado" %}
-								<th scope="col" class="Sortable Estado {{direction}} tableBorderH" style="width: 25%">Tipo
+								<th scope="col" class="Sortable Estado {{direction}} tableBorderH" style="width: 25%">Estado
 								{% if direction == 'asc'%} 
 									<i class="fas fa-caret-up fa-xs"></i>
 								{% elif direction == 'desc' %}

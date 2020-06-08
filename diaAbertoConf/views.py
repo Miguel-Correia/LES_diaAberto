@@ -14,21 +14,25 @@ def index(request):
     #template = loader.get_template('diaAbertoConf/DiaAbertoConfMain.html')
     #return HttpResponse(template.render({}, request))
     try: 
-        diaAberto_data = DiaAberto.objects.get(id=1)
+        diaAberto_data = DiaAberto.objects.all()[0]
         context = {'diaAbertoData' : diaAberto_data}
-    except ObjectDoesNotExist:
+    except IndexError:
         context ={}
     return render(request, 'diaAbertoConf/Home.html',context)
 
 def editConfDiaAberto(request):
-    diaAberto_data = DiaAberto.objects.get(id=1)
-    form = DiaAbertoForm(None)
+    try:
+        diaAberto_data = DiaAberto.objects.all()[0]
+    except IndexError:
+        diaAberto_data = None
+    
+    form = DiaAbertoForm()
 
     if request.method == 'POST':
         form = DiaAbertoForm( request.POST, instance=diaAberto_data)
         if form.is_valid():
             form.save()
-            return   HttpResponseRedirect(reverse('diaAbertoConf:index'))
+            return  redirect('diaAbertoConf:index')
 
     context = {'diaAberto_data' : diaAberto_data,
                 'form' : form}

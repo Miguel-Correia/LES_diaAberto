@@ -6,7 +6,7 @@ from . import views
 app_name =  'diaAbertoConf'
 urlpatterns = [
     path('', views.index, name='index'),
-    path('EditConfig', views.editConfDiaAberto, name='editConfig'),
+    path('DiaAbertoConf/', views.editConfDiaAberto, name='editConfig'),
     
     path('Transportes/', views.showTransportes, name='allTransportes'),
     path('Transportes/create', views.createTransporte, name='createTransporte'),
