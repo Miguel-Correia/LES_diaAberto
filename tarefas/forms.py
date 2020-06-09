@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm, Textarea, RadioSelect, Select, TextInput, formset_factory
 from django.utils.translation import gettext_lazy as _
 
-from tarefas.models import Tarefa, ColaboradorTarefa
+from tarefas.models import Tarefa
 from atividades.models import Atividade, SessaoAtividade
 
 class TarefaForm(ModelForm):
@@ -109,8 +109,6 @@ class TarefaTransporteForm(forms.Form):
             self.fields['sessaoAtividade_origem'].widget.choices = self.sessao_o
             self.fields['sessaoAtividade_destino'].widget.choices = self.sessao_d
 
-        
-
 
 class TarefaGruposForm(forms.Form):
     inscricao = forms.CharField(
@@ -130,9 +128,3 @@ class TarefaGruposForm(forms.Form):
             self.fields['inscricao'].widget.choices = self.available_grupos
 
 TarefaGruposFormset = formset_factory(TarefaGruposForm, extra=1)
-
-class ColaboradorTarefaForm(ModelForm):
-
-    class Meta:
-        model = ColaboradorTarefa
-        fields = ('utilizadorid',)

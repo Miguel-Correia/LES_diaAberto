@@ -29,14 +29,6 @@
 						  	<input type="text" id="id_nome" name="nome" class="form-control" placeholder="Tarefa" {% if nomeTarefaSearched %} value="{{nomeTarefaSearched}}"{% endif %}>
 						</div>
 					</div>
-                    <div class="form-group row">
-						<div class="input-group">
-						  	<div class="input-group-prepend">
-						    	<span class="input-group-text"><i class="fas fa-search"></i></span>
-						  	</div>
-							<input type="text" class="form-control" placeholder="Colaborador">
-						</div>
-					</div>
 					<div class="form-group row">						
 						<select id="id_tipoTarefa" name="tipoTarefa" class="form-control" >
                             <option value="" disabled selected>Tipo de Tarefa</option>
@@ -66,6 +58,23 @@
                             	<option value="False">Não Atribuida</option>
 							{% endif %}
                         </select>
+					</div>
+					<hr>
+					<div class="form-group row">
+						<div class="input-group">
+						  	<div class="input-group-prepend">
+						    	<span class="input-group-text"><i class="fas fa-search"></i></span>
+						  	</div>
+							<input id="id_colaboradores__nome" name="colaboradores__nome" type="text" class="form-control" placeholder="Nome do Colaborador" {% if nomeColaboradorSearched %} value="{{nomeColaboradorSearched}}"{% endif %}>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="input-group">
+						  	<div class="input-group-prepend">
+						    	<span class="input-group-text"><i class="fas fa-search"></i></span>
+						  	</div>
+							<input id="id_colaboradores__email" name="colaboradores__email" type="text" class="form-control" placeholder="E-mail do Colaborador" {% if emailColaboradorSearched %} value="{{emailColaboradorSearched}}"{% endif %}>
+						</div>
 					</div>
 					<hr>
 					<div class="form-group row">
@@ -229,7 +238,7 @@
 										{% for  key, tarefaColab in allTarefaColaboradores.items %}
 											{% if key == tarefa.id %}
 												{% for colab in tarefaColab%}
-													{{colab.utilizadorid.nome}}, {{colab.utilizadorid.email}}
+													{{colab.nome}}, {{colab.email}}
 												{% endfor%}
 											{% endif %}
 										{% endfor %}			

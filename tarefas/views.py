@@ -7,11 +7,10 @@ from django.forms import formset_factory
 from django.db.models.functions import Lower
 
 from tarefas.filters import TarefaFilter
-from tarefas.models import Tarefa, ColaboradorTarefa, InscricaoTarefa
+from tarefas.models import Tarefa, InscricaoTarefa
 from diaAbertoConf.models import DiaAberto
 from atividades.models import UnidadeOrganica, SessaoAtividade, Inscricao, SessaoAtividadeInscricao, Utilizador
-from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm, TarefaGruposForm, TarefaGruposFormset, \
-    ColaboradorTarefaForm
+from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm, TarefaGruposForm, TarefaGruposFormset
 
 
 # Create your views here.
@@ -104,7 +103,7 @@ def showTarefas(request):
         if insc:
             allTarefaGrupos[tarefa.id] = insc
         
-        colab = ColaboradorTarefa.objects.filter(tarefaid = tarefa.id)
+        colab = tarefa.colaboradores.all()
         if colab:
             allTarefaColaboradores[tarefa.id] = colab
 
@@ -132,6 +131,8 @@ def showTarefas(request):
                 'estadoTarefaSearched': request.GET.get('estado'),
                 'data_inicialTarefaSearched': request.GET.get('data_inicial'),
                 'data_finalTarefaSearched':request.GET.get('data_final'),
+                'nomeColaboradorSearched': request.GET.get('colaboradores__nome'),
+                'emailColaboradorSearched': request.GET.get('colaboradores__email'),
                 'datasDiaAberto': daysDiaAberto               
             }
 
@@ -148,8 +149,8 @@ def atribuirTarefa(request, id):
 
     for colab in colaboradores:
         busy = False
-        for colabTarefa in ColaboradorTarefa.objects.filter(utilizadorid=colab):
-            if (colabTarefa.tarefaid.horario == tarefa.horario and colabTarefa.tarefaid.data == tarefa.data):
+        for colabTarefa in colab.tarefa_colaborador.all():
+            if (colabTarefa.horario == tarefa.horario and colabTarefa.data == tarefa.data):
                 busy = True
                 break
         if not busy:
@@ -160,6 +161,11 @@ def atribuirTarefa(request, id):
         tarefaGrupos = InscricaoTarefa.objects.filter(tarefaid=tarefa.id)
 
     if request.method == 'POST':
+        colabid = request.POST.get('utilizadorid')
+        tarefa.colaboradores.add(Utilizador.objects.get(id= colabid))
+        tarefa.estado = True
+        tarefa.save()
+        """  
         form = ColaboradorTarefaForm(request.POST)
         if form.is_valid():
             colabT = form.save(commit=False)
@@ -167,8 +173,9 @@ def atribuirTarefa(request, id):
             colabT.save()
 
             tarefa.estado = True
-            tarefa.save()
-            return redirect('tarefas:showTarefas')
+            tarefa.save() """
+
+        return redirect('tarefas:showTarefas')
 
     context = {
         'colaboradores': resultColaboradores,
@@ -276,8 +283,9 @@ def updateTarefa(request, id):
                             grupo.delete()
 
                 #Remove colaboradores associados com a tarefa
-                for colab in ColaboradorTarefa.objects.filter(tarefaid=t.id):
-                    colab.delete()
+                #for colab in ColaboradorTarefa.objects.filter(tarefaid=t.id):
+                #    colab.delete()
+                t.colaboradores.clear()
 
                 return redirect('tarefas:showTarefas')
         
@@ -292,8 +300,9 @@ def updateTarefa(request, id):
                 t.data = t.sessao_atividadeid.data
                 t.save()
                 #Remove colaboradores associados com a tarefa
-                for colab in ColaboradorTarefa.objects.filter(tarefaid=t.id):
-                    colab.delete()
+                #for colab in ColaboradorTarefa.objects.filter(tarefaid=t.id):
+                #    colab.delete()
+                t.colaboradores.clear()
 
                 return redirect('tarefas:showTarefas')
 
