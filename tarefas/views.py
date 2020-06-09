@@ -165,15 +165,6 @@ def atribuirTarefa(request, id):
         tarefa.colaboradores.add(Utilizador.objects.get(id= colabid))
         tarefa.estado = True
         tarefa.save()
-        """  
-        form = ColaboradorTarefaForm(request.POST)
-        if form.is_valid():
-            colabT = form.save(commit=False)
-            colabT.tarefaid = tarefa
-            colabT.save()
-
-            tarefa.estado = True
-            tarefa.save() """
 
         return redirect('tarefas:showTarefas')
 
@@ -283,8 +274,6 @@ def updateTarefa(request, id):
                             grupo.delete()
 
                 #Remove colaboradores associados com a tarefa
-                #for colab in ColaboradorTarefa.objects.filter(tarefaid=t.id):
-                #    colab.delete()
                 t.colaboradores.clear()
 
                 return redirect('tarefas:showTarefas')
@@ -300,8 +289,6 @@ def updateTarefa(request, id):
                 t.data = t.sessao_atividadeid.data
                 t.save()
                 #Remove colaboradores associados com a tarefa
-                #for colab in ColaboradorTarefa.objects.filter(tarefaid=t.id):
-                #    colab.delete()
                 t.colaboradores.clear()
 
                 return redirect('tarefas:showTarefas')
@@ -327,10 +314,11 @@ def getSessoes(request, atividadeid):
 # Returns a Json Response with the SessaoAtividades that have date equal to the arg date
 def getSessoesBydate(request, date):
     sessoes = []
-    for sessao in SessaoAtividade.objects.filter(data=date):
+    sessoesAtividades =  SessaoAtividade.objects.filter(data=date).order_by('sessaoid__hora_de_inicio')
+    for sessao in sessoesAtividades:
         # change later to authenticated user
-        if sessao.atividadeid.unidadeorganicaid == Utilizador.objects.get(id=1).unidade_organicaid:
-            sessoes.append((sessao.id, str(sessao.atividadeid.nome) + ", " + str(sessao.sessaoid.hora_de_inicio)))
+        if sessao.atividadeid.validada == 1 and sessao.atividadeid.unidadeorganicaid == Utilizador.objects.get(id=1).unidade_organicaid:
+            sessoes.append((sessao.sessaoid.hora_de_inicio.strftime("%H:%M") + ", " + str(sessao.atividadeid.nome) , (str(sessao.id))))
 
     return JsonResponse(dict(sessoes))
 
@@ -346,13 +334,14 @@ def getSessoesNext(request, sessao_atividadeid, date):
 
     hora_fim = hora_inicio + datetime.timedelta(minutes=duracao)
 
-    for sessao in SessaoAtividade.objects.filter(data=date):
+    sessoesAtividades =  SessaoAtividade.objects.filter(data=date).order_by('sessaoid__hora_de_inicio')
+    for sessao in sessoesAtividades:
         # change later to authenticated user
-        if sessao.atividadeid.unidadeorganicaid == Utilizador.objects.get(id=1).unidade_organicaid:
-            # gets all the sessoes within a 30 minute gap since the hora_fim of the sessao_atual
+        if sessao.atividadeid.validada == 1 and sessao.atividadeid.unidadeorganicaid == Utilizador.objects.get(id=1).unidade_organicaid:
+            # gets all the sessoes within a 60 minute gap since the hora_fim of the sessao_atual
             if sessao.sessaoid.hora_de_inicio >= hora_fim.time() and sessao.sessaoid.hora_de_inicio <= (
-                    hora_fim + datetime.timedelta(minutes=30)).time():
-                sessoes.append((sessao.id, str(sessao.atividadeid.nome) + ", " + str(sessao.sessaoid.hora_de_inicio)))
+                    hora_fim + datetime.timedelta(minutes=60)).time():
+                sessoes.append((sessao.sessaoid.hora_de_inicio.strftime("%H:%M") + ", " + str(sessao.atividadeid.nome) , (str(sessao.id))))
 
     return JsonResponse(dict(sessoes))
 
@@ -386,8 +375,10 @@ def getGrupos(request, sessao_atividade_origem, sessao_atividade_destino, dia):
                 count += 1
             elif sessaoInsc.sessao_atividadeid.id == sessao_destino.id:
                 count += 1
-        if count == 2:
-            grupos.append((grupo.id, str(grupo)))
+            
+            if count == 2:
+                grupos.append((grupo.id, str(grupo)))
+                break
 
     return JsonResponse(dict(grupos))
 

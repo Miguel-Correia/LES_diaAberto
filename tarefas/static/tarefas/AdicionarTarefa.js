@@ -62,8 +62,12 @@ $(document).on('click', '.remove-form-row', function(e){
 //                  AJAX 
 //----------------------------------------------------
 function cleanForm(){
-    $('.TarefaTransporte').find('select').find('option').each(function(){
-            $(this).remove();
+    $('.TarefaTransporte').find('select').each(function(){
+        if(!$(this).is('select[name=dia]')){
+            $(this).find('option').each(function(){
+                $(this).remove();
+            })
+        }
     })
     $('.TarefaTransporte').find('input[name=horario]').val('');		
     $('.TarefaTransporte').find('input[name=destino]').val('');		
@@ -80,7 +84,7 @@ function addGrupos(){
     if ($('select[name=sessaoAtividade_destino]').val()){
         sessaoAtividade_origem = $('select[name=sessaoAtividade_origem]').val();
         sessaoAtividade_destino = $('select[name=sessaoAtividade_destino]').val();
-        dia = $('input[name=dia]').val();
+        dia = $('select[name=dia]').val();
         request_url = '/Tarefas/getGrupos/' + sessaoAtividade_origem + '/' + sessaoAtividade_destino + '/' + dia;
         console.log(sessaoAtividade_origem + "->" + sessaoAtividade_destino)
 
@@ -124,14 +128,14 @@ function addProximaAtividade(){
         })
 
         atividade_original = $('select[name=sessaoAtividade_origem]').val();
-        date = $('input[name=dia]').val();
+        date = $('select[name=dia]').val();
         request_url ='/Tarefas/getSessoesNext/'+ atividade_original + '/' + date;
         
         $.ajax({
             url: request_url,
             dataType: "json",
             success: function(data){
-                $.each(data, function(index, text){
+                $.each(data, function(text, index){
                     $('select[name=sessaoAtividade_destino]').append(
                         $('<option></option>').val(index).html(text)
                     )
@@ -165,7 +169,7 @@ function addHora(){
 function addAtividadeAtual(){
     cleanForm();
 
-    date = $('input[name=dia]').val();
+    date = $('select[name=dia]').val();
     console.log(date)
     if(date){
         request_url = '/Tarefas/getSessoesByDate/' + date;
@@ -174,7 +178,8 @@ function addAtividadeAtual(){
             url: request_url,
             dataType:"json",
             success: function(data){
-                $.each(data, function(index, text){
+                console.log(data)
+                $.each(data, function(text, index){
                     $('select[name=sessaoAtividade_origem]').append(
                         $('<option></option>').val(index).html(text)
                     )
@@ -187,7 +192,7 @@ function addAtividadeAtual(){
     }
 }
 
-$('input[name=dia]').change(function(){
+$('select[name=dia]').change(function(){
     addAtividadeAtual()
 })
 
@@ -236,14 +241,14 @@ $('input[name=tipoTarefa').change(function(){
         $('.tarefaGrupo-form-comp').find(".add-form-row").show();
 
         $('.TarefaTransporte').find('input, select').each(function(){
-            if(!$(this).is('input[name$=_FORMS]'))
+            if(!$(this).is('input[name$=_FORMS]') && !$(this).is('select[name=dia]'))
                 $(this).val('');
             
             if($(this).is('input[name$=form-TOTAL_FORMS]'))
                 $(this).val(1)
              
             
-            if($(this).is('select')){
+            if($(this).is('select') && !$(this).is('select[name=dia]')){
                 $(this).find('option').each(function(){
                     $(this).remove();
                 })
