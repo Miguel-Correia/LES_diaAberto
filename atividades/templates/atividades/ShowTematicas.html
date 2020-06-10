@@ -6,14 +6,25 @@
 				<p class="text-muted">Procurar Temáticas</p>
 				<form>
 					<hr>
+                    <div class="form-group row">
+                        <div class="col">
+                            <div class="float-right">
+                                <a href="{% url 'atividades:allTematicas' %}">Limpar filtros</a>
+                            </div>
+                        </div>
+                    </div>
 					<div class="form-group row">
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="fas fa-search"></i></span>
-						  </div>
-						  <input type="text" class="form-control" placeholder="Nome da Temática">
-						</div>
-					</div>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                          </div>
+                          <input {% if nome %} value="{{nome}}" {% endif %} name="nome" id="id_nome" type="text" class="form-control" placeholder="Pesquisar por nome">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row float-right">
+                        <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
+                    </div>
 				</form>
 			</div>
 			<div class="col-xs-9 col-sm-9 col-md-9">
@@ -36,7 +47,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for tematica in allTematicas %}
+                        {% for tematica in page_obj %}
                         <tr>
                             <td>{{ tematica.nome }}</td>
                             <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateTematica' id=tematica.id %}"></a></td>
