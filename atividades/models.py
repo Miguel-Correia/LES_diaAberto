@@ -1,4 +1,6 @@
+import datetime
 from django.db import models
+
 
 # Create your models here.
 
@@ -180,7 +182,7 @@ class SessaoAtividade(models.Model):
     data = models.DateField(db_column='Data', blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
-        return str(self.data) + ", " + str(self.sessaoid)
+        return self.data.strftime("%d-%m-%Y") + ", " + str(self.sessaoid)
 
     class Meta:
         managed = False

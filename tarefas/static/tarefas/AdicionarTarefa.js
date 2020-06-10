@@ -221,7 +221,7 @@ $('select[name=atividade]').change(function(){
         url: request_url,
         dataType: "json",
         success: function(data){
-            $.each(data, function(index, text){
+            $.each(data, function(text, index){
                 $('select[name=sessaoAtividade]').append(
                     $('<option></option>').val(index).html(text)
                 )
@@ -256,9 +256,8 @@ $('input[name=tipoTarefa').change(function(){
         })
     }else{
         $('.TarefaTransporte').show();
+        addAtividadeAtual()
         $('.TarefaAtividade').hide();
-        $('.TarefaTransporte').find('select').each(function(){	
-        })
     }
 })
 

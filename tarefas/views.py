@@ -28,9 +28,15 @@ def createTarefa(request):
         formSetTarefaGrupos = TarefaGruposFormset(request.GET or None)
     elif request.method == 'POST':
         formTarefa = TarefaForm(request.POST)
-        formTarefaAtividade = TarefaAtividadeForm(request.POST, uoId=UnidadeOrganica.objects.get(id=1))
-        formTarefaTransporte = TarefaTransporteForm(request.POST)
-        formSetTarefaGrupos = TarefaGruposFormset(request.POST)
+
+        if formTarefa.is_valid():
+            tipoTarefa = formTarefa.cleaned_data['tipoTarefa']
+            if tipoTarefa == 'Atividade':
+                formTarefaAtividade = TarefaAtividadeForm(request.POST, uoId=UnidadeOrganica.objects.get(id=1))
+
+            elif tipoTarefa == 'Transporte':
+                formTarefaTransporte = TarefaTransporteForm(request.POST)
+                formSetTarefaGrupos = TarefaGruposFormset(request.POST)
 
         if formTarefa.is_valid() and formTarefaTransporte.is_valid() and formSetTarefaGrupos.is_valid():
             t = formTarefa.save(commit=False)
@@ -305,8 +311,8 @@ def updateTarefa(request, id):
 # Used in Create Tarefa to dynamically get the Sessoes Atividade of a the selected Atividade
 # Returns a Json Response with the data of all the SessaoAtividades that have the atividadeid equal to atividadeid
 def getSessoes(request, atividadeid):
-    sessoes = [(sessaoAtividade.id, str(sessaoAtividade)) for sessaoAtividade in
-               SessaoAtividade.objects.filter(atividadeid=atividadeid)]
+    sessoes = [( str(sessaoAtividade) , sessaoAtividade.id) for sessaoAtividade in
+               SessaoAtividade.objects.filter(atividadeid=atividadeid).order_by('sessaoid__hora_de_inicio')]
     return JsonResponse(dict(sessoes))
 
 

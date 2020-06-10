@@ -71,7 +71,7 @@ class TarefaAtividadeForm(forms.Form):
         else:
             try:
                 firstAtividade = next(iter(allAtividades))
-                self.fields['sessaoAtividade'].widget.choices = [(sessao.id, str(sessao)) for sessao in SessaoAtividade.objects.filter(atividadeid = firstAtividade[0])]
+                self.fields['sessaoAtividade'].widget.choices = [(sessao.id, str(sessao)) for sessao in SessaoAtividade.objects.filter(atividadeid = firstAtividade[0]).order_by('sessaoid__hora_de_inicio')]
             except StopIteration:
                 self.fields['sessaoAtividade'].widget.choices = []
 
