@@ -1,25 +1,32 @@
 import django_filters
 
-from django_filters import DateFilter, CharFilter
+from django_filters import DateFilter, CharFilter, NumberFilter
 
 from .models import *
 
 class UnidadeOrganicaFilter(django_filters.FilterSet):
+	nome = CharFilter(field_name='nome', lookup_expr='icontains')
 	class Meta:
 		model = UnidadeOrganica
 		fields = '__all__'
 
 class DepartamentoFilter(django_filters.FilterSet):
+	nome = CharFilter(field_name='nome', lookup_expr='icontains')
+	unidade_organicaid__nome = CharFilter(field_name='unidade_organicaid__nome', lookup_expr='icontains')
 	class Meta:
 		model = Departamento
 		fields = '__all__'
 
 class LocalFilter(django_filters.FilterSet):
+	edicifioid__nome_edificio = CharFilter(field_name='edicifioid__nome_edificio', lookup_expr='icontains')
+	campusid__nome = CharFilter(field_name='campusid__nome', lookup_expr='icontains')
 	class Meta:
 		model = Local
 		fields = ['edicifioid' ,'campusid']
 
 class CampusFilter(django_filters.FilterSet):
+	nome = CharFilter(field_name='nome', lookup_expr='icontains')
+	localizacao = CharFilter(field_name='localizacao', lookup_expr='icontains')
 	class Meta:
 		model = Campus
 		fields = '__all__'
@@ -30,3 +37,25 @@ class EdificioFilter(django_filters.FilterSet):
 	class Meta:
 		model = Edificio
 		fields = ['nome_edificio' ,'campusid__nome']
+
+class TematicaFilter(django_filters.FilterSet):
+	nome = CharFilter(field_name='nome', lookup_expr='icontains')
+	class Meta:
+		model = Tematica
+		fields = '__all__'
+
+class MaterialFilter(django_filters.FilterSet):
+	nome = CharFilter(field_name='nome', lookup_expr='icontains')
+	class Meta:
+		model = Material
+		fields = '__all__'
+
+class AtividadeFilter(django_filters.FilterSet):
+	nome = CharFilter(field_name='nome', lookup_expr='icontains')
+	tipo_atividade = CharFilter(field_name='tipo_atividade')
+	validada = NumberFilter(field_name='validada')
+	localid__campusid = CharFilter(field_name='localid__campusid')
+	localid__edicifioid = CharFilter(field_name='localid__edicifioid')
+	class Meta:
+		model = Atividade
+		fields = '__all__'

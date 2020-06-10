@@ -15,17 +15,22 @@
 					</div>
 					<div class="form-group row">
 						<div class="input-group">
-						  <div class="input-group-prepend"><button class="btn btn-secondary fas fa-search" type="submit"></button>
+						  <div class="input-group-prepend">
+						  	<span class="input-group-text"><i class="fas fa-search"></i></span>
 						  </div>
 						  <input {% if nome %} value="{{nome}}" {% endif %} name="nome" id="id_nome" type="text" class="form-control" placeholder="Pesquisar por nome">
 						</div>
 					</div>
 					<div class="form-group row">
 						<div class="input-group">
-						  <div class="input-group-prepend"><button class="btn btn-secondary fas fa-search" type="submit"></button>
+						  <div class="input-group-prepend">
+						  	<span class="input-group-text"><i class="fas fa-search"></i></span>
 						  </div>
-						  <input {% if unidade_organicaid %} value="{{unidade_organicaid}}" {% endif %} name="unidade_organicaid" id="id_unidade_organicaid" type="text" class="form-control" placeholder="Pesquisar por Unidade Orgânica">
+						  <input {% if unidade_organicaid__nome %} value="{{unidade_organicaid__nome}}" {% endif %} name="unidade_organicaid__nome" id="id_unidade_organicaid__nome" type="text" class="form-control" placeholder="Pesquisar por Unidade Orgânica">
 						</div>
+					</div>
+					<div class="form-group row float-right">
+						<button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
 					</div>
 				</form>
 			</div>

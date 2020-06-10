@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 from django.forms import modelformset_factory, formset_factory
 
-from .filters import UnidadeOrganicaFilter, DepartamentoFilter, LocalFilter, CampusFilter, EdificioFilter
+from .filters import UnidadeOrganicaFilter, DepartamentoFilter, LocalFilter, CampusFilter, EdificioFilter, TematicaFilter, MaterialFilter, AtividadeFilter
 
 from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica, Utilizador, AtividadeTematica, AtividadeMaterial, Sessao, SessaoAtividade, Material
 
@@ -48,16 +48,6 @@ def showCreateEdificio(request, saved=0):
 def showEdificios(request):
     allEdificios = Edificio.objects.all()
     allCampus = Campus.objects.all()
-    # if request.GET.get('campusid'):
-    #         searchCampus = request.GET.get('campusid')
-    #         campus = Campus.objects.filter(nome__icontains=searchCampus)
-    #         allEdificios = []
-    #         for c in campus:
-    #             edificios = Edificio.objects.filter(campusid=c.id)
-    #             allEdificios.extend(edificios)
-    # else:
-    #         myFilter = EdificioFilter(request.GET, queryset=allEdificios)
-    #         allEdificios = myFilter.qs
     myFilter = EdificioFilter(request.GET, queryset=allEdificios)
     allEdificios = myFilter.qs
     paginator = Paginator(allEdificios, 5) 
@@ -236,9 +226,9 @@ def showDepartamentos(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     nome = request.GET.get('nome')
-    unidade_organicaid = request.GET.get('unidade_organicaid')
+    unidade_organicaid__nome = request.GET.get('unidade_organicaid__nome')
     context = {'allDepartamentos' : allDepartamentos, 'page_obj': page_obj,
-    'myFilter' : myFilter, 'nome' : nome, 'unidade_organicaid' : unidade_organicaid}
+    'myFilter' : myFilter, 'nome' : nome, 'unidade_organicaid__nome' : unidade_organicaid__nome}
     return render(request, 'atividades/ShowDepartamentos.html', context)
 
 #gets a departamento with a specific id 
@@ -321,10 +311,10 @@ def showLocais(request):
     paginator = Paginator(allLocais, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    edicifioid = request.GET.get('edicifioid')
-    campusid = request.GET.get('campusid')
+    edicifioid__nome_edificio = request.GET.get('edicifioid__nome_edificio')
+    campusid__nome = request.GET.get('campusid__nome')
     context = {'allCampus': allCampus, 'allLocais' : allLocais, 'page_obj': page_obj,
-    'myFilter' : myFilter, 'edicifioid' : edicifioid, 'campusid' : campusid}
+    'myFilter' : myFilter, 'edicifioid__nome_edificio' : edicifioid__nome_edificio, 'campusid__nome' : campusid__nome}
     return render(request, 'atividades/ShowLocais.html', context)
 
 #gets a local with a specific id 
@@ -461,21 +451,32 @@ def showAtividades(request):
     # elif ordena == limite_de_particiantes:
     # 	dados_atividade_2 = Atividades.objets.order_by('limite_de_particiantes')
     allAtividades = Atividade.objects.all()
+    allCampus = Campus.objects.all()
+    allEdificios = Edificio.objects.all()
+    myFilter = AtividadeFilter(request.GET, queryset=allAtividades)
+    allAtividades = myFilter.qs
     paginator = Paginator(allAtividades, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    nome = request.GET.get('nome')
+    tipo_atividade = request.GET.get('tipo_atividade')
+    validada = request.GET.get('validada')
+    local_campus = request.GET.get('localid__campusid')
+    localid__edicifioid = request.GET.get('localid__edicifioid')
     allTematicaAtividade = AtividadeTematica.objects.all()
     allMaterialAtividade = AtividadeMaterial.objects.all()
     allSessaoAtividade = SessaoAtividade.objects.all()
+
     # listTematica = []        
     # for tematica in AtividadeTematica.objects.filter(atividadeid = id):
     #         listTematica.append(tematica.tematicaid.nome)
     # listMaterial = []        
     # for material in AtividadeMaterial.objects.filter(atividadeid = id):
     #         listMaterial.append((material.materialid.nome, material.quantidade))
-    context = {'allAtividades' : allAtividades, 'page_obj': page_obj,
+    context = {'allAtividades' : allAtividades, 'page_obj': page_obj, 'allCampus' : allCampus, 'allEdificios' : allEdificios,
     'listTematica' : allTematicaAtividade, 'listMaterial' : allMaterialAtividade,
-    'listSessao' : allSessaoAtividade}
+    'listSessao' : allSessaoAtividade, 'myFilter' : myFilter, 'nome' : nome, 'tipo_atividade' : tipo_atividade,
+    'validada' : validada, 'local_campus' : local_campus, 'localid__edicifioid' : localid__edicifioid}
     return render(request, 'atividades/ShowAtividades.html', context)
 
 def showDetailsAtividade(request, id):
@@ -690,7 +691,13 @@ def getLocal(request, edificioid):
 #showAll
 def showTematicas(request):
     allTematicas = Tematica.objects.all()
-    context = {'allTematicas': allTematicas,}
+    myFilter = TematicaFilter(request.GET, queryset=allTematicas)
+    allTematicas = myFilter.qs
+    paginator = Paginator(allTematicas, 5) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    nome = request.GET.get('nome')
+    context = {'allTematicas': allTematicas, 'page_obj': page_obj, 'myFilter' : myFilter, 'nome' : nome}
     return render(request, 'atividades/ShowTematicas.html', context)
 
 #Add tematica
@@ -739,10 +746,13 @@ def showCreateMaterial(request, saved=0):
 
 def showMateriais(request):
     allMateriais = Material.objects.all()
+    myFilter = MaterialFilter(request.GET, queryset=allMateriais)
+    allMateriais = myFilter.qs
     paginator = Paginator(allMateriais, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context = {'allMateriais' : allMateriais, 'page_obj': page_obj,}
+    nome = request.GET.get('nome')
+    context = {'allMateriais' : allMateriais, 'page_obj': page_obj, 'myFilter' : myFilter, 'nome' : nome}
     return render(request, 'atividades/ShowMateriais.html', context)
 
 def updateMaterial(request, id):

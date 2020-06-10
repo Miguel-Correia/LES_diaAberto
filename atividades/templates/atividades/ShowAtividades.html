@@ -11,30 +11,109 @@
 				<p class="text-muted">Filtros Atividades</p>
 				<form>
 					<hr>
+                    <div class="form-group row">
+                        <div class="col">
+                            <div class="float-right">
+                                <a href="{% url 'atividades:allAtividades' %}">Limpar filtros</a>
+                            </div>
+                        </div>
+                    </div>
 					<div class="form-group row">
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="fas fa-search"></i></span>
-						  </div>
-						  <input type="text" class="form-control" placeholder="DEFINIR">
-						</div>
-					</div>
-					<div class="form-group row">
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="fas fa-search"></i></span>
-						  </div>
-						  <input type="text" class="form-control" placeholder="DEFINIR">
-						</div>
-					</div>
-					<div class="form-group row">
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="fas fa-search"></i></span>
-						  </div>
-						  <input type="text" class="form-control" placeholder="DEFINIR">
-						</div>
-					</div>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                          </div>
+                          <input {% if nome %} value="{{nome}}" {% endif %} name="nome" id="id_nome" type="text" class="form-control" placeholder="Pesquisar por nome">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                          </div>
+                          <select id="id_tipo_atividade" name="tipo_atividade" class="form-control">
+                                <option value="" disabled selected>Tipo de atividade</option>
+                            {% if tipo_atividade == 'Laboratorial' %}
+                                <option value="Laboratorial" selected>Laboratorial</option>
+                                <option value="Prática">Prática</option>
+                                <option value="Teórica">Teórica</option>
+                            {% elif tipo_atividade == 'Prática' %}
+                                <option value="Laboratorial">Laboratorial</option>
+                                <option value="Prática" selected>Prática</option>
+                                <option value="Teórica">Teórica</option>
+                            {% elif tipo_atividade == 'Teórica' %}
+                                <option value="Laboratorial">Laboratorial</option>
+                                <option value="Prática">Prática</option>
+                                <option value="Teórica" selected>Teórica</option>
+                            {% else %}
+                                <option value="Laboratorial">Laboratorial</option>
+                                <option value="Prática">Prática</option>
+                                <option value="Teórica">Teórica</option>
+                            {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                          </div>
+                          <select id="id_validada" name="validada" class="form-control">
+                                <option value="" disabled selected>Estado da atividade</option>
+                            {% if validada == "-1" %}
+                                <option value="1">Aceite</option>
+                                <option value="-1" selected>Pendente</option>
+                                <option value="0">Recusada</option>
+                            {% elif validada == "0" %}
+                                <option value="1">Aceite</option>
+                                <option value="-1">Pendente</option>
+                                <option value="0" selected>Recusada</option>
+                            {% elif validada == "1" %}
+                                <option value="1" selected>Aceite</option>
+                                <option value="-1">Pendente</option>
+                                <option value="0">Recusada</option>
+                            {% else %}
+                                <option value="1">Aceite</option>
+                                <option value="-1">Pendente</option>
+                                <option value="0">Recusada</option>
+                            {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                          </div>
+                          <select id="id_localid__campusid" name="localid__campusid" class="form-control">
+                                <option value="" disabled selected>Pesquisar por Campus</option>
+                            {% for campus in allCampus %}
+                            {% if local_campus == campus.id %}
+                                <option value="{{campus.id}}" selected>{{campus.nome}}</option>
+                            {% else %}
+                                <option value="{{campus.id}}">{{campus.nome}}</option>
+                            {% endif %}
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                          </div>
+                          <select id="id_localid__edicifioid" name="localid__edicifioid" class="form-control">
+                                <option value="" disabled selected>Pesquisar por Edifício</option>
+                            {% for edicifio in allEdificios %}
+                            {% if localid__edicifioid == edicifio.id %}
+                                <option value="{{edicifio.id}}" selected>{{edicifio.nome_edificio}}</option>
+                            {% else %}
+                                <option value="{{edicifio.id}}">{{edicifio.nome_edificio}}</option>
+                            {% endif %}
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
 					<hr>
 					<div class="form-group row">
 						<label class="text-muted">De:</label>
@@ -63,6 +142,10 @@
 						  <input type="date" class="form-control">
 						</div>
 					</div>
+                    <hr>
+                    <div class="form-group row float-right">
+                        <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
+                    </div>
 				</form>
 			</div>
 			<div class="col-xs-9 col-sm-9 col-md-9">
