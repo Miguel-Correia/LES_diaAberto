@@ -7,10 +7,10 @@ from django.forms import formset_factory
 from django.db.models.functions import Lower
 
 from tarefas.filters import TarefaFilter
-from tarefas.models import Tarefa, ColaboradorTarefa, InscricaoTarefa
+from tarefas.models import Tarefa, InscricaoTarefa
+from diaAbertoConf.models import DiaAberto
 from atividades.models import UnidadeOrganica, SessaoAtividade, Inscricao, SessaoAtividadeInscricao, Utilizador
-from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm, TarefaGruposForm, TarefaGruposFormset, \
-    ColaboradorTarefaForm
+from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm, TarefaGruposForm, TarefaGruposFormset
 
 
 # Create your views here.
@@ -81,10 +81,13 @@ def showTarefas(request):
     #Ordering Results
     order_by = request.GET.get('order_by')
     direction = request.GET.get('direction')
-    ordering = Lower(order_by)
-    if direction == 'desc':
-        ordering = '-{}'.format(order_by)
-    allTarefas = tarefasFiltered.qs.order_by(ordering)
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        allTarefas = tarefasFiltered.qs.order_by(ordering)
+    else:
+        allTarefas = tarefasFiltered.qs
 
 
     paginator = Paginator(allTarefas, 5)
@@ -94,22 +97,45 @@ def showTarefas(request):
     allTarefaGrupos = {}
     allTarefaColaboradores = {}
 
+    #Gets all grupos and colaboradores that are in the tarefas of page_obj
     for tarefa in page_obj:
         insc = InscricaoTarefa.objects.filter(tarefaid = tarefa.id)
         if insc:
             allTarefaGrupos[tarefa.id] = insc
         
-        colab = ColaboradorTarefa.objects.filter(tarefaid = tarefa.id)
+        colab = tarefa.colaboradores.all()
         if colab:
             allTarefaColaboradores[tarefa.id] = colab
 
+    #Gets all the dates of the diaAberto
+    daysDiaAberto = []
+    try:           
+        diaAberto = DiaAberto.objects.all()[0]
+        start_date = diaAberto.data_inicio
+        end_date = diaAberto.data_fim
+        current_date = start_date
+        daysDiaAberto.append(start_date)
+        while current_date <  end_date:
+            current_date += datetime.timedelta(days=1)
+            daysDiaAberto.append(current_date)
+    except IndexError:
+        pass
+    
     context = { 'page_obj': page_obj,
                 'order_by': order_by,
                 'direction': direction,
                 'allTarefaGrupos': allTarefaGrupos,
                 'allTarefaColaboradores': allTarefaColaboradores,
-                
+                'nomeTarefaSearched': request.GET.get('nome'),
+                'tipoTarefaSearched': request.GET.get('tipoTarefa'),
+                'estadoTarefaSearched': request.GET.get('estado'),
+                'data_inicialTarefaSearched': request.GET.get('data_inicial'),
+                'data_finalTarefaSearched':request.GET.get('data_final'),
+                'nomeColaboradorSearched': request.GET.get('colaboradores__nome'),
+                'emailColaboradorSearched': request.GET.get('colaboradores__email'),
+                'datasDiaAberto': daysDiaAberto               
             }
+
     return render(request, 'tarefas/showTarefas.html', context)
 
 
@@ -123,8 +149,8 @@ def atribuirTarefa(request, id):
 
     for colab in colaboradores:
         busy = False
-        for colabTarefa in ColaboradorTarefa.objects.filter(utilizadorid=colab):
-            if (colabTarefa.tarefaid.horario == tarefa.horario and colabTarefa.tarefaid.data == tarefa.data):
+        for colabTarefa in colab.tarefa_colaborador.all():
+            if (colabTarefa.horario == tarefa.horario and colabTarefa.data == tarefa.data):
                 busy = True
                 break
         if not busy:
@@ -135,15 +161,12 @@ def atribuirTarefa(request, id):
         tarefaGrupos = InscricaoTarefa.objects.filter(tarefaid=tarefa.id)
 
     if request.method == 'POST':
-        form = ColaboradorTarefaForm(request.POST)
-        if form.is_valid():
-            colabT = form.save(commit=False)
-            colabT.tarefaid = tarefa
-            colabT.save()
+        colabid = request.POST.get('utilizadorid')
+        tarefa.colaboradores.add(Utilizador.objects.get(id= colabid))
+        tarefa.estado = True
+        tarefa.save()
 
-            tarefa.estado = True
-            tarefa.save()
-            return redirect('tarefas:showTarefas')
+        return redirect('tarefas:showTarefas')
 
     context = {
         'colaboradores': resultColaboradores,
@@ -251,8 +274,7 @@ def updateTarefa(request, id):
                             grupo.delete()
 
                 #Remove colaboradores associados com a tarefa
-                for colab in ColaboradorTarefa.objects.filter(tarefaid=t.id):
-                    colab.delete()
+                t.colaboradores.clear()
 
                 return redirect('tarefas:showTarefas')
         
@@ -267,8 +289,7 @@ def updateTarefa(request, id):
                 t.data = t.sessao_atividadeid.data
                 t.save()
                 #Remove colaboradores associados com a tarefa
-                for colab in ColaboradorTarefa.objects.filter(tarefaid=t.id):
-                    colab.delete()
+                t.colaboradores.clear()
 
                 return redirect('tarefas:showTarefas')
 
@@ -293,10 +314,11 @@ def getSessoes(request, atividadeid):
 # Returns a Json Response with the SessaoAtividades that have date equal to the arg date
 def getSessoesBydate(request, date):
     sessoes = []
-    for sessao in SessaoAtividade.objects.filter(data=date):
+    sessoesAtividades =  SessaoAtividade.objects.filter(data=date).order_by('sessaoid__hora_de_inicio')
+    for sessao in sessoesAtividades:
         # change later to authenticated user
-        if sessao.atividadeid.unidadeorganicaid == Utilizador.objects.get(id=1).unidade_organicaid:
-            sessoes.append((sessao.id, str(sessao.atividadeid.nome) + ", " + str(sessao.sessaoid.hora_de_inicio)))
+        if sessao.atividadeid.validada == 1 and sessao.atividadeid.unidadeorganicaid == Utilizador.objects.get(id=1).unidade_organicaid:
+            sessoes.append((sessao.sessaoid.hora_de_inicio.strftime("%H:%M") + ", " + str(sessao.atividadeid.nome) , (str(sessao.id))))
 
     return JsonResponse(dict(sessoes))
 
@@ -312,13 +334,14 @@ def getSessoesNext(request, sessao_atividadeid, date):
 
     hora_fim = hora_inicio + datetime.timedelta(minutes=duracao)
 
-    for sessao in SessaoAtividade.objects.filter(data=date):
+    sessoesAtividades =  SessaoAtividade.objects.filter(data=date).order_by('sessaoid__hora_de_inicio')
+    for sessao in sessoesAtividades:
         # change later to authenticated user
-        if sessao.atividadeid.unidadeorganicaid == Utilizador.objects.get(id=1).unidade_organicaid:
-            # gets all the sessoes within a 30 minute gap since the hora_fim of the sessao_atual
+        if sessao.atividadeid.validada == 1 and sessao.atividadeid.unidadeorganicaid == Utilizador.objects.get(id=1).unidade_organicaid:
+            # gets all the sessoes within a 60 minute gap since the hora_fim of the sessao_atual
             if sessao.sessaoid.hora_de_inicio >= hora_fim.time() and sessao.sessaoid.hora_de_inicio <= (
-                    hora_fim + datetime.timedelta(minutes=30)).time():
-                sessoes.append((sessao.id, str(sessao.atividadeid.nome) + ", " + str(sessao.sessaoid.hora_de_inicio)))
+                    hora_fim + datetime.timedelta(minutes=60)).time():
+                sessoes.append((sessao.sessaoid.hora_de_inicio.strftime("%H:%M") + ", " + str(sessao.atividadeid.nome) , (str(sessao.id))))
 
     return JsonResponse(dict(sessoes))
 
@@ -352,8 +375,10 @@ def getGrupos(request, sessao_atividade_origem, sessao_atividade_destino, dia):
                 count += 1
             elif sessaoInsc.sessao_atividadeid.id == sessao_destino.id:
                 count += 1
-        if count == 2:
-            grupos.append((grupo.id, str(grupo)))
+            
+            if count == 2:
+                grupos.append((grupo.id, str(grupo)))
+                break
 
     return JsonResponse(dict(grupos))
 

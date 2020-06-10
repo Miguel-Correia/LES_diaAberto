@@ -28,7 +28,7 @@
                 Sessao:
                 {% for form in listSessao %}
                 {% if form.atividadeid.id == atividade.id %}
-                <p>{{ form.data }}, {{ form.sessaoid }}</p>
+                <p>{{ form.data|date:"d-m-Y" }}, {{ form.sessaoid }}</p>
                 {% endif %}
                 {% endfor %}
             </div>
@@ -48,7 +48,7 @@
                              <label for="campusid">Campus</label>
                         </div>
                         <div class="col-sm-6">
-                            <select name="campusid" id="campusid" class = "form-control" required>
+                            <select name="campusid" id="id_campusid" class = "form-control" required>
                             {% for campus in allCampus %}
                                 <option value="{{campus.id}}">{{campus.nome}}</option>
                             {% endfor %}
@@ -58,7 +58,7 @@
                     <div class="hideable form-group row">
                         <label for="edificio" class="col-sm-4 col-form-label">Edifício</label>
                         <div class="col-sm-6">
-                            <select name="edicifioid" id = "edicifioid" class = "form-control">
+                            <select name="edicifioid" id = "id_edicifioid" class = "form-control">
                             {% for edificio in allEdificios %}
                                 <option value="{{edificio.id}}">{{edificio.nome_edificio}}</option>
                             {% endfor %}
@@ -68,7 +68,7 @@
                     <div class="hideable form-group row">
                         <label for="andar" class="col-sm-4 col-form-label">Local</label>
                         <div class="col-sm-6">
-                            <select name="localid" id = "localid" class = "form-control">
+                            <select name="localid" id = "id_localid" class = "form-control">
                             {% for local in allLocais %}
                                 <option value="{{local.id}}">Andar {{local.andar}}, Sala {{local.sala}}</option>
                             {% endfor %}
@@ -91,8 +91,28 @@
 
 	{% block js %}
 		<script type='text/javascript'> 
+
+            function getLocais(){
+                edificioid = $('select[name=edicifioid]').val();
+                request_url = '/GestaoAtividades/getLocal/' + edificioid;
+                $.ajax({
+                    url: request_url,
+                    dataType: "json",
+                    success: function(data){
+                        $.each(data, function(index, text){
+                            $('select[name=localid]').append(
+                                $('<option></option>').val(index).html(text)
+                            )
+                        })
+                    },
+                });
+            }
+
             $('select[name=campusid]').change(function(){
                 $('select[name=edicifioid]').find('option').each(function(){
+                    $(this).remove();
+                })
+                $('select[name=localid]').find('option').each(function(){
                     $(this).remove();
                 })
                 campusid = $(this).val();
@@ -107,6 +127,7 @@
                                 $('<option></option>').val(index).html(text)
                             )
                         })
+                        getLocais()
                     },
                 });
             })
@@ -115,20 +136,7 @@
                 $('select[name=localid]').find('option').each(function(){
                     $(this).remove();
                 })
-                campusid = $(this).val();
-                console.log(campusid);
-                request_url = '/GestaoAtividades/getLocal/' + campusid;
-                $.ajax({
-                    url: request_url,
-                    dataType: "json",
-                    success: function(data){
-                        $.each(data, function(index, text){
-                            $('select[name=localid]').append(
-                                $('<option></option>').val(index).html(text)
-                            )
-                        })
-                    },
-                });
+                getLocais()
             })
         </script> 
 	{% endblock %}

@@ -6,7 +6,6 @@ $('th.Sortable').click(function(){
         if($(this).hasClass('asc')){
             form.find("#id_order_by").val("nome")
             form.find("#id_direction").val("desc")
-            //url = appendTo_url("order_by=nome&direction=desc", url)
         }else{
             form.find("#id_order_by").val("nome")
             form.find("#id_direction").val("asc")    
@@ -15,25 +14,28 @@ $('th.Sortable').click(function(){
         if($(this).hasClass('asc')){
             form.find("#id_order_by").val("tipoTarefa")
             form.find("#id_direction").val("desc")
-            //url = appendTo_url("order_by=tipoTarefa&direction=desc", url)
         }else{
             form.find("#id_order_by").val("tipoTarefa")
             form.find("#id_direction").val("asc")
-            //url = appendTo_url("order_by=tipoTarefa&direction=asc", url)
         }
     }else if($(this).hasClass('Estado')){
         if($(this).hasClass('asc')){
             form.find("#id_order_by").val("estado")
             form.find("#id_direction").val("desc")
-            //url = appendTo_url("order_by=estado&direction=desc", url)
         }else{
             form.find("#id_order_by").val("estado")
             form.find("#id_direction").val("asc")
-            //url = appendTo_url("order_by=estado&direction=asc", url)
         }
     }
     form.submit()
-})  
+})
+
+$('button.page').click(function(){
+    var page = $(this).data('page')
+    var form = $('#formfilters')
+    form.find("#id_page").val(page)
+    form.submit()
+})
 
 $(document).ready( function(){
     $('th.Sortable').each(function(){
