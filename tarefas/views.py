@@ -20,61 +20,62 @@ from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm,
 # ----------------------------------------------------------
 
 def createTarefa(request):
-    if request.method == 'GET':
-        formTarefa = TarefaForm()
-        # Change later so that id equals the UO of the autheticated Coordenador
-        formTarefaAtividade = TarefaAtividadeForm(request.GET or None, uoId=UnidadeOrganica.objects.get(id=1))
-        formTarefaTransporte = TarefaTransporteForm(request.GET or None)
-        formSetTarefaGrupos = TarefaGruposFormset(request.GET or None)
-    elif request.method == 'POST':
+
+    saved = False
+    formTarefa = TarefaForm()
+    # Change later so that id equals the UO of the autheticated Coordenador
+    formTarefaAtividade = TarefaAtividadeForm(request.GET or None, uoId=UnidadeOrganica.objects.get(id=1))
+    formTarefaTransporte = TarefaTransporteForm(request.GET or None)
+    formSetTarefaGrupos = TarefaGruposFormset(request.GET or None)
+    
+    if request.method == 'POST':
         formTarefa = TarefaForm(request.POST)
 
         if formTarefa.is_valid():
             tipoTarefa = formTarefa.cleaned_data['tipoTarefa']
+            
             if tipoTarefa == 'Atividade':
                 formTarefaAtividade = TarefaAtividadeForm(request.POST, uoId=UnidadeOrganica.objects.get(id=1))
-
+                if formTarefaAtividade.is_valid():
+                    t = formTarefa.save(commit=False)
+                    t.estado = False
+                    # Change for logged in user
+                    t.utilizadorid = Utilizador.objects.get(id=1)
+                    t.sessao_atividadeid = SessaoAtividade.objects.get(id=formTarefaAtividade.cleaned_data['sessaoAtividade'])
+                    t.horario = t.sessao_atividadeid.sessaoid.hora_de_inicio
+                    t.data = t.sessao_atividadeid.data
+                    t.save()
+                    saved = True
             elif tipoTarefa == 'Transporte':
                 formTarefaTransporte = TarefaTransporteForm(request.POST)
                 formSetTarefaGrupos = TarefaGruposFormset(request.POST)
+                if formTarefaTransporte.is_valid() and formSetTarefaGrupos.is_valid():
+                    t = formTarefa.save(commit=False)
+                    t.estado = False
+                    # Change for logged in user
+                    t.utilizadorid = Utilizador.objects.get(id=1)
+                    t.sessao_atividadeid_destino = SessaoAtividade.objects.get(
+                        id=formTarefaTransporte.cleaned_data['sessaoAtividade_destino'])
+                    t.sessao_atividadeid_origem = SessaoAtividade.objects.get(
+                        id=formTarefaTransporte.cleaned_data['sessaoAtividade_origem'])
+                    t.origem = formTarefaTransporte.cleaned_data['origem']
+                    t.destino = formTarefaTransporte.cleaned_data['destino']
+                    t.horario = formTarefaTransporte.cleaned_data['horario']
+                    t.data = formTarefaTransporte.cleaned_data['dia']
 
-        if formTarefa.is_valid() and formTarefaTransporte.is_valid() and formSetTarefaGrupos.is_valid():
-            t = formTarefa.save(commit=False)
-            t.estado = False
-            # Change for logged in user
-            t.utilizadorid = Utilizador.objects.get(id=1)
-            t.sessao_atividadeid_destino = SessaoAtividade.objects.get(
-                id=formTarefaTransporte.cleaned_data['sessaoAtividade_destino'])
-            t.sessao_atividadeid_origem = SessaoAtividade.objects.get(
-                id=formTarefaTransporte.cleaned_data['sessaoAtividade_origem'])
-            t.origem = formTarefaTransporte.cleaned_data['origem']
-            t.destino = formTarefaTransporte.cleaned_data['destino']
-            t.horario = formTarefaTransporte.cleaned_data['horario']
-            t.data = formTarefaTransporte.cleaned_data['dia']
+                    t.save()
+           
+                    for form in formSetTarefaGrupos:
+                        InscTarefa = InscricaoTarefa(inscricaoid=Inscricao.objects.get(id=form.cleaned_data['inscricao']),tarefaid=t)
+                        InscTarefa.save()
 
-            t.save()
-
-            for form in formSetTarefaGrupos:
-                InscTarefa = InscricaoTarefa(inscricaoid=Inscricao.objects.get(id=form.cleaned_data['inscricao']),
-                                             tarefaid=t)
-                InscTarefa.save()
-
-        elif formTarefa.is_valid() and formTarefaAtividade.is_valid():
-            t = formTarefa.save(commit=False)
-            t.estado = False
-            # Change for logged in user
-            t.utilizadorid = Utilizador.objects.get(id=1)
-            t.sessao_atividadeid = SessaoAtividade.objects.get(id=formTarefaAtividade.cleaned_data['sessaoAtividade'])
-            t.horario = t.sessao_atividadeid.sessaoid.hora_de_inicio
-            t.data = t.sessao_atividadeid.data
-            t.save()
-
-        return redirect('tarefas:showTarefas')
+                    saved = True
 
     context = {'formTarefa': formTarefa,
                'formTarefaAtividade': formTarefaAtividade,
                'formTarefaTransporte': formTarefaTransporte,
                'formSetTarefaGrupos': formSetTarefaGrupos,
+               'saved': saved,
                }
 
     return render(request, 'tarefas/AdicionarTarefa.html', context)

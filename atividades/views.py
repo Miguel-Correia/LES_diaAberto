@@ -427,56 +427,46 @@ def createAtividade(request):
 
 #show all atividade
 def showAtividades(request):
-    # allAtividade = Atividade.objects.all()
-    # if tipo == departamento:
-    # 	dados_atividade = Atividades.objects.filter(departamento = filtro)
-    # elif tipo == campus:
-    # 	dados_atividade = Atividades.objects.filter(campus = filtro)
-    # elif tipo == nome:
-    # 	dados_atividade = Atividades.objects.filter(nome = filtro)
-    # elif tipo == tipo_atividade:
-    # 	dados_atividade = Atividades.objects.filter(tipo_atividade = filtro)
-    # elif tipo == validada:
-    # 	dados_atividade = Atividades.objects.filter(validada = filtro)
-    # elif tipo == unidadeorganica:
-    # 	dados_atividade = Atividades.objects.filter(unidadeorgaica = filtro)
-    # if ordena == departamento:
-    # 	dados_atividade_2 = Atividades.objets.order_by('departamento')
-    # elif ordena == campus:
-    # 	dados_atividade_2 = Atividades.objets.order_by('campus')
-    # elif ordena == nome:
-    # 	dados_atividade_2 = Atividades.objets.order_by('nome')
-    # elif ordena == duracao:
-    # 	dados_atividade_2 = Atividades.objets.order_by('duracao')
-    # elif ordena == limite_de_particiantes:
-    # 	dados_atividade_2 = Atividades.objets.order_by('limite_de_particiantes')
+
     allAtividades = Atividade.objects.all()
     allCampus = Campus.objects.all()
     allEdificios = Edificio.objects.all()
-    myFilter = AtividadeFilter(request.GET, queryset=allAtividades)
-    allAtividades = myFilter.qs
-    paginator = Paginator(allAtividades, 5) 
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    nome = request.GET.get('nome')
-    tipo_atividade = request.GET.get('tipo_atividade')
-    validada = request.GET.get('validada')
-    local_campus = request.GET.get('localid__campusid')
-    localid__edicifioid = request.GET.get('localid__edicifioid')
     allTematicaAtividade = AtividadeTematica.objects.all()
     allMaterialAtividade = AtividadeMaterial.objects.all()
     allSessaoAtividade = SessaoAtividade.objects.all()
 
-    # listTematica = []        
-    # for tematica in AtividadeTematica.objects.filter(atividadeid = id):
-    #         listTematica.append(tematica.tematicaid.nome)
-    # listMaterial = []        
-    # for material in AtividadeMaterial.objects.filter(atividadeid = id):
-    #         listMaterial.append((material.materialid.nome, material.quantidade))
-    context = {'allAtividades' : allAtividades, 'page_obj': page_obj, 'allCampus' : allCampus, 'allEdificios' : allEdificios,
-    'listTematica' : allTematicaAtividade, 'listMaterial' : allMaterialAtividade,
-    'listSessao' : allSessaoAtividade, 'myFilter' : myFilter, 'nome' : nome, 'tipo_atividade' : tipo_atividade,
-    'validada' : validada, 'local_campus' : local_campus, 'localid__edicifioid' : localid__edicifioid}
+    myFilter = AtividadeFilter(request.GET, queryset=allAtividades)
+    allAtividades = myFilter.qs
+
+    paginator = Paginator(allAtividades, 5) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    nome = request.GET.get('nome')
+    tipo_atividade = request.GET.get('tipo_atividade')
+    validada = request.GET.get('validada')
+    #local_campus = request.GET.get('localid__campusid')
+    #localid__edicifioid = request.GET.get('localid__edicifioid')
+    
+    try:
+        localcampusSearched =  int(request.GET.get('localcampus'))
+        localedificioSearched = None
+    except TypeError:
+        localcampusSearched = None
+        localedificioSearched = None
+
+    context = {
+        'page_obj': page_obj, 
+        'allCampus' : allCampus, 
+        'allEdificios' : allEdificios,
+        'listTematica' : allTematicaAtividade, 
+        'listMaterial' : allMaterialAtividade,
+        'listSessao' : allSessaoAtividade, 
+        'nome' : nome, 
+        'tipo_atividade' : tipo_atividade,
+        'validada' : validada, 
+        'localcampusSearched' : localcampusSearched, 
+        }
     return render(request, 'atividades/ShowAtividades.html', context)
 
 def showDetailsAtividade(request, id):

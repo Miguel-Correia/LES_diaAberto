@@ -54,8 +54,8 @@ class AtividadeFilter(django_filters.FilterSet):
 	nome = CharFilter(field_name='nome', lookup_expr='icontains')
 	tipo_atividade = CharFilter(field_name='tipo_atividade')
 	validada = NumberFilter(field_name='validada')
-	localid__campusid = CharFilter(field_name='localid__campusid')
-	localid__edicifioid = CharFilter(field_name='localid__edicifioid')
+	localcampus = CharFilter(field_name='localid__campusid')
+	localedicifio = CharFilter(field_name='localid__edicifioid')
 	class Meta:
 		model = Atividade
 		fields = '__all__'
