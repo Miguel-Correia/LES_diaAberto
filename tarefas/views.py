@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.forms import formset_factory
 from django.db.models.functions import Lower
 
-from tarefas.filters import TarefaFilter
+from tarefas.filters import TarefaFilter, ColaboradorFilter
 from tarefas.models import Tarefa, InscricaoTarefa
 from diaAbertoConf.models import DiaAberto
 from atividades.models import UnidadeOrganica, SessaoAtividade, Inscricao, SessaoAtividadeInscricao, Utilizador
@@ -153,9 +153,31 @@ def atribuirTarefa(request, id):
     uo_id = tarefa.utilizadorid.unidade_organicaid
     resultColaboradores = []
 
-    # change later depending on other group user_type numeration
-    colaboradores = Utilizador.objects.filter(unidade_organicaid=uo_id).filter(user_type=3)
+    if request.method == 'POST':
+        colabid = request.POST.get('utilizadorid')
+        tarefa.colaboradores.add(Utilizador.objects.get(id= colabid))
+        tarefa.estado = True
+        tarefa.save()
+        return redirect('tarefas:showTarefas')
 
+
+    # change later depending on other group user_type numeration
+    allcolaboradores = Utilizador.objects.filter(unidade_organicaid=uo_id).filter(user_type=3)
+
+    colaboradoresFiltered = ColaboradorFilter(request.GET, allcolaboradores)
+
+    #Ordering Results
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        colaboradores = colaboradoresFiltered.qs.order_by(ordering)
+    else:
+        colaboradores = colaboradoresFiltered.qs
+
+    #Check if the colaboradores are busy
     for colab in colaboradores:
         busy = False
         for colabTarefa in colab.tarefa_colaborador.all():
@@ -165,22 +187,23 @@ def atribuirTarefa(request, id):
         if not busy:
             resultColaboradores.append(colab)
 
+    paginator = Paginator(resultColaboradores, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     tarefaGrupos = None
     if tarefa.tipoTarefa == 'Transporte':
         tarefaGrupos = InscricaoTarefa.objects.filter(tarefaid=tarefa.id)
 
-    if request.method == 'POST':
-        colabid = request.POST.get('utilizadorid')
-        tarefa.colaboradores.add(Utilizador.objects.get(id= colabid))
-        tarefa.estado = True
-        tarefa.save()
-
-        return redirect('tarefas:showTarefas')
-
     context = {
+        'page_obj': page_obj,
+        'order_by': order_by,
+        'direction': direction,
         'colaboradores': resultColaboradores,
         'dadosTarefa': tarefa,
         'dadosTarefaGrupos': tarefaGrupos,
+        'nomeColaboradorSearched': request.GET.get('nomeColab'),
+        'emailColaboradorSearched': request.GET.get('emailColab'),
     }
     return render(request, 'tarefas/AtribuirTarefa.html', context)
 
