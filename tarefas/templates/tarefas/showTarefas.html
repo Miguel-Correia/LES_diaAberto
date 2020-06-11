@@ -190,7 +190,7 @@
 								<td ></td>                   	        
 								{% if tarefa.tipoTarefa == 'Atividade' %}
 									<td colspan="2">	
-                    	        	    <p><b>Data:</b> {{ tarefa.data|date:"d/m/Y"}}</p>
+                    	        	    <p><b>Data:</b> {{ tarefa.data|date:"d-m-Y"}}</p>
                     	        	    <p><b>Descrição:</b> {{tarefa.descricao}}</p>								
                     	        	</td>
 									<td colspan="3">     
@@ -200,7 +200,7 @@
 									</td>
 								{% elif tarefa.tipoTarefa == 'Transporte' %}
 									<td>	
-                    	        	    <p><b>Data:</b> {{tarefa.data|date:"d/m/Y"}}</p>
+                    	        	    <p><b>Data:</b> {{tarefa.data|date:"d-m-Y"}}</p>
                     	        	    <p><b>Descrição:</b> {{tarefa.descricao}}</p>								
                     	        	</td>
 									<td>     
@@ -223,28 +223,38 @@
 								{% endif %}
                     	    </tr>
 							{% if not tarefa.estado %}
-							<tr>
-								<td></td>
-								<td colspan="5">
-                    	            <a type="button" class="btn btn-outline-success mb-2" href="{% url 'tarefas:atribuirTarefa' id=tarefa.id %}">Atribuir Colaborador</a><td>
-								</td>
-							</tr>
-							{% else %}
-							<tr>
-								<td></td>
-								<td colspan="5">
-									
-									<p><b>Colaborador Associado: </b>
+								<tr>
+									<td></td>
+									<td colspan="5">
+										<a type="button" class="btn btn-outline-success mb-2" href="{% url 'tarefas:atribuirTarefa' id=tarefa.id %}">Atribuir Colaborador</a><td>
+									</td>
+								</tr>
+								{% else %}
+								<tr>
+									<td></td>
+									<td colspan="5">
+										
+										<b>Colaborador Associado: </b>
 										{% for  key, tarefaColab in allTarefaColaboradores.items %}
 											{% if key == tarefa.id %}
 												{% for colab in tarefaColab%}
-													{{colab.nome}}, {{colab.email}}
+													<p>
+													{{colab.nome}}, {{colab.email}} 
+													<a type="button" class="btn btn-outline-danger fas fa-times ml-2 rmcolab" href="" data-toggle="modal" data-target="#RemoveColab" data-id="{% url 'tarefas:removeColaborador' id=tarefa.id colabid=colab.id%}"></a>
+													</p>
 												{% endfor%}
 											{% endif %}
-										{% endfor %}			
-									</p>
-								</td>
-							</tr>
+										{% endfor %}
+									</td>
+								</tr>
+								{% if tarefa.tipoTarefa == 'Atividade' %}
+									<tr>
+										<td></td>
+										<td colspan="5">
+											<a type="button" class="btn btn-outline-success mb-2" href="{% url 'tarefas:atribuirTarefa' id=tarefa.id %}"> + Colaborador Extra</a><td>
+										</td>
+									</tr>
+								{% endif%}
 							{% endif %}
                     	</tbody>
 					{% endfor %}
@@ -283,6 +293,30 @@
 					<!-- Modal footer -->
 					<div class="modal-footer">
 						<form id="deleteModal" action="" method="post">
+							{% csrf_token %}
+						<button type="submit" class="btn btn-success" >Sim</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Nao</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="RemoveColab">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				<!-- Modal Header -->
+					<div class="modal-header">
+						<h4 class="modal-title">Aviso</h4>
+						<button type="button" class="close" data-dismiss="modal">×</button>
+					</div>
+					<!-- Modal body -->
+					<div class="modal-body">
+						Tem a certeza que pretende remover este colaborador?
+					</div>
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<form id="removeColabModal" action="" method="post">
 							{% csrf_token %}
 						<button type="submit" class="btn btn-success" >Sim</button>
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Nao</button>

@@ -184,6 +184,16 @@ def atribuirTarefa(request, id):
     }
     return render(request, 'tarefas/AtribuirTarefa.html', context)
 
+def removeColab(request, id, colabid):
+    tarefa = Tarefa.objects.get(id=id)
+    tarefa.colaboradores.remove(Utilizador.objects.get(id=colabid))
+
+    if not tarefa.colaboradores.all():
+        tarefa.estado = False
+        tarefa.save()
+    
+    return redirect('tarefas:showTarefas')
+
 def deleteTarefa(request, id):
     tarefa = Tarefa.objects.get(id=id)
     tarefa.delete()

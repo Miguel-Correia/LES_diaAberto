@@ -49,6 +49,11 @@ $('.delete').click(function (){
     $("#deleteModal").attr("action", data_var);
 })
 
+$('.rmcolab').click(function (){
+    var data_var = $(this).data('id');
+    $("#removeColabModal").attr("action", data_var);
+})
+
 
 $(".expand").hide();
 

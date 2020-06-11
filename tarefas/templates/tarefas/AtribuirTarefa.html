@@ -10,7 +10,7 @@
                 <b>Descrição:</b>  
                 <p>{{ dadosTarefa.descricao}}</p>
                 <p><b>Tipo de Tarefa:</b>  {{ dadosTarefa.tipoTarefa }}</p>
-                <p><b>Dia:</b>  {{ dadosTarefa.data|date:"d/m/Y"}}</p>
+                <p><b>Dia:</b>  {{ dadosTarefa.data|date:"d-m-Y"}}</p>
                 <p><b>Horario:</b>  {{ dadosTarefa.horario|time:"H:i" }}</p>
                 <hr>
                 {% if dadosTarefa.tipoTarefa == 'Transporte' %}
