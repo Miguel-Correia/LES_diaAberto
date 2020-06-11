@@ -22,11 +22,6 @@ from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm,
 def createTarefa(request):
 
     saved = False
-    formTarefa = TarefaForm()
-    # Change later so that id equals the UO of the autheticated Coordenador
-    formTarefaAtividade = TarefaAtividadeForm(request.GET or None, uoId=UnidadeOrganica.objects.get(id=1))
-    formTarefaTransporte = TarefaTransporteForm(request.GET or None)
-    formSetTarefaGrupos = TarefaGruposFormset(request.GET or None)
     
     if request.method == 'POST':
         formTarefa = TarefaForm(request.POST)
@@ -70,6 +65,13 @@ def createTarefa(request):
                         InscTarefa.save()
 
                     saved = True
+
+    formTarefa = TarefaForm()
+    # Change later so that id equals the UO of the autheticated Coordenador
+    formTarefaAtividade = TarefaAtividadeForm(request.GET or None, uoId=UnidadeOrganica.objects.get(id=1))
+    formTarefaTransporte = TarefaTransporteForm(request.GET or None)
+    formSetTarefaGrupos = TarefaGruposFormset(request.GET or None)
+    
 
     context = {'formTarefa': formTarefa,
                'formTarefaAtividade': formTarefaAtividade,
@@ -202,12 +204,12 @@ def updateTarefa(request, id):
             #Get sessoes origem from getSessoesBydate and then convert jsonResponse into a list of tuples
             sessao_o = getSessoesBydate(request, dados_Tarefa.data)
             s_o = json.loads(sessao_o.content)
-            dados_sessao_o = [(k, v) for k, v in s_o.items()]
+            dados_sessao_o = [(k, v) for v, k in s_o.items()]
 
             #Get sessoes destino from getSessoesNext and then convert jsonResponse into a list of tuples
             sessao_d = getSessoesNext(request, dados_Tarefa.sessao_atividadeid_origem.id, dados_Tarefa.data)
             s_d = json.loads(sessao_d.content)
-            dados_sessao_d = [(k, v) for k, v in s_d.items()]
+            dados_sessao_d = [(k, v) for v, k in s_d.items()]
 
             formTarefaTransporte = TarefaTransporteForm(
                 initial={
@@ -373,11 +375,11 @@ def getGrupos(request, sessao_atividade_origem, sessao_atividade_destino, dia):
     sessao_origem = SessaoAtividade.objects.get(id=sessao_atividade_origem)
     sessao_destino = SessaoAtividade.objects.get(id=sessao_atividade_destino)
 
-    count = 0
     grupos = []
 
     for grupo in Inscricao.objects.filter(dia=dia):
-        for sessaoInsc in SessaoAtividadeInscricao.objects.filter(inscricaoid=grupo):
+        count = 0
+        for sessaoInsc in SessaoAtividadeInscricao.objects.filter(inscricaoid=grupo.id):
             if sessaoInsc.sessao_atividadeid.id == sessao_origem.id:
                 count += 1
             elif sessaoInsc.sessao_atividadeid.id == sessao_destino.id:

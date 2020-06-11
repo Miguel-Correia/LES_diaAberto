@@ -222,8 +222,8 @@ class Inscricao(models.Model):
 
 class SessaoAtividadeInscricao(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    sessao_atividadeid = models.ForeignKey(SessaoAtividade, models.DO_NOTHING, db_column='Sessao_AtividadeID')  # Field name made lowercase.
-    inscricaoid = models.ForeignKey(Inscricao, models.DO_NOTHING, db_column='InscricaoID')  # Field name made lowercase.
+    sessao_atividadeid = models.ForeignKey(SessaoAtividade, on_delete=models.CASCADE, db_column='Sessao_AtividadeID')  # Field name made lowercase.
+    inscricaoid = models.ForeignKey(Inscricao, on_delete=models.CASCADE, db_column='InscricaoID')  # Field name made lowercase.
     num_alunos = models.IntegerField(db_column='Num_alunos', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:

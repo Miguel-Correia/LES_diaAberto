@@ -15,7 +15,7 @@
     		    </div>
 				<div class = "col-sm-4 offset-sm-4">
     		    {% if saved %}
-                    <div class="alert alert-primary" role="alert">
+                    <div class="alert alert-primary" role="alert" style="text-align:center;">
                         A Tarefa foi guardado com sucesso!
                     </div>
                 {% endif %}
@@ -94,7 +94,7 @@
 							<div class="form-group row">
                         	    <label class="form-check-label col-sm-3"> {{formTarefaTransporte.horario.label}} </label>
     							<div class="col-sm-8">
-						      		<input id="horario" type="text" name="horario" class="form-control">
+						      		<input id="horario" type="time" name="horario" class="form-control">
     							</div>
   							</div>
 							{{formSetTarefaGrupos.management_form}}
