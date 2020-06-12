@@ -1,13 +1,19 @@
+import datetime
+
 from django.shortcuts import render , redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from django.core.paginator import Paginator
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.functions import Lower
+
 
 from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Ementa, Prato, Rota_Inscricao, DiaAberto
 from atividades.models import Inscricao
 from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, RotasInscFormset, EmentaForm, PratoForm, DiaAbertoForm, formset_factory
+
+from diaAbertoConf.filters import RotaFilter, TransporteFilter
 
 # Create your views here.
 def index(request):
@@ -46,14 +52,62 @@ def editConfDiaAberto(request):
 #show all transporteUniversidade_Horarios
 def showTransportes(request):
     allTransportes = Transporte.objects.all()
-    allTransportesUni_Horario = Rota.objects.all()
+    allRotas = Rota.objects.all()
 
-    paginator = Paginator(allTransportes, 5) 
+    #Filtering
+    transportesFiltered = TransporteFilter(request.GET, queryset=allTransportes)
+    rotasFiltered = RotaFilter(request.GET, queryset=allRotas)
+
+    #Ordering Results
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+
+        if order_by == 'tipo_transporte':
+            transportes = transportesFiltered.qs.order_by(ordering)
+            rotas = rotasFiltered.qs
+        else:
+            transportes = transportesFiltered.qs
+            rotas = rotasFiltered.qs.order_by(ordering)
+    else:
+        transportes = transportesFiltered.qs
+        rotas = rotasFiltered.qs
+
+    #Pagination
+    paginator = Paginator(transportes, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    #Gets all the dates of the diaAberto
+    daysDiaAberto = []
+    try:           
+        diaAberto = DiaAberto.objects.all()[0]
+        start_date = diaAberto.data_inicio
+        end_date = diaAberto.data_fim
+        current_date = start_date
+        daysDiaAberto.append(start_date)
+        while current_date <  end_date:
+            current_date += datetime.timedelta(days=1)
+            daysDiaAberto.append(current_date)
+    except IndexError:
+        pass
+
     context = { 'page_obj': page_obj,
-                'rotas': allTransportesUni_Horario,}
+                'rotas': rotas,
+                'order_by': order_by,
+                'direction': direction,
+                'datasDiaAberto': daysDiaAberto,
+                'tipoTransporteSearched': request.GET.get('tipo_transporte'),
+                'origemSearched': request.GET.get('origem'),
+                'destinoSearched': request.GET.get('destino'),
+                'hora_gte_Searched': request.GET.get('hora_gte'),
+                'hora_lte_Searched': request.GET.get('hora_lte'),
+                'dataSearched': request.GET.get('data'),
+            }
+
     return render(request, 'diaAbertoConf/ShowTransportes.html', context)
 
 #Creates new transporte
