@@ -138,8 +138,9 @@ def showTarefas(request):
                 'nomeTarefaSearched': request.GET.get('nome'),
                 'tipoTarefaSearched': request.GET.get('tipoTarefa'),
                 'estadoTarefaSearched': request.GET.get('estado'),
-                'data_inicialTarefaSearched': request.GET.get('data_inicial'),
-                'data_finalTarefaSearched':request.GET.get('data_final'),
+                'dataTarefaSearched': request.GET.get('data'),
+                'horario_gte_Searched': request.GET.get('horario_gte'),
+                'horario_lte_Searched': request.GET.get('horario_lte'),
                 'nomeColaboradorSearched': request.GET.get('colaboradores__nome'),
                 'emailColaboradorSearched': request.GET.get('colaboradores__email'),
                 'datasDiaAberto': daysDiaAberto               

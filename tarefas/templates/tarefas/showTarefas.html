@@ -80,37 +80,39 @@
 					<div class="form-group row">
 						<label class="text-muted">De:</label>
 						<div class="input-group">
+						  <div class="input-group-prepend">
+						    <span class="input-group-text"><i class="far fa-clock"></i></span>
+						  </div>
+						  <input type="time" class="form-control" id="id_horario_gte" name="horario_gte" 
+						  	{% if horario_gte_Searched %} value="{{horario_gte_Searched}}"{% endif %}>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="text-muted">Até:</label>
+						<div class="input-group">
+						  <div class="input-group-prepend">
+						    <span class="input-group-text"><i class="far fa-clock"></i></span>
+						  </div>
+						  <input type="time" class="form-control" id="id_horario_lte" name="horario_lte"
+						  	{% if horario_lte_Searched %} value="{{horario_lte_Searched}}"{% endif %}>
+						</div>
+					</div>
+					<hr>
+					<div class="form-group row">
+						<div class="input-group">
 						  	<div class="input-group-prepend">
 						    	<span class="input-group-text"><i class="far fa-calendar"></i></span>
 						  	</div>
-							<select id="id_data_inicial" name="data_inicial" class="form-control">
-                            	<option value="" disabled selected>Data inicial</option>
+							<select id="id_data" name="data" class="form-control">
+                            	<option value="" disabled selected>Data</option>
 								{% for dia in datasDiaAberto%}				
-									{% if dia|date:"m/d/Y" == data_inicialTarefaSearched %}				
+									{% if dia|date:"m/d/Y" == dataTarefaSearched %}				
 										<option selected value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
 									{% else %}
 										<option value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
 									{% endif %}								
 								{% endfor %}
                         	</select>						
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="text-muted">Até:</label>
-						<div class="input-group">
-						  	<div class="input-group-prepend">
-						    	<span class="input-group-text"><i class="far fa-calendar"></i></span>
-						  	</div>
-						  	<select id="id_data_final" name="data_final" class="form-control">
-                            	<option value="" disabled selected>Data final</option>
-								{% for dia in datasDiaAberto%}
-									{% if dia|date:"m/d/Y" == data_finalTarefaSearched %}				
-										<option selected value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
-									{% else %}
-										<option value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
-									{% endif %}
-								{% endfor %}
-                        	</select>
 						</div>
 					</div>
 					<hr>
@@ -191,20 +193,21 @@
 								{% if tarefa.tipoTarefa == 'Atividade' %}
 									<td colspan="2">	
                     	        	    <p><b>Data:</b> {{ tarefa.data|date:"d-m-Y"}}</p>
+										<p><b>Horário:</b> {{tarefa.horario|time:"H:i"}}</p>
                     	        	    <p><b>Descrição:</b> {{tarefa.descricao}}</p>								
                     	        	</td>
 									<td colspan="3">     
                     	        	    <p><b>Atividade:</b> {{tarefa.sessao_atividadeid.atividadeid.nome}}</p>
-										<p><b>Local:</b> {{tarefa.sessao_atividadeid.atividadeid.localid}}</p>
-                    	        	    <p><b>Sessão:</b> {{tarefa.sessao_atividadeid.sessaoid.hora_de_inicio|time:"H:i"}}</p>
+										<p><b>Sessão:</b> {{tarefa.sessao_atividadeid}}</p>
+										<p><b>Local:</b> {{tarefa.sessao_atividadeid.atividadeid.localid}}</p>                    	        	    
 									</td>
 								{% elif tarefa.tipoTarefa == 'Transporte' %}
 									<td>	
                     	        	    <p><b>Data:</b> {{tarefa.data|date:"d-m-Y"}}</p>
+										<p><b>Horário:</b> {{tarefa.horario|time:"H:i"}}</p>
                     	        	    <p><b>Descrição:</b> {{tarefa.descricao}}</p>								
                     	        	</td>
 									<td>     
-                    	        	    <p><b>Horário:</b> {{tarefa.horario|time:"H:i"}}</p>
 										<p><b>Atividade Origem:</b> {{tarefa.sessao_atividadeid_origem.atividadeid.nome}}</p>
 										<p><b>Origem:</b> {{tarefa.origem}}</p>
                     	        	    <p><b>Atividade Destino:</b> {{tarefa.sessao_atividadeid_destino.atividadeid.nome}}</p>

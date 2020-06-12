@@ -12,7 +12,3 @@ table {
 .tableBorder{
     border-bottom: solid gray !important;
 }
-
-td{
-    border-top: none !important;
-}

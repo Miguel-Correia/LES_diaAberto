@@ -139,7 +139,7 @@ class Sessao(models.Model):
     hora_de_inicio = models.TimeField(db_column='Hora_de_inicio', blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
-        return str(self.hora_de_inicio)
+        return self.hora_de_inicio.strftime("%I:%M")
 
     class Meta:
         managed = False

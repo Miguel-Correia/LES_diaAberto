@@ -22,14 +22,6 @@ class Tarefa(models.Model):
         managed = True
         db_table = 'tarefa'
 
-""" class ColaboradorTarefa(models.Model):
-    #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    utilizadorid = models.ForeignKey("atividades.Utilizador", on_delete=models.CASCADE, db_column='UtilizadorID')  # Field name made lowercase.
-    tarefaid = models.ForeignKey(Tarefa, on_delete=models.CASCADE, db_column='TarefaID')  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'utilizador_tarefa' """
 
 class InscricaoTarefa(models.Model):
     inscricaoid = models.ForeignKey("atividades.Inscricao", on_delete=models.CASCADE, db_column='InscricaoID', blank=True, null=True)
