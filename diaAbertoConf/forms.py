@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 from django.forms import ModelForm, TextInput, NumberInput, CheckboxSelectMultiple, formset_factory, modelformset_factory, Select
 from django.utils.translation import gettext_lazy as _
@@ -56,12 +58,40 @@ class RotaForm(forms.Form):
         )
     )
     data = forms.DateField(
-        label = 'Data'
+        label = 'Data',
+        widget=forms.Select(
+            attrs= {
+                'class' : 'form-control date-Set',
+                'required' : 'required',
+            },
+            choices=[]
+        )
     )
 
     def __init__(self, *args, **kwargs):
         super(RotaForm, self).__init__(*args, **kwargs)
+
+        #Gets all the dates of the diaAberto
+        daysDiaAberto = []
+        try:           
+            diaAberto = DiaAberto.objects.all()[0]
+            start_date = diaAberto.data_inicio
+            end_date = diaAberto.data_fim
+            current_date = start_date
+            daysDiaAberto.append((start_date, start_date.strftime("%d-%m-%Y")))
+            while current_date <  end_date:
+                current_date += datetime.timedelta(days=1)
+                daysDiaAberto.append((current_date, current_date.strftime("%d-%m-%Y")))
+        except IndexError:
+            pass
+
+        my_default_errors = {
+            'required': 'Tem de selecionar pelo menos um horário de transporte',
+        } 
+
+        self.fields['data'].widget.choices = daysDiaAberto
         self.fields['horarioid'].choices = [(horario.id, horario) for horario in HorarioTransporte.objects.all()]  
+        self.fields['horarioid'].error_messages= my_default_errors
 
 RotaFormSet = formset_factory(RotaForm, extra=1)
 

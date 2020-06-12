@@ -112,7 +112,7 @@ def showTransportes(request):
 
 #Creates new transporte
 def createTransporte(request):
-    
+    saved = False
     horarios = HorarioTransporte.objects.all()
 
     if request.method == "GET":
@@ -133,13 +133,16 @@ def createTransporte(request):
                         data = form.cleaned_data['data'],
                     )
                     result.save()
+            saved = True
+            transporteform = TransporteForm()
+            rotaformset = RotaFormSet()
             
-            return redirect('diaAbertoConf:allTransportes')
         
     return render(request, 'diaAbertoConf/AdicionarTransporte.html', {
         'transporteform' : transporteform,
         'rotaformset': rotaformset,
         'horarios': horarios,
+        'saved': saved,
         })
 
 #deletes a transporteUniversidade_Horario
