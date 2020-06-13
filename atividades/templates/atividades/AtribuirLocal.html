@@ -6,29 +6,29 @@
 				<p class="text-muted">Dados da atividade</p>
 				<hr>
                 
-                <p>Nome: {{ atividade.nome}}</p>
-                <p>Tipo de atividade: {{ atividade.tipo_atividade }}</p> 
-                <p>Descrição: {{ atividade.descricao}}</p>
-                <p>Público alvo: {{ atividade.public_alvo}}</p>
-                <p>Limite de participantes: {{ atividade.limite_de_participantes }}</p>
-                <p>Colaboradores: {{ atividade.num_colaboradores }}</p>
-                <p>Duração: {{ atividade.duracao }}</p>
-                Temática:
+                <p><b>Nome:</b> {{ atividade.nome}}</p>
+                <p><b>Tipo de atividade:</b> {{ atividade.tipo_atividade }}</p> 
+                <p><b>Descrição:</b> {{ atividade.descricao}}</p>
+                <p><b>Público alvo:</b> {{ atividade.public_alvo}}</p>
+                <p><b>Limite de participantes:</b> {{ atividade.limite_de_participantes }}</p>
+                <p><b>Colaboradores:</b> {{ atividade.num_colaboradores }}</p>
+                <p><b>Duração:</b> {{ atividade.duracao }}</p>
+                <b>Temática:</b>
                 {% for form in listTematica %}
                 {% if form.atividadeid.id == atividade.id %}
                 <p>{{ form.tematicaid.nome }}</p>
                 {% endif %}
                 {% endfor %}
-                Material: 
+                <b>Material:</b> 
                 {% for form in listMaterial %}
                 {% if form.atividadeid.id == atividade.id %}
                 <p>{{ form.materialid.nome }} x {{ form.quantidade }}</p>
                 {% endif %}
                 {% endfor %}
-                Sessao:
+                <b>Sessao:</b>
                 {% for form in listSessao %}
                 {% if form.atividadeid.id == atividade.id %}
-                <p>{{ form.data|date:"d-m-Y" }}, {{ form.sessaoid }}</p>
+                <p>{{ form.data|date:"d-m-Y" }}, {{ form.sessaoid.hora_de_inicio|time:"H:i" }}</p>
                 {% endif %}
                 {% endfor %}
             </div>

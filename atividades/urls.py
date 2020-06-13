@@ -32,8 +32,7 @@ urlpatterns = [
     path('Edificios/updates/<int:id>', views.updateEdificio, name='updateEdificio'),
 
     path('Campus/', views.showCampus, name='allCampus'),
-    path('Campus/create/<int:saved>', views.showCreateCampus, name='showCreateCampus'),
-    path('Campus/add', views.createCampus, name='addCampus'),
+    path('Campus/create', views.createCampus, name='addCampus'),
     path('Campus/delete/<int:id>', views.deleteCampus, name='deleteCampus'),
     path('Campus/update/<int:id>', views.showUpdateCampus, name='showUpdateCampus'),
     path('Campus/updates/<int:id>', views.updateCampus, name='updateCampus'),
@@ -65,8 +64,7 @@ urlpatterns = [
     path('Tematicas/update/<int:id>', views.updateTematica, name='updateTematica'),
 
    path('Materiais/', views.showMateriais, name='allMateriais'),
-    path('Materiais/create/<int:saved>', views.showCreateMaterial, name='showCreateMaterial'),
-    path('Materiais/add', views.createMaterial, name='addMaterial'),
+    path('Materiais/create', views.createMaterial, name='addMaterial'),
     path('Materiais/delete/<int:id>', views.deleteMaterial, name='deleteMaterial'),
     path('Materiais/update/<int:id>', views.showUpdateMaterial, name='showUpdateMaterial'),
     path('Materiais/updates/<int:id>', views.updateMaterial, name='updateMaterial'),
@@ -77,3 +75,4 @@ urlpatterns = [
     path('Sessoes/delete/<int:id>', views.deleteSessao, name="deleteSessao")
   
 ]
+

@@ -6,19 +6,28 @@
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
 					<li class="breadcrumb-item"><a href="{% url 'atividades:allMateriais' %}">Material</a></li>
-					<li class="breadcrumb-item active">Adicionar Material</li>
+					<li class="breadcrumb-item active">Adicionar material</li>
 				</ol>
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4 style="text-align:center;">Adicionar Material</h4>
+                    <h4 style="text-align:center;">Adicionar material</h4>
     		    </div>
     		    <div class = "col-sm-4 offset-sm-4">
     		    {% if saved %}
-                    <div class="alert alert-primary" role="alert">
+                    <div class="alert alert-primary" role="alert" style="text-align:center;">
                         O material foi guardado com sucesso!
                     </div>
                 {% endif %}
+
+                {% for key, value in form.errors.items %}
+                    {% for error in value %}
+                        <div class="alert alert-danger" style="text-align:center;">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
             	</div>
             </div>
 			<hr class="mx-5">

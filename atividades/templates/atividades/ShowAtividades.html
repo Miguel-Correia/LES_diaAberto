@@ -121,7 +121,7 @@
 						  <div class="input-group-prepend">
 						    <span class="input-group-text"><i class="far fa-clock"></i></span>
 						  </div>
-						  <input type="time" class="form-control">
+						  <input {% if sessao_gte %} value="{{sessao_gte}}" {% endif %} name="sessao_gte" id="id_sessao_gte" type="time" class="form-control" placeholder="Pesquisar por sessão">
 						</div>
 					</div>
 					<div class="form-group row">
@@ -130,18 +130,27 @@
 						  <div class="input-group-prepend">
 						    <span class="input-group-text"><i class="far fa-clock"></i></span>
 						  </div>
-						  <input type="time" class="form-control">
+						  <input {% if sessao_lte %} value="{{sessao_lte}}" {% endif %} name="sessao_lte" id="id_sessao_lte" type="time" class="form-control" placeholder="Pesquisar por sessão">
 						</div>
 					</div>
 					<hr>
 					<div class="form-group row">
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="far fa-calendar"></i></span>
-						  </div>
-						  <input type="date" class="form-control">
-						</div>
-					</div>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="far fa-calendar"></i></span>
+                          </div>
+                          <select id="id_data" name="data" class="form-control">
+                                <option value="" disabled selected>Data inicial</option>
+                                {% for dia in daysDiaAberto %}
+                                    {% if dia|date:"m/d/Y" == data_inicialTarefaSearched %}
+                                        <option selected value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
+                                    {% else %}
+                                        <option value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                     <hr>
                     <div class="form-group row float-right">
                         <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
@@ -212,7 +221,7 @@
                         				    		<p><b>Sessão:</b><p>
                         							{% for form in listSessao %}
                         							{% if form.atividadeid.id == atividade.id %} 
-                        				    		<p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{form.data}}, {{form.sessaoid.hora_de_inicio}}</p>
+                        				    		<p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{form.data|date:"d-m-Y"}}, {{form.sessaoid.hora_de_inicio|time:"H:i"}}</p>
                         				    		{% endif %}
                         				    		{% endfor %}
 											</div>

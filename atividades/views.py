@@ -5,13 +5,16 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.core.paginator import Paginator
 from django.forms import modelformset_factory, formset_factory
+import datetime
+from django.db.models.functions import Lower
 
-from .filters import UnidadeOrganicaFilter, DepartamentoFilter, LocalFilter, CampusFilter, EdificioFilter, TematicaFilter, MaterialFilter, AtividadeFilter
+from .filters import UnidadeOrganicaFilter, DepartamentoFilter, LocalFilter, CampusFilter, EdificioFilter, TematicaFilter, MaterialFilter, AtividadeFilter, SessaoFilter
 
 from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica, Utilizador, AtividadeTematica, AtividadeMaterial, Sessao, SessaoAtividade, Material
 
 from atividades.forms import EdificioForm, CampusForm, DepartamentoForm, LocalForm, AtividadeForm, UnidadeOrganicaForm, TematicaForm, AtividadeTematicaFormset, AtividadeMaterialFormset, AtividadeTematicaForm, AtividadeMaterialForm, AtividadeSessaoForm, AtividadeSessaoFormset, SessaoForm, MaterialForm
 
+from diaAbertoConf.models import DiaAberto
 # Create your views here.
 
 def index(request):
@@ -88,38 +91,42 @@ def deleteEdificio(request, id):
 
 #Creates new campus
 def createCampus(request):
+    form = CampusForm()
+    saved = False
     if request.method == "POST":
         form = CampusForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('atividades:showCreateCampus', saved=1)
-        else:
+            saved = True
             form = CampusForm()
-            return render(request, 'atividades/AdicionarCampus.html')
-
-def showCreateCampus(request, saved=0):
-    context = {'saved' : saved}
+    context = {'form' : form, 'saved' : saved}
     return render(request, 'atividades/AdicionarCampus.html', context)
 
 #show all campus
 def showCampus(request):#, ordena):
     allCampus = Campus.objects.all()
     myFilter = CampusFilter(request.GET, queryset=allCampus)
-    allCampus = myFilter.qs
+
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        allCampus = myFilter.qs.order_by(ordering)
+    else:
+        allCampus = myFilter.qs
+
     paginator = Paginator(allCampus, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     nome = request.GET.get('nome')
     localizacao = request.GET.get('localizacao')
-    context = {'allCampus' : allCampus, 'page_obj': page_obj,
-    'myFilter' : myFilter, 'nome' : nome, 'localizacao' : localizacao}
-    return render(request, 'atividades/ShowCampus.html', context)
 
-#gets a campus with a specific id 
-def getCampus(request, id):
-    dados_Campus = Campus.objects.get(id = id)
-    #add later
-    return 0
+    context = {'allCampus' : allCampus, 'page_obj': page_obj,
+                'myFilter' : myFilter, 'nome' : nome, 'localizacao' : localizacao,
+                'order_by': order_by, 'direction': direction}
+    return render(request, 'atividades/ShowCampus.html', context)
 
 #upadates the fields of a spcific campus
 def updateCampus(request, id):
@@ -128,7 +135,7 @@ def updateCampus(request, id):
     if form.is_valid():
         form.save()
         return  HttpResponseRedirect(reverse('atividades:allCampus'))
-    return render(request, 'atividades/EditarCampus.html')
+    return render(request, 'atividades/EditarCampus.html', {'form' : form, 'campus' : dados_Campus})
 
 def showUpdateCampus(request, id):
     dados_Campus = Campus.objects.get(id = id)
@@ -427,56 +434,46 @@ def createAtividade(request):
 
 #show all atividade
 def showAtividades(request):
-    # allAtividade = Atividade.objects.all()
-    # if tipo == departamento:
-    # 	dados_atividade = Atividades.objects.filter(departamento = filtro)
-    # elif tipo == campus:
-    # 	dados_atividade = Atividades.objects.filter(campus = filtro)
-    # elif tipo == nome:
-    # 	dados_atividade = Atividades.objects.filter(nome = filtro)
-    # elif tipo == tipo_atividade:
-    # 	dados_atividade = Atividades.objects.filter(tipo_atividade = filtro)
-    # elif tipo == validada:
-    # 	dados_atividade = Atividades.objects.filter(validada = filtro)
-    # elif tipo == unidadeorganica:
-    # 	dados_atividade = Atividades.objects.filter(unidadeorgaica = filtro)
-    # if ordena == departamento:
-    # 	dados_atividade_2 = Atividades.objets.order_by('departamento')
-    # elif ordena == campus:
-    # 	dados_atividade_2 = Atividades.objets.order_by('campus')
-    # elif ordena == nome:
-    # 	dados_atividade_2 = Atividades.objets.order_by('nome')
-    # elif ordena == duracao:
-    # 	dados_atividade_2 = Atividades.objets.order_by('duracao')
-    # elif ordena == limite_de_particiantes:
-    # 	dados_atividade_2 = Atividades.objets.order_by('limite_de_particiantes')
     allAtividades = Atividade.objects.all()
     allCampus = Campus.objects.all()
     allEdificios = Edificio.objects.all()
+
+    daysDiaAberto = []
+    try:
+        diaAberto = DiaAberto.objects.all()[0]
+        start_date = diaAberto.data_inicio
+        end_date = diaAberto.data_fim
+        current_date = start_date
+        daysDiaAberto.append(start_date)
+        while current_date <  end_date:
+            current_date += datetime.timedelta(days=1)
+            daysDiaAberto.append(current_date)
+    except IndexError:
+        pass
+
     myFilter = AtividadeFilter(request.GET, queryset=allAtividades)
     allAtividades = myFilter.qs
+
     paginator = Paginator(allAtividades, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
     nome = request.GET.get('nome')
     tipo_atividade = request.GET.get('tipo_atividade')
     validada = request.GET.get('validada')
     local_campus = request.GET.get('localid__campusid')
     localid__edicifioid = request.GET.get('localid__edicifioid')
+    sessao_gte = request.GET.get('sessaoatividade__sessaoid__hora_de_inicio')
+    sessao_lte = request.GET.get('sessaoatividade__sessaoid__hora_de_inicio')
+
     allTematicaAtividade = AtividadeTematica.objects.all()
     allMaterialAtividade = AtividadeMaterial.objects.all()
     allSessaoAtividade = SessaoAtividade.objects.all()
 
-    # listTematica = []        
-    # for tematica in AtividadeTematica.objects.filter(atividadeid = id):
-    #         listTematica.append(tematica.tematicaid.nome)
-    # listMaterial = []        
-    # for material in AtividadeMaterial.objects.filter(atividadeid = id):
-    #         listMaterial.append((material.materialid.nome, material.quantidade))
     context = {'allAtividades' : allAtividades, 'page_obj': page_obj, 'allCampus' : allCampus, 'allEdificios' : allEdificios,
     'listTematica' : allTematicaAtividade, 'listMaterial' : allMaterialAtividade,
     'listSessao' : allSessaoAtividade, 'myFilter' : myFilter, 'nome' : nome, 'tipo_atividade' : tipo_atividade,
-    'validada' : validada, 'local_campus' : local_campus, 'localid__edicifioid' : localid__edicifioid}
+    'validada' : validada, 'local_campus' : local_campus, 'localid__edicifioid' : localid__edicifioid, 'daysDiaAberto' : daysDiaAberto, 'sessao_gte' : sessao_gte, 'sessao_lte' : sessao_lte}
     return render(request, 'atividades/ShowAtividades.html', context)
 
 def showDetailsAtividade(request, id):
@@ -739,28 +736,37 @@ def deleteTematica(request, id):
 # Material CRUD- Create Read Update Delete
 #----------------------------------------------------------------
 def createMaterial(request):
+    form = MaterialForm()
+    saved = False
     if request.method == "POST":
         form = MaterialForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('atividades:showCreateMaterial', saved=1)
-        else:
+            saved = True
             form = MaterialForm()
-            return render(request, 'atividades/AdicionarMaterial.html')
-
-def showCreateMaterial(request, saved=0):
-    context = {'form' : MaterialForm(), 'saved' : saved}
+    context = {'form' : form, 'saved' : saved}
     return render(request, 'atividades/AdicionarMaterial.html', context)
 
 def showMateriais(request):
     allMateriais = Material.objects.all()
     myFilter = MaterialFilter(request.GET, queryset=allMateriais)
-    allMateriais = myFilter.qs
+
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        allMateriais = myFilter.qs.order_by(ordering)
+    else:
+        allMateriais = myFilter.qs
+
     paginator = Paginator(allMateriais, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     nome = request.GET.get('nome')
-    context = {'allMateriais' : allMateriais, 'page_obj': page_obj, 'myFilter' : myFilter, 'nome' : nome}
+    context = {'allMateriais' : allMateriais, 'page_obj': page_obj, 'myFilter' : myFilter, 
+    'nome' : nome, 'order_by' : order_by, 'direction' : direction}
     return render(request, 'atividades/ShowMateriais.html', context)
 
 def updateMaterial(request, id):
@@ -769,7 +775,7 @@ def updateMaterial(request, id):
     if form.is_valid():
         form.save()
         return  HttpResponseRedirect(reverse('atividades:allMateriais'))
-    return render(request, 'atividades/EditarMaterial.html')
+    return render(request, 'atividades/EditarMaterial.html', {'form' : form, 'material' : dados_Material})
 
 def showUpdateMaterial(request, id):
     dados_Material = Material.objects.get(id = id)
@@ -788,7 +794,14 @@ def deleteMaterial(request, id):
 
 def showSessoes(request):
     allSessoes = Sessao.objects.all()
-    return render(request, 'atividades/ShowHorarioSessao.html', {'allSessoes': allSessoes})
+    myFilter = SessaoFilter(request.GET, queryset=allSessoes)
+    allSessoes = myFilter.qs
+    paginator = Paginator(allSessoes, 5) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    hora_de_inicio = request.GET.get('hora_de_inicio')
+    context = {'allSessoes' : allSessoes, 'page_obj': page_obj, 'myFilter' : myFilter, 'hora_de_inicio' : hora_de_inicio}
+    return render(request, 'atividades/ShowHorarioSessao.html', context)
 
 def addSessao(request):
 
