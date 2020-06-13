@@ -3,9 +3,6 @@ from datetime import datetime
 # Create your models here.
 
 class Transporte(models.Model):
-    #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    #hora_chegada = models.TimeField(db_column='Hora_de_chegada', blank=True, null=True)  # Field name made lowercase.
-    #hora_partida = models.TimeField(db_column='Hora_de_partida', blank=True, null=True)  # Field name made lowercase.
     tipo_transporte = models.CharField(db_column='Tipo_de_transporte', max_length=255, blank=True, null=True)  # Field name made lowercase.
     capacidade = models.IntegerField(db_column='Capacidade', blank=True, null=True)  # Field name made lowercase.
 
@@ -20,10 +17,9 @@ class HorarioTransporte(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     hora_de_partida = models.TimeField(db_column='Hora_de_partida', blank=True, null=True)  # Field name made lowercase.
     hora_de_chegada = models.TimeField(db_column='Hora_de_chegada', blank=True, null=True)  # Field name made lowercase.
-    #data = models.DateField(db_column='Data', blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
-        return str(self.hora_de_partida) + " - " + str(self.hora_de_chegada)
+        return self.hora_de_partida.strftime("%H:%M") + " - " + self.hora_de_chegada.strftime("%H:%M")
 
     class Meta:
         managed = True

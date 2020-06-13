@@ -1,4 +1,6 @@
+import datetime
 from django.db import models
+
 
 # Create your models here.
 
@@ -137,7 +139,7 @@ class Sessao(models.Model):
     hora_de_inicio = models.TimeField(db_column='Hora_de_inicio', blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
-        return str(self.hora_de_inicio)
+        return self.hora_de_inicio.strftime("%I:%M")
 
     class Meta:
         managed = False
@@ -180,7 +182,7 @@ class SessaoAtividade(models.Model):
     data = models.DateField(db_column='Data', blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
-        return str(self.data) + ", " + str(self.sessaoid)
+        return self.data.strftime("%d-%m-%Y") + ", " + str(self.sessaoid)
 
     class Meta:
         managed = False
@@ -220,8 +222,8 @@ class Inscricao(models.Model):
 
 class SessaoAtividadeInscricao(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    sessao_atividadeid = models.ForeignKey(SessaoAtividade, models.DO_NOTHING, db_column='Sessao_AtividadeID')  # Field name made lowercase.
-    inscricaoid = models.ForeignKey(Inscricao, models.DO_NOTHING, db_column='InscricaoID')  # Field name made lowercase.
+    sessao_atividadeid = models.ForeignKey(SessaoAtividade, on_delete=models.CASCADE, db_column='Sessao_AtividadeID')  # Field name made lowercase.
+    inscricaoid = models.ForeignKey(Inscricao, on_delete=models.CASCADE, db_column='InscricaoID')  # Field name made lowercase.
     num_alunos = models.IntegerField(db_column='Num_alunos', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:

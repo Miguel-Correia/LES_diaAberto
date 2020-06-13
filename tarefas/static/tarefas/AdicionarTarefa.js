@@ -77,9 +77,13 @@ function cleanForm(){
 
 function addGrupos(){
 
+    $('.tarefaGrupo-form-comp:not(:first)').remove()
+    $('.tarefaGrupo-form-comp').find(".add-form-row").show();
     $('select[name$=inscricao]').find('option').each(function(){
         $(this).remove();
     })
+    $('input[name$=form-TOTAL_FORMS]').val(1)
+    
 
     if ($('select[name=sessaoAtividade_destino]').val()){
         sessaoAtividade_origem = $('select[name=sessaoAtividade_origem]').val();
@@ -221,7 +225,7 @@ $('select[name=atividade]').change(function(){
         url: request_url,
         dataType: "json",
         success: function(data){
-            $.each(data, function(index, text){
+            $.each(data, function(text, index){
                 $('select[name=sessaoAtividade]').append(
                     $('<option></option>').val(index).html(text)
                 )
@@ -240,14 +244,22 @@ $('input[name=tipoTarefa').change(function(){
         $('.tarefaGrupo-form-comp:not(:first)').remove()
         $('.tarefaGrupo-form-comp').find(".add-form-row").show();
 
+        //Turns fields in Tarefa Atividade into required fields
+        $('.TarefaAtividade').find('select').each(function(){
+            $(this).prop('required', true)
+        })
+
         $('.TarefaTransporte').find('input, select').each(function(){
-            if(!$(this).is('input[name$=_FORMS]') && !$(this).is('select[name=dia]'))
-                $(this).val('');
-            
+            //Removes required atribute from fields in Tarefa Transporte
+            if(!$(this).is('input[name$=_FORMS]') && $(this).is('input, select'))
+                $(this).prop('required', false)
+
             if($(this).is('input[name$=form-TOTAL_FORMS]'))
                 $(this).val(1)
-             
             
+            if(!$(this).is('input[name$=_FORMS]') && !$(this).is('select[name=dia]'))
+                $(this).val('');
+                         
             if($(this).is('select') && !$(this).is('select[name=dia]')){
                 $(this).find('option').each(function(){
                     $(this).remove();
@@ -256,8 +268,17 @@ $('input[name=tipoTarefa').change(function(){
         })
     }else{
         $('.TarefaTransporte').show();
+        addAtividadeAtual()
+        $('.TarefaTransporte').find('input, select').each(function(){
+            //Turns fields in Tarefa Transporte into required fields
+            if(!$(this).is('input[name$=_FORMS]') && $(this).is('input, select'))
+                $(this).prop('required', true)
+        })
+
         $('.TarefaAtividade').hide();
-        $('.TarefaTransporte').find('select').each(function(){	
+        //Removes required atribute from fields in Tarefa Atividade
+        $('.TarefaAtividade').find('select').each(function(){
+            $(this).prop('required', false)
         })
     }
 })

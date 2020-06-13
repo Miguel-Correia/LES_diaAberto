@@ -71,7 +71,7 @@ class TarefaAtividadeForm(forms.Form):
         else:
             try:
                 firstAtividade = next(iter(allAtividades))
-                self.fields['sessaoAtividade'].widget.choices = [(sessao.id, str(sessao)) for sessao in SessaoAtividade.objects.filter(atividadeid = firstAtividade[0])]
+                self.fields['sessaoAtividade'].widget.choices = [(sessao.id, str(sessao)) for sessao in SessaoAtividade.objects.filter(atividadeid = firstAtividade[0]).order_by('sessaoid__hora_de_inicio')]
             except StopIteration:
                 self.fields['sessaoAtividade'].widget.choices = []
 
@@ -91,13 +91,13 @@ class TarefaTransporteForm(forms.Form):
         label = "Hora"
     )
     sessaoAtividade_origem = forms.CharField(
-        label = "Atividade Origem",
+        label = "Sessão Atividade Origem",
         widget = Select(attrs={
             'class' : 'form-control',
         })
     )
     sessaoAtividade_destino = forms.CharField(
-        label = "Atividade Destino",
+        label = "Sessão Atividade Destino",
         widget = Select(attrs={
             'class' : 'form-control',
         })

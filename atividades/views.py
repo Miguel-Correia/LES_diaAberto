@@ -437,6 +437,9 @@ def showAtividades(request):
     allAtividades = Atividade.objects.all()
     allCampus = Campus.objects.all()
     allEdificios = Edificio.objects.all()
+    allTematicaAtividade = AtividadeTematica.objects.all()
+    allMaterialAtividade = AtividadeMaterial.objects.all()
+    allSessaoAtividade = SessaoAtividade.objects.all()
 
     daysDiaAberto = []
     try:
@@ -461,19 +464,34 @@ def showAtividades(request):
     nome = request.GET.get('nome')
     tipo_atividade = request.GET.get('tipo_atividade')
     validada = request.GET.get('validada')
-    local_campus = request.GET.get('localid__campusid')
-    localid__edicifioid = request.GET.get('localid__edicifioid')
     sessao_gte = request.GET.get('sessaoatividade__sessaoid__hora_de_inicio')
     sessao_lte = request.GET.get('sessaoatividade__sessaoid__hora_de_inicio')
 
-    allTematicaAtividade = AtividadeTematica.objects.all()
-    allMaterialAtividade = AtividadeMaterial.objects.all()
-    allSessaoAtividade = SessaoAtividade.objects.all()
+    #local_campus = request.GET.get('localid__campusid')
+    #localid__edicifioid = request.GET.get('localid__edicifioid')
+    
+    try:
+        localcampusSearched =  int(request.GET.get('localcampus'))
+        localedificioSearched = None
+    except TypeError:
+        localcampusSearched = None
+        localedificioSearched = None
 
-    context = {'allAtividades' : allAtividades, 'page_obj': page_obj, 'allCampus' : allCampus, 'allEdificios' : allEdificios,
-    'listTematica' : allTematicaAtividade, 'listMaterial' : allMaterialAtividade,
-    'listSessao' : allSessaoAtividade, 'myFilter' : myFilter, 'nome' : nome, 'tipo_atividade' : tipo_atividade,
-    'validada' : validada, 'local_campus' : local_campus, 'localid__edicifioid' : localid__edicifioid, 'daysDiaAberto' : daysDiaAberto, 'sessao_gte' : sessao_gte, 'sessao_lte' : sessao_lte}
+    context = {
+        'page_obj': page_obj, 
+        'allCampus' : allCampus, 
+        'allEdificios' : allEdificios,
+        'listTematica' : allTematicaAtividade, 
+        'listMaterial' : allMaterialAtividade,
+        'listSessao' : allSessaoAtividade, 
+        'nome' : nome, 
+        'tipo_atividade' : tipo_atividade,
+        'validada' : validada, 
+        'localcampusSearched' : localcampusSearched,
+        'daysDiaAberto' : daysDiaAberto, 
+        'sessao_gte' : sessao_gte, 
+        'sessao_lte' : sessao_lte 
+        }
     return render(request, 'atividades/ShowAtividades.html', context)
 
 def showDetailsAtividade(request, id):
