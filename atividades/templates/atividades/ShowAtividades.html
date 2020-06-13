@@ -101,7 +101,7 @@
 						  <div class="input-group-prepend">
 						    <span class="input-group-text"><i class="far fa-clock"></i></span>
 						  </div>
-						  <input type="time" class="form-control">
+						  <input {% if sessao_gte %} value="{{sessao_gte}}" {% endif %} name="sessao_gte" id="id_sessao_gte" type="time" class="form-control" placeholder="Pesquisar por sessão">
 						</div>
 					</div>
 					<div class="form-group row">
@@ -110,22 +110,31 @@
 						  <div class="input-group-prepend">
 						    <span class="input-group-text"><i class="far fa-clock"></i></span>
 						  </div>
-						  <input type="time" class="form-control">
+						  <input {% if sessao_lte %} value="{{sessao_lte}}" {% endif %} name="sessao_lte" id="id_sessao_lte" type="time" class="form-control" placeholder="Pesquisar por sessão">
 						</div>
 					</div>
 					<hr>
 					<div class="form-group row">
-						<div class="input-group">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text"><i class="far fa-calendar"></i></span>
-						  </div>
-						  <input type="date" class="form-control">
-						</div>
-					</div>
-          <hr>
-          <div class="form-group row float-right">
-              <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
-          </div>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="far fa-calendar"></i></span>
+                          </div>
+                          <select id="id_data" name="data" class="form-control">
+                                <option value="" disabled selected>Data inicial</option>
+                                {% for dia in daysDiaAberto %}
+                                    {% if dia|date:"m/d/Y" == data_inicialTarefaSearched %}
+                                        <option selected value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
+                                    {% else %}
+                                        <option value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row float-right">
+                        <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
+                    </div>
 				</form>
 			</div>
 			<div class="col-xs-9 col-sm-9 col-md-9">
@@ -176,62 +185,68 @@
                 {% endif %}
                 <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateAtividade' id=atividade.id %}"></a></td>
                 <td><a href="" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteAtividade' id=atividade.id %}"></a></td>  
-              </tr>
+                </tr>
             </tbody>
-            <tbody class="hide">
-					    <tr>
-					  	  <td colspan="1"></td>
-					  	  <td colspan="2">
-					  	  	<div>
-					  	  		<p><b>Descrição:</b> {{ atividade.descricao}}</p>
+                    <tbody class="hide">
+										<tr>
+											<td colspan="1"></td>
+											<td colspan="2">
+												<div>
+													<p><b>Descrição:</b> {{ atividade.descricao}}</p>
+													
+													<p><b>Local:</b> {{ atividade.localid}}</p>
+													<p><b>Duração:</b> {{ atividade.duracao}}</p>
+                        				    		<p><b>Sessão:</b><p>
+                        							{% for form in listSessao %}
+                        							{% if form.atividadeid.id == atividade.id %} 
+                        				    		<p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{form.data|date:"d-m-Y"}}, {{form.sessaoid.hora_de_inicio|time:"H:i"}}</p>
+                        				    		{% endif %}
+                        				    		{% endfor %}
+											</div>
+											<td colspan="3">
+												<div>
+                                                    <p><b>Colaboradores:</b> {{ atividade.num_colaboradores }}
+													<p><b>Público alvo:</b> {{ atividade.public_alvo}}</p>
+													<p><b>Temática:</b></p>
+                        							{% for form in listTematica %}
+                        							{% if form.atividadeid.id == atividade.id %} 
+                        				    		<p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{form.tematicaid.nome}}</p>
+                        				    		{% endif %}
+                        				    		{% endfor %}
+                        				    		<p><b>Limite de participantes:</b> {{ atividade.limite_de_participantes}}</p>
+                        				    		<p><b>Material:</b></p>
+                        							{% for form in listMaterial %}
+                        							{% if form.atividadeid.id == atividade.id %} 
+                        				    		<p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{form.materialid.nome}} x {{form.quantidade}}</p>
+                        				    		{% endif %}
+                        				    		{% endfor %}
+												</div>
+											</td>
+                        				</tr>
+                                        <tr>
+                                            <td></td>
+                                            <td colspan="5">
+                                                {% if atividade.validada == -1 %}
+                                                <p><!-- <a href="" class="btn btn-outline-success validate" data-toggle="modal" data-target="#myModal1" data-id="{% url 'atividades:validAtividade' id=atividade.id %}">Aceitar atividade</a> -->
+                                                <br>
+                                                <a href="{% url 'atividades:atribuirLocal' id=atividade.id %}" class="btn btn-outline-success mr-3">Aceitar atividade</a>
+                                                <a href="" class="recuse btn btn-outline-danger" data-toggle="modal" data-target="#Modalrecusar" data-id="{% url 'atividades:recuseAtividade' id=atividade.id %}">Recusar atividade</a>
+                                                </p>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
 
-					  	  		<p><b>Local:</b> {{ atividade.localid}}</p>
-					  	  		<p><b>Duração:</b> {{ atividade.duracao}}</p>
-                  	<p><b>Sessão:</b><p>
-                  	{% for form in listSessao %}
-                  	  {% if form.atividadeid.id == atividade.id %} 
-                  		  <p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{form.data}}, {{form.sessaoid.hora_de_inicio}}</p>
-                  	  {% endif %}
-                  	{% endfor %}
-					  	    </div>
-					  	  <td colspan="3">
-					  			<div>
-                    <p><b>Colaboradores:</b> {{ atividade.num_colaboradores }}</p>
-					  			  <p><b>Público alvo:</b> {{ atividade.public_alvo}}</p>
-					  			  <p><b>Temática:</b></p>
-
-                    {% for form in listTematica %}
-                      {% if form.atividadeid.id == atividade.id %} 
-                    	  <p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{form.tematicaid.nome}}</p>
-                      {% endif %}
-                    {% endfor %}
-
-                    <p><b>Limite de participantes:</b> {{ atividade.limite_de_participantes}}</p>
-                    <p><b>Material:</b></p>
-                    {% for form in listMaterial %}
-                      {% if form.atividadeid.id == atividade.id %} 
-                    	  <p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{form.materialid.nome}} x {{form.quantidade}}</p>
-                      {% endif %}
-                    {% endfor %}
-					  			</div>
-					  		</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td colspan="5">
-                    {% if atividade.validada == -1 %}
-                      <p><!-- <a href="" class="btn btn-outline-success validate" data-toggle="modal" data-target="#myModal1" data-id="{% url 'atividades:validAtividade' id=atividade.id %}">Aceitar atividade</a> -->
-                      <br>
-                      <a href="{% url 'atividades:atribuirLocal' id=atividade.id %}" class="btn btn-outline-success mr-3">Aceitar atividade</a>
-                      <a href="" class="recuse btn btn-outline-danger" data-toggle="modal" data-target="#Modalrecusar" data-id="{% url 'atividades:recuseAtividade' id=atividade.id %}">Recusar atividade</a>
-                      </p>
-                    {% endif %}
-                </td>
-              </tr>                      				
-					  </tbody>
-					{% endfor %}
-        </table>
-
+                        				<!-- <tr>
+                        					{% if atividade.validada == -1 %}
+											<td colspan="4"></td>
+											<td><a href="" class="btn btn-outline-success validate" data-toggle="modal" data-target="#myModal1" data-id="{% url 'atividades:validAtividade' id=atividade.id %}">Aceitar atividade</a></td>
+											<td><a href="{% url 'atividades:recuseAtividade' id=atividade.id %}" class="btn btn-outline-danger">Recusar atividade</a></td>
+											{% endif %}
+										</tr> -->
+							<tbody>
+								{% endfor %}
+                    </tbody>
+                </table>
 				<div class="pagination d-flex justify-content-end">
 				  <span class="step-links">
 				    {% if page_obj.has_previous %}

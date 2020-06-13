@@ -1,6 +1,6 @@
 import django_filters
 
-from django_filters import DateFilter, CharFilter, NumberFilter
+from django_filters import DateFilter, CharFilter, NumberFilter, TimeFilter
 
 from .models import *
 
@@ -56,6 +56,16 @@ class AtividadeFilter(django_filters.FilterSet):
 	validada = NumberFilter(field_name='validada')
 	localcampus = CharFilter(field_name='localid__campusid')
 	localedicifio = CharFilter(field_name='localid__edicifioid')
+	data = DateFilter(field_name="sessaoatividade__data")
+	sessao_gte = TimeFilter(field_name="sessaoatividade__sessaoid__hora_de_inicio", lookup_expr='gte')
+	sessao_lte = TimeFilter(field_name="sessaoatividade__sessaoid__hora_de_inicio", lookup_expr='lte')
 	class Meta:
 		model = Atividade
+		fields = '__all__'
+
+class SessaoFilter(django_filters.FilterSet):
+	sessao_gte = TimeFilter(field_name="hora_de_inicio", lookup_expr='gte')
+	sessao_lte = TimeFilter(field_name="hora_de_inicio", lookup_expr='lte')
+	class Meta:
+		model = Sessao
 		fields = '__all__'

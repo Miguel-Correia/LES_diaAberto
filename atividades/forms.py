@@ -2,7 +2,8 @@ from django.utils.translation import gettext_lazy as _
 from django import forms
 from django.forms import ModelForm, TextInput, NumberInput, Select, Textarea, modelformset_factory, formset_factory, MultipleChoiceField, DateField
 from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica, Material, AtividadeTematica, AtividadeMaterial, SessaoAtividade, Sessao
-
+from diaAbertoConf.models import DiaAberto
+import datetime
 
 class EdificioForm(ModelForm):
     class Meta:
@@ -13,6 +14,24 @@ class CampusForm(ModelForm):
     class Meta:
         model = Campus
         fields =    '__all__'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        nome = cleaned_data.get("nome")
+        if not self.instance:
+            for campus in Campus.objects.all():
+                if nome == campus.nome:
+                    raise forms.ValidationError(
+                        ('O campus que pretende criar já existe'),
+                    code='invalid'
+                    )
+        else:
+            for campus in Campus.objects.all():
+                if nome == campus.nome and self.instance.id != campus.id:
+                    raise forms.ValidationError(
+                        ('O campus que pretende editar já existe'),
+                    code='invalid'
+                    )
 
 class UnidadeOrganicaForm(ModelForm):
     class Meta:
@@ -100,6 +119,25 @@ class MaterialForm(ModelForm):
         model = Material
         fields =    '__all__'
 
+    def clean(self):
+        cleaned_data = super().clean()
+        nome = cleaned_data.get("nome")
+        print(self.instance.id)
+        if self.instance == "None":
+            for material in Material.objects.all():
+                if nome == material.nome:
+                    raise forms.ValidationError(
+                        ('O material que pretende criar já existe'),
+                    code='invalid'
+                    )
+        else:
+            for material in Material.objects.all():
+                if nome == material.nome and self.instance.id != material.id:
+                    raise forms.ValidationError(
+                        ('O material que pretende editar já existe'),
+                    code='invalid'
+                    )
+
 
 # AtividadeTematicaFormset = modelformset_factory(
 #     AtividadeTematica,
@@ -186,16 +224,36 @@ class AtividadeSessaoForm(ModelForm):
                 choices= [(sessao.id, sessao.hora_de_inicio) for sessao in Sessao.objects.all()],
                 attrs= {
                     'class' : 'form-control',
+                    'required' : 'required',
                 }),
-            # 'data' : DateField(attrs={
-            #     'class' : 'form-control',
-            #     'required' : 'required',
-            # }),
+            'data' : Select(attrs={
+                 'class' : 'form-control',
+                 'required' : 'required',
+            }, choices=[]),
         }
         labels = {
             'sessaoid': ('Sessão'),
             'data' : ('Data'),
         } 
+
+    def __init__(self, *args, **kwargs):
+        super(AtividadeSessaoForm,self).__init__(*args,**kwargs)
+
+        daysDiaAberto = []
+        try:
+            diaAberto = DiaAberto.objects.all()[0]
+            start_date = diaAberto.data_inicio
+            end_date = diaAberto.data_fim
+            current_date = start_date
+            daysDiaAberto.append((start_date, start_date.strftime("%d-%m-%Y")))
+            while current_date <  end_date:
+                current_date += datetime.timedelta(days=1)
+                daysDiaAberto.append((current_date, current_date.strftime("%d-%m-%Y")))
+        except IndexError:
+            pass
+
+        self.fields['data'].widget.choices = daysDiaAberto
+
 
 AtividadeSessaoFormset = formset_factory(AtividadeSessaoForm, extra=1)
 

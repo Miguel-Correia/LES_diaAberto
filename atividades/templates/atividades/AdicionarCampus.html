@@ -6,12 +6,12 @@
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
 					<li class="breadcrumb-item"><a href="{% url 'atividades:allCampus' %}">Campus</a></li>
-					<li class="breadcrumb-item active">Adicionar Campus</li>
+					<li class="breadcrumb-item active">Adicionar campus</li>
 				</ol>
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4 style="text-align:center;">Adicionar Campus</h4>
+                    <h4 style="text-align:center;">Adicionar campus</h4>
     		    </div>
     		    <div class = "col-sm-4 offset-sm-4">
     		    {% if saved %}
@@ -19,6 +19,15 @@
                         O campus foi guardado com sucesso!
                     </div>
                 {% endif %}
+
+                {% for key, value in form.errors.items %}
+                    {% for error in value %}
+                        <div class="alert alert-danger" style="text-align:center;">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
             </div>
             </div>
 			<hr class="mx-5">
