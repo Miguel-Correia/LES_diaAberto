@@ -258,23 +258,38 @@ def showHorarios_Transporte(request):
     allHorarios_Transporte = HorarioTransporte.objects.all()
     horariosFiltered = HorarioTransporteFilter(request.GET, queryset=allHorarios_Transporte)
 
-    context = { 'allHorarios_Transporte': horariosFiltered.qs,
+    #Ordering Results
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+
+        horarios = horariosFiltered.qs.order_by(ordering)
+    else:
+        horarios = horariosFiltered.qs
+
+    context = { 'allHorarios_Transporte': horarios,
                 'hora_de_partidaSearched': request.GET.get('hora_de_partida'),
-                'hora_de_chegadaSearched': request.GET.get('hora_de_chegada')
+                'hora_de_chegadaSearched': request.GET.get('hora_de_chegada'),
+                'order_by': order_by,
+                'direction': direction,
         }
 
     return render(request, 'diaAbertoConf/ShowHorarioTransportes.html', context)
 
 #Creates new Horario Transporte
 def createHorario_Transporte(request):
-
+    saved = False
     form = HorarioTransporteForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect('diaAbertoConf:allHorarios')
-    
-    return render(request, 'diaAbertoConf/AdicionarHorarioTransporte.html', {'form': form})
+            saved = True    
+            form = HorarioTransporteForm()
+            
+    return render(request, 'diaAbertoConf/AdicionarHorarioTransporte.html', {'form': form, 'saved':saved})
 
 #updates the fields of a spcific Horario_Transporte
 def updateHorario_Transporte(request, id):

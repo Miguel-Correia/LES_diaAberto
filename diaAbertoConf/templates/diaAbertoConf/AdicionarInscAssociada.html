@@ -24,7 +24,7 @@
                         <li class="breadcrumb-item active">Associar Grupo</li>
 					</ol>
 				</nav>
-
+				<hr>
                 <form action = "{% url 'diaAbertoConf:createInscAssociadas' id=dados_rota.id %}" method="post">
                 	{% csrf_token %}
 					{% if error %}

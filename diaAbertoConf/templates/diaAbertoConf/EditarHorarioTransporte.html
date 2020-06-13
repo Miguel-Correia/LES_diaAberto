@@ -52,8 +52,28 @@
 								<a type="button" class="btn btn-secondary" href="{% url 'diaAbertoConf:allHorarios' %}">Cancelar</a>
 							</div>
 							<div class="col-sm-2">
-								<button type="submit" class="btn btn-primary">Editar</button>
+								<a class="btn btn-primary" href="" data-toggle="modal" data-target="#Modal">Editar</a>
 							</div>
+						</div>
+						<div class="modal" id="Modal">
+							<div class="modal-dialog">
+								<div class="modal-content">
+								    <!-- Modal Header -->
+										<div class="modal-header">
+											<h4 class="modal-title">Aviso</h4>
+											<button type="button" class="close" data-dismiss="modal">×</button>
+										</div>
+										<!-- Modal body -->
+										<div class="modal-body">
+											<p>Tem a certeza que pretende guardar as alteracões?</p>
+										</div>
+										<!-- Modal footer -->
+										<div class="modal-footer">
+											<button type="submit" class="btn btn-success" >Sim</button>
+											<button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+										</div>
+                                </div>   
+                            </div>     
 						</div>
 					</form>
     		    </div>

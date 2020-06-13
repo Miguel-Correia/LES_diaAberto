@@ -1,5 +1,10 @@
 {% extends "diaAbertoConf/Home.html"%}
 
+	{% block css %}
+		{% load static %}
+		<link rel="stylesheet" href="{% static "diaAbertoConf/ShowTransportes.css" %}">
+	{% endblock %}
+
 	{% block content %}
 		<div class = "row mx-4 my-4">
 			<div class="col-xs-3 col-sm-3 col-md-3">
@@ -52,62 +57,81 @@
 
 				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'diaAbertoConf:createHorarioTransporte' %}"> + Adicionar Horário</a>
 
-				{% if allHorarios_Transporte %}
-    		    		<table class="table">
-                    	    <thead>
-                    	        <tr>
-                    	            <th scope="col" style="width: 40%">Hora partida</th>
-                    	            <th scope="col" style="width: 40%">Hora chegada</th>
-                    	            <th scope="col" style="width: 10%"></th>
-                    	            <th scope="col" style="width: 10%"></th>
-                    	        </tr>
-                    	    </thead>
-                    	    <tbody>
-								{% for horario in allHorarios_Transporte %}
-                    	        	<tr>
-                    	        	    <td>{{ horario.hora_de_partida|time:"H:i" }}</td>
-                    	        	    <td>{{ horario.hora_de_chegada|time:"H:i"}}</td>
-                    	        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'diaAbertoConf:updateHorarioTransporte' id=horario.id %}"></a></td>
-                    	        	    <td><a class="btn btn-outline-danger fas fa-trash-alt delete" href="" data-toggle="modal" data-target="#Modal" data-id="{% url 'diaAbertoConf:deleteHorarioTransporte' id=horario.id %}"></a></td>
-                                		<div class="modal fade" id="Modal">
-                                    		<div class="modal-dialog">
-                                    			<div class="modal-content">
-
-                                    		    	<!-- Modal Header -->
-                                    		    	<div class="modal-header">
-                                    		    	  <h4 class="modal-title">Aviso</h4>
-                                    		    	  <button type="button" class="close" data-dismiss="modal">×</button>
-                                    		    	</div>
-
-                                    		    	<!-- Modal body -->
-                                    		    	<div class="modal-body">
-                                    		    	  Tem a certeza que pretende remover?
-                                    		    	</div>
-
-                                    		    	<!-- Modal footer -->
-                                    		    	<div class="modal-footer">
-                                    		    	    <form id="deleteModal" action="" method="post">
-                                    		    	        {% csrf_token %}
-                                    		    	  		<button type="submit" class="btn btn-success" >Sim</button>
-                                    		    	  		<button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
-                                    		  			</form>
-                                    		    	</div>        
-                                    		  	</div>
-                                    		</div>
-                                  		</div>
-                    	        	</tr>
-								{% endfor %}
-                    	    </tbody>
-                    	</table>
-					{% else %}
-						<h2>Dados não se encontram disponiveis</h2>
-					{% endif %}
+    		    <table class="table">
+                    <thead>
+                        <tr>
+							{% if order_by == 'hora_de_partida' %}
+								<th scope="col" style="width: 40%" class="Sortable {{direction}} Hora_de_partida tableBorderH">Hora partida
+								{% if direction == 'asc'%}
+									<i class="fas fa-caret-up fa-xs"></i>
+								{% elif direction == 'desc'%}
+									<i class="fas fa-caret-down fa-xs"></i>
+								{% endif %}
+								</th>
+							{% else %}	
+                            	<th scope="col" style="width: 40%" class="Sortable Hora_de_partida tableBorderH">Hora partida</th>
+							{% endif %}
+							{% if order_by == 'hora_de_chegada' %}
+								<th scope="col" style="width: 40%" class="Sortable {{direction}} Hora_de_chegada tableBorderH">Hora chegada
+								{% if direction == 'asc'%}
+									<i class="fas fa-caret-up fa-xs"></i>
+								{% elif direction == 'desc'%}
+									<i class="fas fa-caret-down fa-xs"></i>
+								{% endif %}
+								</th>
+							{% else %}
+                            	<th scope="col" style="width: 40%" class="Sortable Hora_de_chegada tableBorderH">Hora chegada</th>
+							{% endif %}
+                            <th scope="col" style="width: 10%"></th>
+                            <th scope="col" style="width: 10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+						{% if allHorarios_Transporte %}
+							{% for horario in allHorarios_Transporte %}
+                        		<tr>
+                        		    <td>{{ horario.hora_de_partida|time:"H:i" }}</td>
+                        		    <td>{{ horario.hora_de_chegada|time:"H:i"}}</td>
+                        		    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'diaAbertoConf:updateHorarioTransporte' id=horario.id %}"></a></td>
+                        		    <td><a class="btn btn-outline-danger fas fa-trash-alt delete" href="" data-toggle="modal" data-target="#Modal" data-id="{% url 'diaAbertoConf:deleteHorarioTransporte' id=horario.id %}"></a></td>                       		
+                        		</tr>
+							{% endfor %}
+						{% endif %}
+                    </tbody>
+                </table>
 			</div>
     	</div>
+
+
+		<div class="modal fade" id="Modal">
+        	<div class="modal-dialog">
+        		<div class="modal-content">
+        	    	<!-- Modal Header -->
+        	    	<div class="modal-header">
+        	    	  <h4 class="modal-title">Aviso</h4>
+        	    	  <button type="button" class="close" data-dismiss="modal">×</button>
+        	    	</div>
+        	    	<!-- Modal body -->
+        	    	<div class="modal-body">
+        	    	  Tem a certeza que pretende remover?
+        	    	</div>
+        	    	<!-- Modal footer -->
+        	    	<div class="modal-footer">
+        	    	    <form id="deleteModal" action="" method="post">
+        	    	        {% csrf_token %}
+        	    	  		<button type="submit" class="btn btn-success" >Sim</button>
+        	    	  		<button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+        	  			</form>
+        	    	</div>        
+        	  	</div>
+        	</div>
+        </div>
 	{% endblock %}
 
 
 	{% block js %}
+		{% load static %}
+		<script src={% static "diaAbertoConf/ShowHorarioTransportes.js" %}></script>
 		<script type='text/javascript'>
 
 			$(function () {

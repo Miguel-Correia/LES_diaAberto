@@ -14,6 +14,13 @@
     		    <div class = "col-sm-4 offset-sm-4">
                     <h4 style="text-align:center;">Adicionar Horário Transporte</h4>
     		    </div>
+				<div class = "col-sm-4 offset-sm-4">
+    		    {% if saved %}
+                    <div class="alert alert-primary" role="alert" style="text-align:center;">
+                        O Horário de transporte foi guardado com sucesso!
+                    </div>
+                {% endif %}
+            	</div>
             </div>
     	    <hr class="mx-5">
     	    <div class = "row">
@@ -22,7 +29,7 @@
 						{% csrf_token %}
 						{% for key, value in form.errors.items %}
 							{% for error in value %}
-            					<div class="alert alert-danger">
+            					<div class="alert alert-danger" style="text-align:center;">
                						{{ error }}
             					</div>
 							{% endfor%}

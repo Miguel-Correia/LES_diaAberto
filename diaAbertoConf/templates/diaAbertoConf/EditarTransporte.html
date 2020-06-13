@@ -40,10 +40,18 @@
       							{{ transporteform.capacidade }}
     						</div>
   						</div>
-						<hr>
+						
 						{{rotaformset.management_form}}
 						{% for rota in rotaformset %}
-							<div class="rota-form-comp"> 
+							<div class="rota-form-comp">
+								<hr>
+								{% for key, value in rota.errors.items %}
+									{% for error in value %}
+            							<div class="alert alert-danger" style="text-align:center;">
+               								{{ error }}
+            							</div>
+									{% endfor%}
+								{% endfor %} 
 								<div class="form-group row">
 									<div class="col-sm-4 col-form-label">
 										<label>{{ rota.origem.label}}</label>
@@ -88,9 +96,10 @@
 										<button class="add-form-row btn btn-outline-success">Adicionar Rota</button>
 									</div>								
 								</div>
-							<hr>
+							
 							</div>
 						{% endfor %}
+						<hr>
 						<div class="form-group row">
 							<div class="col-sm-2">
 								<a type="button" class="btn btn-secondary" href="{% url 'diaAbertoConf:allTransportes' %}">Cancelar</a>
