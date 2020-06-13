@@ -13,7 +13,7 @@ from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Ementa, Pr
 from atividades.models import Inscricao
 from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, RotasInscFormset, EmentaForm, PratoForm, DiaAbertoForm, formset_factory
 
-from diaAbertoConf.filters import RotaFilter, TransporteFilter
+from diaAbertoConf.filters import RotaFilter, TransporteFilter, HorarioTransporteFilter
 
 # Create your views here.
 def index(request):
@@ -256,7 +256,13 @@ def updateTransporte(request, id):
 #show all Horarios Transporte
 def showHorarios_Transporte(request):
     allHorarios_Transporte = HorarioTransporte.objects.all()
-    context = {'allHorarios_Transporte': allHorarios_Transporte,}
+    horariosFiltered = HorarioTransporteFilter(request.GET, queryset=allHorarios_Transporte)
+
+    context = { 'allHorarios_Transporte': horariosFiltered.qs,
+                'hora_de_partidaSearched': request.GET.get('hora_de_partida'),
+                'hora_de_chegadaSearched': request.GET.get('hora_de_chegada')
+        }
+
     return render(request, 'diaAbertoConf/ShowHorarioTransportes.html', context)
 
 #Creates new Horario Transporte
