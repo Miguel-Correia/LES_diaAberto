@@ -123,20 +123,14 @@ class MaterialForm(ModelForm):
         cleaned_data = super().clean()
         nome = cleaned_data.get("nome")
         print(self.instance.id)
-        if self.instance == "None":
+        if self.instance.id:
             for material in Material.objects.all():
-                if nome == material.nome:
-                    raise forms.ValidationError(
-                        ('O material que pretende criar já existe'),
-                    code='invalid'
-                    )
+                if nome.lower() == material.nome.lower() and self.instance.id != material.id:
+                    raise forms.ValidationError(('O material que pretende editar já existe'),code='invalid')
         else:
             for material in Material.objects.all():
-                if nome == material.nome and self.instance.id != material.id:
-                    raise forms.ValidationError(
-                        ('O material que pretende editar já existe'),
-                    code='invalid'
-                    )
+                if nome.lower() == material.nome.lower(): 
+                    raise forms.ValidationError(('O material que pretende criar já existe '),code='invalid')
 
 
 # AtividadeTematicaFormset = modelformset_factory(
