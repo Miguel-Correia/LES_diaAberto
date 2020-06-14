@@ -324,9 +324,22 @@ def showInscAssociada(request, id):
     for rotaInsc in dados_rotaInsc:
         lugaresOcupados += rotaInsc.num_passageiros
 
+    #Ordering Results
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = order_by
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+
+        dados_rotaInsc = dados_rotaInsc.order_by(ordering)
+
     context = { 'dados_rota': dados_rota,
                 'dados_rotaInsc': dados_rotaInsc,
-                'lugaresOcupados': lugaresOcupados}
+                'lugaresOcupados': lugaresOcupados,
+                'order_by': order_by,
+                'direction': direction,
+            }
 
     return render(request, 'diaAbertoConf/ShowInscAssociada.html', context)
 
