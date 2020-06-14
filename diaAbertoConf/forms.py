@@ -119,12 +119,6 @@ class RotaInscForm(ModelForm):
         fields = ['inscricaoid', 'num_passageiros']
 
         widgets = { 
-            'inscricaoid': Select(
-                choices= [],
-                attrs= {
-                    'class' : 'form-control',
-                    'required' : 'required',
-                }),
             'num_passageiros': NumberInput(
                 attrs= {
                     'class' : 'form-control',
@@ -134,17 +128,9 @@ class RotaInscForm(ModelForm):
                 }),
         }
         labels = {
-            'inscricaoid': _('Grupo'),
             'num_passageiros': _('Número de Passageiros'),
+            'inscricaoid': _('Grupo')
         } 
-
-    def __init__(self, *args, choices, **kwargs):
-        
-        super(RotaInscForm, self).__init__(*args, **kwargs)
-        self.fields['inscricaoid'].choices = choices
-
-
-RotasInscFormset = modelformset_factory(Rota_Inscricao, RotaInscForm, extra=1)
 
 
 class EmentaForm(ModelForm):

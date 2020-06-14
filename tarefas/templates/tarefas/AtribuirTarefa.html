@@ -115,19 +115,18 @@
 					    	{% endfor %}
                         </tbody>
                     </table>
-                    <hr>
                     <div class="pagination d-flex justify-content-end">
 				        <span class="step-links">
 				            {% if page_obj.has_previous %}
-				                <button class="btn btn-outline-secondary  fas fa-angle-double-left page" data-page="1"></button>
-				                <button class="btn btn-outline-secondary  fas fa-angle-left page" data-page="{{page_obj.previous_page_number}}"></button>
+				                <button type="button" class="btn btn-outline-secondary  fas fa-angle-double-left page" data-page="1"></button>
+				                <button type="button" class="btn btn-outline-secondary  fas fa-angle-left page" data-page="{{page_obj.previous_page_number}}"></button>
 					    	{% endif %}
 
 				            <span class="current">{{ page_obj.number }}</span>
 
 				            {% if page_obj.has_next %}
-					    		<button class="btn btn-outline-secondary  fas fa-angle-right page" data-page="{{page_obj.next_page_number}}"></button>
-				                <button class="btn btn-outline-secondary  fas fa-angle-double-right page" data-page="{{page_obj.paginator.num_pages}}"></button>
+					    		<button type="button" class="btn btn-outline-secondary  fas fa-angle-right page" data-page="{{page_obj.next_page_number}}"></button>
+				                <button type="button" class="btn btn-outline-secondary  fas fa-angle-double-right page" data-page="{{page_obj.paginator.num_pages}}"></button>
 					    	{% endif %}
 				        </span>
 				    </div> 
