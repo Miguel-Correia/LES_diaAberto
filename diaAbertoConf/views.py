@@ -421,9 +421,10 @@ def updateInscAssociada(request, id, idRota_Insc):
     for rotaInsc in all_rotaInsc:
         lugaresOcupados += rotaInsc.num_passageiros
 
-    form = RotaInscForm(request.POST or None, instance=dadosRota_Insc)
+    form = RotaInscForm(request.GET or None, instance=dadosRota_Insc)
 
-    if request.method == "POST":        
+    if request.method == "POST":   
+        form = RotaInscForm(request.POST, instance=dadosRota_Insc)     
         if form.is_valid():
             num_passageiros = form.cleaned_data['num_passageiros']
 
@@ -431,7 +432,7 @@ def updateInscAssociada(request, id, idRota_Insc):
                 error = "Lugares insufecientes para o número de passageiros"
             else:
                 insc = form.save(commit=False)
-                insc.inscricaoid = dadosRota_Insc.inscricaoid
+                insc.inscricaoid = Rota_Inscricao.objects.get(id=idRota_Insc).inscricaoid
                 insc.save()
                 return redirect('diaAbertoConf:showInscAssociadas', id=dados_rota.id)
     

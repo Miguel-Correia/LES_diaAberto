@@ -277,10 +277,7 @@ def createLocal(request):
 
     if request.method == "POST":
         form = LocalForm(request.POST, request.FILES)
-        #image = ImageForm(request.POST, request.FILES)
-        print(request.FILES['mapa_sala'])
         if form.is_valid():
-            print("aa")
             if form.cleaned_data['indoor'] == False:
                 l = Local(campusid=form.cleaned_data['campusid'],  
                     descricao=form.cleaned_data['descricao'],
@@ -333,37 +330,36 @@ def getLocal(request, id):
 #upadates the fields of a spcific local
 def updateLocal(request, id):
     dados_Local = Local.objects.get(id = id)
-    form = LocalForm(request.POST, request.FILES)
-    if form.is_valid():
-        if form.cleaned_data['indoor'] == True:
-            dados_Local.campusid = form.cleaned_data['campusid']
-            dados_Local.indoor = form.cleaned_data['indoor']
-            dados_Local.descricao = form.cleaned_data['descricao']
-            dados_Local.andar = form.cleaned_data['andar']
-            dados_Local.sala = form.cleaned_data['sala']
-            dados_Local.edicifioid = Edificio.objects.get(id=request.POST['edicifioid'])
-            if form.cleaned_data['mapa_sala'] != None:
-                dados_Local.mapa_sala = form.cleaned_data['mapa_sala']
-        #form.save()
-        else:
-            dados_Local.campusid = form.cleaned_data['campusid']
-            dados_Local.indoor = form.cleaned_data['indoor']
-            dados_Local.descricao = form.cleaned_data['descricao']
-            dados_Local.andar = None
-            dados_Local.sala = None
-            dados_Local.edicifioid = None
-            if form.cleaned_data['mapa_sala'] != None:
-                dados_Local.mapa_sala = form.cleaned_data['mapa_sala']
-        dados_Local.save()
-        return  HttpResponseRedirect(reverse('atividades:allLocais'))
-    return render(request, 'atividades/EditarLocal.html')
-
-def showUpdateLocal(request, id):
-    dados_Local = Local.objects.get(id = id)
     allEdificios = Edificio.objects.all()
     allCampus = Campus.objects.all()
+
+    if request.method == "POST":
+        form = LocalForm(request.POST, request.FILES)
+        if form.is_valid():
+            if form.cleaned_data['indoor'] == True:
+                dados_Local.campusid = form.cleaned_data['campusid']
+                dados_Local.indoor = form.cleaned_data['indoor']
+                dados_Local.descricao = form.cleaned_data['descricao']
+                dados_Local.andar = form.cleaned_data['andar']
+                dados_Local.sala = form.cleaned_data['sala']
+                dados_Local.edicifioid = Edificio.objects.get(id=request.POST['edicifioid'])
+                if form.cleaned_data['mapa_sala'] != None:
+                    dados_Local.mapa_sala = form.cleaned_data['mapa_sala']
+            else:
+                dados_Local.campusid = form.cleaned_data['campusid']
+                dados_Local.indoor = form.cleaned_data['indoor']
+                dados_Local.descricao = form.cleaned_data['descricao']
+                dados_Local.andar = None
+                dados_Local.sala = None
+                dados_Local.edicifioid = None
+                if form.cleaned_data['mapa_sala'] != None:
+                    dados_Local.mapa_sala = form.cleaned_data['mapa_sala']
+            dados_Local.save()
+            return  redirect('atividades:allLocais')
+    
     context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'local' : dados_Local,}
     return render(request, 'atividades/EditarLocal.html', context)
+
 
 #deletes a local
 def deleteLocal(request, id):
@@ -472,9 +468,12 @@ def showAtividades(request):
     
     try:
         localcampusSearched =  int(request.GET.get('localcampus'))
-        localedificioSearched = None
     except TypeError:
         localcampusSearched = None
+
+    try:
+        localedificioSearched = int(request.GET.get('localedicifio'))
+    except TypeError:
         localedificioSearched = None
 
     context = {
@@ -488,6 +487,7 @@ def showAtividades(request):
         'tipo_atividade' : tipo_atividade,
         'validada' : validada, 
         'localcampusSearched' : localcampusSearched,
+        'localedificioSearched': localedificioSearched,
         'daysDiaAberto' : daysDiaAberto, 
         'sessao_gte' : sessao_gte, 
         'sessao_lte' : sessao_lte 
@@ -702,7 +702,7 @@ def atribuirLocal(request, id):
     return render(request, 'atividades/AtribuirLocal.html', context)
 
 def getEdificio(request, campusid):
-    dados_edificio = [(e.id, e.nome_edificio)for e in Edificio.objects.filter(campusid = campusid)]
+    dados_edificio = [(e.id, e.nome_edificio + ", " + str(e.campusid))for e in Edificio.objects.filter(campusid = campusid)]
     return JsonResponse(dict(dados_edificio))
 
 def getLocal(request, edificioid):

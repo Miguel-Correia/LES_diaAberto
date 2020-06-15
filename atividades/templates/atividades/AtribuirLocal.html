@@ -60,7 +60,7 @@
                         <div class="col-sm-6">
                             <select name="edicifioid" id = "id_edicifioid" class = "form-control">
                             {% for edificio in allEdificios %}
-                                <option value="{{edificio.id}}">{{edificio.nome_edificio}}</option>
+                                <option value="{{edificio.id}}">{{edificio.nome_edificio}}, {{edificio.campusid}}</option>
                             {% endfor %}
                             </select>
                         </div>

@@ -126,6 +126,7 @@ class RotaInscForm(ModelForm):
                     'placeholder': 'Introduza o número de passageiros',
                     'min': '0',
                 }),
+            'inscricaoid': TextInput()
         }
         labels = {
             'num_passageiros': _('Número de Passageiros'),

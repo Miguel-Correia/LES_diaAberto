@@ -55,8 +55,7 @@ urlpatterns = [
     path('Locais/create/<int:saved>', views.showCreateLocal, name='showCreateLocal'),
     path('Locais/add', views.createLocal, name='addLocal'),
     path('Locais/delete/<int:id>', views.deleteLocal, name='deleteLocal'),
-    path('Locais/update/<int:id>', views.showUpdateLocal, name='showUpdateLocal'),
-    path('Locais/updates/<int:id>', views.updateLocal, name='updateLocal'),
+    path('Locais/update/<int:id>', views.updateLocal, name='updateLocal'),
 
     path('Tematicas', views.showTematicas, name='allTematicas'),
     path('Tematicas/create', views.addTematica, name='addTematica'),
