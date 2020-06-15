@@ -15,7 +15,7 @@
     		    </div>
     		    <div class = "col-sm-4 offset-sm-4">
     		    {% if saved %}
-                    <div class="alert alert-primary" role="alert">
+                    <div class="alert alert-primary" role="alert" style="text-align:center;">
                         O edifício foi guardado com sucesso!
                     </div>
                 {% endif %}
@@ -24,7 +24,7 @@
 			<hr class="mx-5">
     	    <div class = "row">
     		    <div class = "col-sm-6 offset-sm-3">
-					<form action = "{% url 'atividades:addEdificio' %}" method="post">
+					<form action = "{% url 'atividades:createEdificio' %}" method="post">
 						{% csrf_token %}
  						<div class="form-group row">
 							<div class="col-sm-4 col-form-label">
@@ -54,7 +54,6 @@
       							<input id="num_edificio" type="number" min="1" name="num_edificio" class="form-control" required>
     						</div>
   						</div>
-						<hr>
 						<div class="form-group row">
 							<div class="col-sm-2">
 								<a type="button" class="btn btn-secondary" href="{% url 'atividades:allEdificios' %}">Cancelar</a>

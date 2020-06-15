@@ -15,7 +15,7 @@
     		    </div>
     		    <div class = "col-sm-4 offset-sm-4">
     		    {% if saved %}
-                    <div class="alert alert-primary" role="alert">
+                    <div class="alert alert-primary" role="alert" style="text-align:center;">
                         O departamento foi guardado com sucesso!
                     </div>
                 {% endif %}
@@ -24,7 +24,7 @@
 			<hr class="mx-5">
     	    <div class = "row">
     		    <div class = "col-sm-6 offset-sm-3">
-					<form action = "{% url 'atividades:addDepartamento' %}" method="post">
+					<form action = "{% url 'atividades:createDepartamento' %}" method="post">
 						{% csrf_token %}
  						<div class="form-group row">
 							<div class="col-sm-4 col-form-label">

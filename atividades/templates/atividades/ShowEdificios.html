@@ -43,7 +43,7 @@
 					</ol>
 				</nav>
 
-				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:showCreateEdificio' saved='0' %}"> + Adicionar Edifício</a>
+				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:createEdificio' %}"> + Adicionar Edifício</a>
 
     	    	<table class="table">
                     <thead>
@@ -62,7 +62,7 @@
                         	    <td>{{ edificio.campusid.nome}}</td>
                         	    <td>{{ edificio.nome_edificio}}</td>
                                 <td>{{ edificio.num_edificio }}</td>
-                        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:showUpdateEdificio' id=edificio.id %}"></a></td>
+                        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateEdificio' id=edificio.id %}"></a></td>
                         	    <td><a href="" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteEdificio' id=edificio.id %}"></a></td>
                         	</tr>
 						{% endfor %}

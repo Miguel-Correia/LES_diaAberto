@@ -284,6 +284,25 @@ $(document).on('click', '.remove-form-row', function(e){
     }
     return false;
 });
+
+
+$(window).on('load' ,function() { 
+	  $('.sessao-form-comp').each(function(){
+	  	$(this).find('.add-form-row').hide();
+	  })
+	  $('.sessao-form-comp').last().find('.add-form-row').show();
+
+    $('.material-form-comp').each(function(){
+	  	$(this).find('.add-form-row').hide();
+	  })
+	  $('.material-form-comp').last().find('.add-form-row').show();
+
+    $('.tematica-form-comp').each(function(){
+	  	$(this).find('.add-form-row').hide();
+	  })
+	  $('.tematica-form-comp').last().find('.add-form-row').show();
+  })
+
 </script>
     
   {% endblock %}
