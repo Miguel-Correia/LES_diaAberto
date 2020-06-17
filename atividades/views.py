@@ -17,27 +17,12 @@ from atividades.forms import EdificioForm, CampusForm, DepartamentoForm, LocalFo
 from diaAbertoConf.models import DiaAberto
 # Create your views here.
 
-def index(request):
-    #template = loader.get_template('atividades/AtividadesMain.html')
-    #return HttpResponse(template.render({}, request))
-    return render(request, 'atividades/AtividadesMain.html')
-
-def gestaoAtividades(request):
-    return render(request, 'atividades/GestaoAtividades.html')
-
-def showatividades(request):
-    return render(request, 'atividades/ShowAtividades.html')
-
-def adicionaratividade(request):
-    return render(request, 'atividades/AdicionarAtividade.html')
-
 #Creates new edificio
 def createEdificio(request):
     allCampus = Campus.objects.all()
-    form = EdificioForm()
+    form = EdificioForm(request.POST)
     saved = False
     if request.method == "POST":
-        form = EdificioForm(request.POST)
         if form.is_valid():
             form.save()
             saved = True
@@ -80,17 +65,16 @@ def showEdificios(request):
 #upadates the fields of a spcific edificio
 def updateEdificio(request, id):
     dados_Edificio = Edificio.objects.get(id = id)
-    form = EdificioForm(request.POST, instance = dados_Edificio)
-    if form.is_valid():
-        form.save()
-        return  HttpResponseRedirect(reverse('atividades:allEdificios'))
-    return render(request, 'atividades/EditarEdificio.html', {'form' : form, 'edificio' : dados_Edificio})
-
-def showUpdateEdificio(request, id):
-    dados_Edificio = Edificio.objects.get(id = id)
     allCampus = Campus.objects.all()
-    context = {'allCampus' : allCampus, 'edificio' : dados_Edificio}
-    return render(request, 'atividades/EditarEdificio.html', context)
+    form = EdificioForm(request.POST or None, instance = dados_Edificio)
+
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return  redirect('atividades:allEdificios')
+
+    context = {'allCampus' : allCampus, 'edificio' : dados_Edificio, 'form' : form}
+    return render(request, 'atividades/EditarEdificio.html' ,context)
 
 #deletes a edificio
 def deleteEdificio(request, id):
@@ -141,15 +125,13 @@ def showCampus(request):#, ordena):
 def updateCampus(request, id):
     dados_Campus = Campus.objects.get(id = id)
     form = CampusForm(request.POST, instance = dados_Campus)
-    if form.is_valid():
-        form.save()
-        return  HttpResponseRedirect(reverse('atividades:allCampus'))
-    return render(request, 'atividades/EditarCampus.html', {'form' : form, 'campus' : dados_Campus})
+    
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return  redirect('atividades:allCampus')
 
-def showUpdateCampus(request, id):
-    dados_Campus = Campus.objects.get(id = id)
-    context = {'campus' : dados_Campus}
-    return render(request, 'atividades/EditarCampus.html', context)
+    return render(request, 'atividades/EditarCampus.html', {'form' : form, 'campus' : dados_Campus})
 
 #deletes a campus
 def deleteCampus(request, id):
@@ -159,15 +141,15 @@ def deleteCampus(request, id):
 
 #Creates new unidade
 def createUnidadeOrganica(request):
-    form = UnidadeOrganicaForm()
+    form = UnidadeOrganicaForm(request.POST or None)
     saved = False
     if request.method == "POST":
-        form = UnidadeOrganicaForm(request.POST)
         if form.is_valid():
             form.save()
             saved = True
             form = UnidadeOrganicaForm()
     context = {'form' : form, 'saved' : saved}       
+
     return render(request, 'atividades/AdicionarUO.html', context)
 
 #show all unidade
@@ -202,16 +184,15 @@ def showUnidadeOrganicas(request):
 #upadates the fields of a spcific unidade
 def updateUnidadeOrganica(request, id):
     dados_UnidadeOrganica = UnidadeOrganica.objects.get(id = id)
-    form = UnidadeOrganicaForm(request.POST, instance = dados_UnidadeOrganica)
-    if form.is_valid():
-        form.save()
-        return  HttpResponseRedirect(reverse('atividades:allUnidadeOrganicas'))
-    context = {'form' : form, 'unidadeorganica' : dados_UnidadeOrganica}
-    return render(request, 'atividades/EditarUO.html', context)
+    allCampus = Campus.objects.all()
+    form = UnidadeOrganicaForm(request.POST or None, instance = dados_UnidadeOrganica)
 
-def showUpdateUnidadeOrganica(request, id):
-    dados_UnidadeOrganica = UnidadeOrganica.objects.get(id = id)
-    context = {'unidadeorganica' : dados_UnidadeOrganica}
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return  redirect('atividades:allUnidadeOrganicas')
+    
+    context = {'allCampus' : allCampus, 'unidadeorganica' : dados_UnidadeOrganica, 'form' : form}
     return render(request, 'atividades/EditarUO.html', context)
 
 #deletes a unidade
@@ -232,7 +213,9 @@ def createDepartamento(request):
             saved = True
             form = DepartamentoForm()
     context = {'form' : form, 'saved' : saved, 'allUnidadeOrganicas' : allUnidadeOrganicas}
+
     return render(request, 'atividades/AdicionarDepartamento.html', context)
+
 
 #show all departamntos
 def showDepartamentos(request):
@@ -268,16 +251,14 @@ def showDepartamentos(request):
 #upadates the fields of a spcific departamento
 def updateDepartamento(request, id):
     dados_Departamento = Departamento.objects.get(id = id)
-    form = DepartamentoForm(request.POST, instance = dados_Departamento)
-    if form.is_valid():
-        form.save()
-        return  HttpResponseRedirect(reverse('atividades:allDepartamentos'))
-    return render(request, 'atividades/EditarDepartamento.html', {'form' : form, 'departamento' : dados_Departamento})
-
-def showUpdateDepartamento(request, id):
-    dados_Departamento = Departamento.objects.get(id = id)
     allUnidadeOrganicas = UnidadeOrganica.objects.all()
-    context = {'allUnidadeOrganicas' : allUnidadeOrganicas, 'departamento' : dados_Departamento}
+    form = DepartamentoForm(request.POST, instance = dados_Departamento)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return  redirect('atividades:allDepartamentos')
+
+    context = {'allUnidadeOrganicas' : allUnidadeOrganicas, 'departamento' : dados_Departamento, 'form' : form}
     return render(request, 'atividades/EditarDepartamento.html', context)
 
 #deletes a departamento
@@ -299,7 +280,6 @@ def createLocal(request):
 
     if request.method == "POST":
         form = LocalForm(request.POST, request.FILES)
-        #image = ImageForm(request.POST, request.FILES)
         if form.is_valid():
             if form.cleaned_data['indoor'] == False:
                 l = Local(campusid=form.cleaned_data['campusid'],  
@@ -322,12 +302,6 @@ def createLocal(request):
             form = LocalForm()
     context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'saved' : saved, 'form' : form}
     return render(request, 'atividades/AdicionarLocal.html', context)
-
-# def showCreateLocal(request, saved=0):
-#     allEdificios = Edificio.objects.all()
-#     allCampus = Campus.objects.all()
-#     context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'saved' : saved}
-#     return render(request, 'atividades/AdicionarLocal.html', context)
 
 #show all local
 def showLocais(request):
@@ -363,38 +337,35 @@ def showLocais(request):
 #upadates the fields of a spcific local
 def updateLocal(request, id):
     dados_Local = Local.objects.get(id = id)
-    form = LocalForm(request.POST, request.FILES, instance = dados_Local)
-    if form.is_valid():
-        if form.cleaned_data['indoor'] == True:
-            dados_Local.campusid = form.cleaned_data['campusid']
-            dados_Local.indoor = form.cleaned_data['indoor']
-            dados_Local.descricao = form.cleaned_data['descricao']
-            dados_Local.andar = form.cleaned_data['andar']
-            dados_Local.sala = form.cleaned_data['sala']
-            dados_Local.edicifioid = Edificio.objects.get(id=request.POST['edicifioid'])
-            if form.cleaned_data['mapa_sala'] != None:
-                dados_Local.mapa_sala = form.cleaned_data['mapa_sala']
-        #form.save()
-        else:
-            dados_Local.campusid = form.cleaned_data['campusid']
-            dados_Local.indoor = form.cleaned_data['indoor']
-            dados_Local.descricao = form.cleaned_data['descricao']
-            dados_Local.andar = None
-            dados_Local.sala = None
-            dados_Local.edicifioid = None
-            if form.cleaned_data['mapa_sala'] != None:
-                dados_Local.mapa_sala = form.cleaned_data['mapa_sala']
-        dados_Local.save()
-        form.save()
-        return  HttpResponseRedirect(reverse('atividades:allLocais'))
-    return render(request, 'atividades/EditarLocal.html', {'form' : form, 'local' : dados_Local})
-
-def showUpdateLocal(request, id):
-    dados_Local = Local.objects.get(id = id)
     allEdificios = Edificio.objects.all()
     allCampus = Campus.objects.all()
-    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'local' : dados_Local,}
+form = LocalForm(request.POST, request.FILES, instance= dados_Local)
+    if request.method == "POST":
+        if form.is_valid():
+            if form.cleaned_data['indoor'] == True:
+                dados_Local.campusid = form.cleaned_data['campusid']
+                dados_Local.indoor = form.cleaned_data['indoor']
+                dados_Local.descricao = form.cleaned_data['descricao']
+                dados_Local.andar = form.cleaned_data['andar']
+                dados_Local.sala = form.cleaned_data['sala']
+                dados_Local.edicifioid = Edificio.objects.get(id=request.POST['edicifioid'])
+                if form.cleaned_data['mapa_sala'] != None:
+                    dados_Local.mapa_sala = form.cleaned_data['mapa_sala']
+            else:
+                dados_Local.campusid = form.cleaned_data['campusid']
+                dados_Local.indoor = form.cleaned_data['indoor']
+                dados_Local.descricao = form.cleaned_data['descricao']
+                dados_Local.andar = None
+                dados_Local.sala = None
+                dados_Local.edicifioid = None
+                if form.cleaned_data['mapa_sala'] != None:
+                    dados_Local.mapa_sala = form.cleaned_data['mapa_sala']
+            dados_Local.save()
+            return  redirect('atividades:allLocais')
+    
+    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'local' : dados_Local, 'form' : form}
     return render(request, 'atividades/EditarLocal.html', context)
+
 
 #deletes a local
 def deleteLocal(request, id):
@@ -512,9 +483,12 @@ def showAtividades(request):
     
     try:
         localcampusSearched =  int(request.GET.get('localcampus'))
-        localedificioSearched = None
     except TypeError:
         localcampusSearched = None
+
+    try:
+        localedificioSearched = int(request.GET.get('localedicifio'))
+    except TypeError:
         localedificioSearched = None
 
     context = {
@@ -528,6 +502,7 @@ def showAtividades(request):
         'tipo_atividade' : tipo_atividade,
         'validada' : validada, 
         'localcampusSearched' : localcampusSearched,
+        'localedificioSearched': localedificioSearched,
         'daysDiaAberto' : daysDiaAberto, 
         'sessao_gte' : sessao_gte, 
         'sessao_lte' : sessao_lte,
@@ -744,7 +719,7 @@ def atribuirLocal(request, id):
     return render(request, 'atividades/AtribuirLocal.html', context)
 
 def getEdificio(request, campusid):
-    dados_edificio = [(e.id, e.nome_edificio)for e in Edificio.objects.filter(campusid = campusid)]
+    dados_edificio = [(e.id, e.nome_edificio + ", " + str(e.campusid))for e in Edificio.objects.filter(campusid = campusid)]
     return JsonResponse(dict(dados_edificio))
 
 def getLocal(request, edificioid):
@@ -850,16 +825,13 @@ def showMateriais(request):
 
 def updateMaterial(request, id):
     dados_Material = Material.objects.get(id = id)
-    form = MaterialForm(request.POST, instance = dados_Material)
-    if form.is_valid():
-        form.save()
-        return  HttpResponseRedirect(reverse('atividades:allMateriais'))
-    return render(request, 'atividades/EditarMaterial.html', {'form' : form, 'material' : dados_Material})
+    form = MaterialForm(request.POST or None, instance = dados_Material)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('atividades:allMateriais')
 
-def showUpdateMaterial(request, id):
-    dados_Material = Material.objects.get(id = id)
-    context = {'material' : dados_Material}
-    return render(request, 'atividades/EditarMaterial.html', context)
+    return render(request, 'atividades/EditarMaterial.html', {'form' : form, 'material' : dados_Material})
 
 def deleteMaterial(request, id):
     dados_Material = Material.objects.get(id = id)
@@ -907,6 +879,7 @@ def addSessao(request):
         if form.is_valid():
             form.save()
             saved = True
+            form = SessaoForm()
     context = {'form' : form, 'saved' : saved}
     return render(request, 'atividades/AdicionarHorarioSessao.html', context)
 

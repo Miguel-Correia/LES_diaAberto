@@ -119,12 +119,6 @@ class RotaInscForm(ModelForm):
         fields = ['inscricaoid', 'num_passageiros']
 
         widgets = { 
-            'inscricaoid': Select(
-                choices= [],
-                attrs= {
-                    'class' : 'form-control',
-                    'required' : 'required',
-                }),
             'num_passageiros': NumberInput(
                 attrs= {
                     'class' : 'form-control',
@@ -132,19 +126,12 @@ class RotaInscForm(ModelForm):
                     'placeholder': 'Introduza o número de passageiros',
                     'min': '0',
                 }),
+            'inscricaoid': TextInput()
         }
         labels = {
-            'inscricaoid': _('Grupo'),
             'num_passageiros': _('Número de Passageiros'),
+            'inscricaoid': _('Grupo')
         } 
-
-    def __init__(self, *args, choices, **kwargs):
-        
-        super(RotaInscForm, self).__init__(*args, **kwargs)
-        self.fields['inscricaoid'].choices = choices
-
-
-RotasInscFormset = modelformset_factory(Rota_Inscricao, RotaInscForm, extra=1)
 
 
 class EmentaForm(ModelForm):
@@ -193,6 +180,6 @@ class DiaAbertoForm(ModelForm):
 
         if dInicInsc < dIpropAtiv:
             raise forms.ValidationError(
-                ('Data de incio do período de inscricao deve de ser depois  da data  de fim do período de proposta de atividades'),
+                ('Data de incio do período de inscricao deve de ser depois da data de fim do período de proposta de atividades'),
                 code='invalid'
             )                          

@@ -10,7 +10,7 @@ class Transporte(models.Model):
         return str(self.tipo_transporte)
 
     class Meta:
-        managed = True
+        
         db_table = 'transporte'
 
 class HorarioTransporte(models.Model):
@@ -22,7 +22,7 @@ class HorarioTransporte(models.Model):
         return self.hora_de_partida.strftime("%H:%M") + " - " + self.hora_de_chegada.strftime("%H:%M")
 
     class Meta:
-        managed = True
+        
         db_table = 'horario'
 
 class Rota(models.Model):
@@ -34,7 +34,7 @@ class Rota(models.Model):
     data = models.DateField(db_column='Data', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        
         db_table = 'transporte_universitario_horario'
         
 
@@ -45,7 +45,7 @@ class Rota_Inscricao(models.Model):
     num_passageiros = models.IntegerField(db_column='Num_passageiros', blank=True, null=True)
 
     class Meta:
-        managed = True
+        
         db_table = 'transporte_universitario_horario_inscricao'
 
 
@@ -62,7 +62,6 @@ class Ementa(models.Model):
         return "Ementa " + str(self.id)
 
     class Meta:
-        #managed = False
         db_table = 'ementa'
 
 
@@ -74,7 +73,6 @@ class Prato(models.Model):
     descricao = models.CharField(db_column='Descricao', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        #managed = False
         db_table = 'prato'
 
 
@@ -97,5 +95,4 @@ class DiaAberto(models.Model):
 
 
     class Meta:
-        #managed = False
         db_table = 'dia_aberto'

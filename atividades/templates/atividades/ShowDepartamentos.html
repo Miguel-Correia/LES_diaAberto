@@ -50,7 +50,7 @@
 					</ol>
 				</nav>
 
-				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:addDepartamento' %}"> + Adicionar departamento</a>
+				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:createDepartamento'%}"> + Adicionar departamento</a>
 
     	    	<table class="table">
                     <thead>
@@ -86,7 +86,7 @@
                         	<tr>
                         	    <td>{{ departamento.nome}}</td>
                         	    <td>{{ departamento.unidade_organicaid.nome}}</td>
-                        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:showUpdateDepartamento' id=departamento.id %}"></a></td>
+                        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateDepartamento' id=departamento.id %}"></a></td>
                         	    <td><a href="" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteDepartamento' id=departamento.id %}"></a></td>
                         	</tr>
 						{% endfor %}

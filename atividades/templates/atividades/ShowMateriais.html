@@ -68,7 +68,7 @@
                         {% for material in page_obj %}
                         <tr>
                             <td>{{ material.nome }}</td>
-                            <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:showUpdateMaterial' id=material.id %}"></a></td>
+                            <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateMaterial' id=material.id %}"></a></td>
                             <td>
 								<a href="" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteMaterial' id=material.id %}"></a>
 							</td>

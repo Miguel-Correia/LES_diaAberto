@@ -36,8 +36,8 @@
                             	<option value="Atividade" selected>Atividade</option>
                             	<option value="Transporte">Transporte</option>
 							{% elif tipoTarefaSearched == 'Transporte'%}
-								<option value="Atividade" selected>Atividade</option>
-                            	<option value="Transporte">Transporte</option>
+								<option value="Atividade" >Atividade</option>
+                            	<option value="Transporte" selected>Transporte</option>
 							{% else %}
 								<option value="Atividade">Atividade</option>
                             	<option value="Transporte">Transporte</option>
@@ -117,9 +117,10 @@
 					</div>
 					<hr>
 					<div class="form-group row float-right">
-						<button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
-					</div>
+						<button id="searchbtn"class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
+				</div>
 				</form>
+				
 			</div>
             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
 				<nav aria-label="breadcrumb">
@@ -131,8 +132,8 @@
 
 				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'tarefas:createTarefa' %}"> + Adicionar Tarefa</a>
                	<div class="table-responsive-sm">
-				<table class="table">
-                    <thead>
+				<table class="table" id="dataTable">                    
+					<thead>
                         <tr>
 							<th scope="col" style="width: 8%"></th>
 							{% if order_by == "nome" %}

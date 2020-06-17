@@ -6,7 +6,7 @@
     {% endblock %}
 
 	{% block content %}
-		<div class = "row mx-4 my-4">
+		<div class = "row mx-4 my-4" style="height:40rem">
 			<div class="col-xs-3 col-sm-3 col-md-3">
 				<p class="text-muted">Filtros horários de sessões</p>
 				<form id="formfilters" method="get">
@@ -80,6 +80,7 @@
                     	        	    <td>{{ sessao.hora_de_inicio|time:"H:i" }}</td>
                     	        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateSessao'  id=sessao.id %}"></a></td>
                     	        	    <td><a class="btn btn-outline-danger fas fa-trash-alt delete" href="" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteSessao' id=sessao.id %}"></a></td>
+
                                 		</tr>
                         {% endfor %}
                     </tbody>
@@ -132,6 +133,7 @@
               </div>
             </div>
         </div>
+
 	{% endblock %}
 
 

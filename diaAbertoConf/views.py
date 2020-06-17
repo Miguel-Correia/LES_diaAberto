@@ -11,9 +11,9 @@ from django.db.models.functions import Lower
 
 from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Ementa, Prato, Rota_Inscricao, DiaAberto
 from atividades.models import Inscricao
-from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, RotasInscFormset, EmentaForm, PratoForm, DiaAbertoForm, formset_factory
+from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, EmentaForm, PratoForm, DiaAbertoForm, formset_factory
 
-from diaAbertoConf.filters import RotaFilter, TransporteFilter
+from diaAbertoConf.filters import RotaFilter, TransporteFilter, HorarioTransporteFilter, InscRotaFilter
 
 # Create your views here.
 def index(request):
@@ -256,19 +256,40 @@ def updateTransporte(request, id):
 #show all Horarios Transporte
 def showHorarios_Transporte(request):
     allHorarios_Transporte = HorarioTransporte.objects.all()
-    context = {'allHorarios_Transporte': allHorarios_Transporte,}
+    horariosFiltered = HorarioTransporteFilter(request.GET, queryset=allHorarios_Transporte)
+
+    #Ordering Results
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+
+        horarios = horariosFiltered.qs.order_by(ordering)
+    else:
+        horarios = horariosFiltered.qs
+
+    context = { 'allHorarios_Transporte': horarios,
+                'hora_de_partidaSearched': request.GET.get('hora_de_partida'),
+                'hora_de_chegadaSearched': request.GET.get('hora_de_chegada'),
+                'order_by': order_by,
+                'direction': direction,
+        }
+
     return render(request, 'diaAbertoConf/ShowHorarioTransportes.html', context)
 
 #Creates new Horario Transporte
 def createHorario_Transporte(request):
-
+    saved = False
     form = HorarioTransporteForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect('diaAbertoConf:allHorarios')
-    
-    return render(request, 'diaAbertoConf/AdicionarHorarioTransporte.html', {'form': form})
+            saved = True    
+            form = HorarioTransporteForm()
+            
+    return render(request, 'diaAbertoConf/AdicionarHorarioTransporte.html', {'form': form, 'saved':saved})
 
 #updates the fields of a spcific Horario_Transporte
 def updateHorario_Transporte(request, id):
@@ -303,15 +324,53 @@ def showInscAssociada(request, id):
     for rotaInsc in dados_rotaInsc:
         lugaresOcupados += rotaInsc.num_passageiros
 
+    #Ordering Results
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = order_by
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+
+        dados_rotaInsc = dados_rotaInsc.order_by(ordering)
+
     context = { 'dados_rota': dados_rota,
                 'dados_rotaInsc': dados_rotaInsc,
-                'lugaresOcupados': lugaresOcupados}
+                'lugaresOcupados': lugaresOcupados,
+                'lugaresDisponiveis': dados_rota.transporteid.capacidade - lugaresOcupados,
+                'order_by': order_by,
+                'direction': direction,
+            }
 
     return render(request, 'diaAbertoConf/ShowInscAssociada.html', context)
 
 def createInscAssociada(request, id):
+    saved = False
     dados_rota = Rota.objects.get(id=id)
     dados_rotaInsc = Rota_Inscricao.objects.filter(rotaid = dados_rota.id)
+    allInsc = Inscricao.objects.filter(dia = dados_rota.data)
+
+    inscFiltered = InscRotaFilter(request.GET, queryset=allInsc)
+
+    numGrupoSearched = request.GET.get("num_grupo")
+    escolaSearched = request.GET.get("nome_escola")
+
+    #Ordering Results
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = order_by
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+
+        insc = inscFiltered.qs.order_by(ordering)
+    else:
+        insc = inscFiltered.qs
+
+    #Pagination
+    paginator = Paginator(insc, 5) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     error = ""
 
@@ -319,29 +378,34 @@ def createInscAssociada(request, id):
     for rotaInsc in dados_rotaInsc:
         lugaresOcupados += rotaInsc.num_passageiros
 
-    if request.method == "GET":  
-        formset = RotasInscFormset(queryset=Rota_Inscricao.objects.none(), form_kwargs={'choices':[(insc.id, insc) for insc in Inscricao.objects.filter(dia = dados_rota.data)]})
-    elif request.method =="POST":
-        formset = RotasInscFormset(request.POST, form_kwargs={'choices':[(insc.id, insc) for insc in Inscricao.objects.filter(dia = dados_rota.data)]})        
-                
-        if formset.is_valid():
-            num_passageiros = 0
-            for form in formset:
-                num_passageiros += form.cleaned_data['num_passageiros']
+    form = RotaInscForm(request.POST or None)  
 
+    if request.method =="POST":            
+        if form.is_valid():
+            num_passageiros = form.cleaned_data['num_passageiros']
+            
             if num_passageiros + lugaresOcupados > dados_rota.transporteid.capacidade:
                 error = "Lugares insufecientes para o número de passageiros"
             else:
-                for form in formset:
-                    v = form.save(commit=False)
-                    v.rotaid = dados_rota
-                    v.save()
-                return redirect('diaAbertoConf:showInscAssociadas', id=dados_rota.id)
+                v = form.save(commit=False)
+                v.rotaid = dados_rota
+                v.save()
+                saved = True
+                form = RotaInscForm(None) 
+                lugaresOcupados += num_passageiros 
 
     context = { 'dados_rota': dados_rota,
-                'formset':formset,
+                'page_obj': page_obj,
+                'order_by': order_by,
+                'direction': direction,
+                'form':form,
                 'lugaresOcupados': lugaresOcupados,
-                'error':error}
+                'lugaresDisponiveis': dados_rota.transporteid.capacidade - lugaresOcupados,
+                'error':error,
+                'numGrupoSearched': numGrupoSearched,
+                'escolaSearched': escolaSearched,
+                'saved': saved,
+            }
 
     return render(request, 'diaAbertoConf/AdicionarInscAssociada.html', context)
 
@@ -352,29 +416,33 @@ def updateInscAssociada(request, id, idRota_Insc):
     error = ""
 
     all_rotaInsc = Rota_Inscricao.objects.filter(rotaid = dados_rota.id)
+    
     lugaresOcupados = -dadosRota_Insc.num_passageiros
     for rotaInsc in all_rotaInsc:
         lugaresOcupados += rotaInsc.num_passageiros
 
-    if request.method == "GET":
-        form = RotaInscForm(initial={'inscricaoid': dadosRota_Insc.inscricaoid.id, 'num_passageiros': dadosRota_Insc.num_passageiros}, choices =[(insc.id, insc) for insc in Inscricao.objects.filter(dia = dados_rota.data)])   
-    elif request.method == "POST":
-        form = RotaInscForm(request.POST, instance=dadosRota_Insc, choices =[(insc.id, insc) for insc in Inscricao.objects.filter(dia = dados_rota.data)])
-        
+    form = RotaInscForm(request.GET or None, instance=dadosRota_Insc)
+
+    if request.method == "POST":   
+        form = RotaInscForm(request.POST, instance=dadosRota_Insc)     
         if form.is_valid():
             num_passageiros = form.cleaned_data['num_passageiros']
 
             if num_passageiros + lugaresOcupados > dados_rota.transporteid.capacidade:
                 error = "Lugares insufecientes para o número de passageiros"
             else:
-                form.save()
+                insc = form.save(commit=False)
+                insc.inscricaoid = Rota_Inscricao.objects.get(id=idRota_Insc).inscricaoid
+                insc.save()
                 return redirect('diaAbertoConf:showInscAssociadas', id=dados_rota.id)
     
     context = { 'dados_rota': dados_rota,
                 'dadosRota_Insc': dadosRota_Insc,
                 'form': form,
                 'lugaresOcupados': lugaresOcupados,
+                'lugaresDisponiveis': dados_rota.transporteid.capacidade - lugaresOcupados,
                 'error': error}
+
     return render(request, 'diaAbertoConf/EditarInscAssociada.html', context)
 
 def deleteInscAssociada(reques,id, idRota_Insc):

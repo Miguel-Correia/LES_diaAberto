@@ -19,7 +19,6 @@ class Tarefa(models.Model):
     colaboradores = models.ManyToManyField("atividades.Utilizador", related_name='tarefa_colaborador')
 
     class Meta:
-        managed = True
         db_table = 'tarefa'
 
 
@@ -28,5 +27,4 @@ class InscricaoTarefa(models.Model):
     tarefaid = models.ForeignKey(Tarefa, on_delete=models.CASCADE, db_column='TarefaID', blank=True, null=True)
 
     class Meta:
-        managed = True
         db_table = 'inscricao_tarefa'

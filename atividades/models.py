@@ -11,7 +11,6 @@ class Campus(models.Model):
     contacto = models.CharField(db_column='Contacto', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
         db_table = 'campus'
 
     def __str__(self):
@@ -24,7 +23,7 @@ class Edificio(models.Model):
     campusid = models.ForeignKey(Campus, on_delete = models.CASCADE, db_column='CampusID', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        
         db_table = 'edicifio'
 
     def __str__(self):
@@ -36,7 +35,7 @@ class UnidadeOrganica(models.Model):
     nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        
         db_table = 'unidade_organica'
 
 class Departamento(models.Model):
@@ -45,7 +44,7 @@ class Departamento(models.Model):
     nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        
         db_table = 'departamento'
 
 class Local(models.Model):
@@ -64,7 +63,7 @@ class Local(models.Model):
         return str(self.campusid.nome) + " Exterior"
 
     class Meta:
-        managed = True
+        
         db_table = 'local'
 
 
@@ -90,7 +89,7 @@ class Utilizador(models.Model):
     check_in_state = models.IntegerField(db_column='Check_in_state', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        
         db_table = 'utilizador'
 
 class Atividade(models.Model):
@@ -109,7 +108,7 @@ class Atividade(models.Model):
     num_colaboradores = models.IntegerField(db_column='Num_Colaboradores', blank=True, null=True)
 
     class Meta:
-        managed = True
+        
         db_table = 'atividade'
 
 class Material(models.Model):
@@ -117,7 +116,7 @@ class Material(models.Model):
     nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        
         db_table = 'material'
 
     def __str__ (self): 
@@ -128,7 +127,7 @@ class Tematica(models.Model):
     nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        
         db_table = 'tematica'
 
     def __str__ (self): 
@@ -142,7 +141,7 @@ class Sessao(models.Model):
         return self.hora_de_inicio.strftime("%I:%M")
 
     class Meta:
-        managed = False
+        
         db_table = 'sessao'
 
 class AtividadeDepartamento(models.Model):
@@ -151,7 +150,7 @@ class AtividadeDepartamento(models.Model):
     departamentoid = models.ForeignKey('Departamento', on_delete = models.CASCADE, db_column='DepartamentoID')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        
         db_table = 'atividade_departamento'
 
 
@@ -162,7 +161,7 @@ class AtividadeMaterial(models.Model):
     quantidade = models.IntegerField(db_column='Quantidade', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        
         db_table = 'atividade_material'
 
 
@@ -172,7 +171,7 @@ class AtividadeTematica(models.Model):
     tematicaid = models.ForeignKey('Tematica', on_delete = models.CASCADE, db_column='TematicaID')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        
         db_table = 'atividade_tematica'
 
 class SessaoAtividade(models.Model):
@@ -185,7 +184,7 @@ class SessaoAtividade(models.Model):
         return self.data.strftime("%d-%m-%Y") + ", " + str(self.sessaoid)
 
     class Meta:
-        managed = False
+        
         db_table = 'sessao_atividade'
 
 
@@ -200,10 +199,13 @@ class Escola(models.Model):
     localidade = models.CharField(db_column='Localidade', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
-        return str(self.nome)
+        if self.nome:
+            return str(self.nome)
+        else:
+            return 'Individual'
 
     class Meta:
-        managed = False
+        
         db_table = 'escola'
 
 class Inscricao(models.Model):
@@ -217,7 +219,7 @@ class Inscricao(models.Model):
         return "Grupo" + str(self.id) + ", Individual"
 
     class Meta:
-        managed = False
+        
         db_table = 'inscricao'
 
 class SessaoAtividadeInscricao(models.Model):
@@ -227,7 +229,7 @@ class SessaoAtividadeInscricao(models.Model):
     num_alunos = models.IntegerField(db_column='Num_alunos', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        
         db_table = 'sessao_atividade_inscricao'
 
 # class Image(models.Model):

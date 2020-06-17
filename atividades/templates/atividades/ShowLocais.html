@@ -123,15 +123,19 @@
                                 {% else %}
                                 <td>{{ local.sala }}</td>
                                 {% endif %}
-                        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:showUpdateLocal' id=local.id %}"></a></td>
+                        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateLocal' id=local.id %}"></a></td>
                         	    <td><a href="" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteLocal' id=local.id %}"></a></td>
                         	</tr>
                         </tbody>
                         <tbody class="hide">
                         	<tr>
                         		<td colspan="1"></td>
-                        	    <td colspan="7"><div><b>Descrição:</b> {{local.descricao}}</div></td>
-                        	</tr>
+                        	    <td colspan="5"><div><b>Descrição:</b> {{local.descricao}}</div></td>
+                              {% if local.mapa_sala %}
+                                <td><b>Mapa: </b><a class="imageShow" href="" data-toggle="modal" data-target="#ImageModal" data-image="{{local.mapa_sala}}">Visualizar a imagem</a></td>
+                        	    {% endif %}
+                          </tr>
+                            
                         </tbody>
 						{% endfor %}
                     </tbody>
@@ -157,31 +161,48 @@
         </div>
 
         <div class="modal fade" id="Modal">
-                                    <div class="modal-dialog">
-                                      <div class="modal-content">
-                                      
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                          <h4 class="modal-title">Aviso</h4>
-                                          <button type="button" class="close" data-dismiss="modal">×</button>
-                                        </div>
-                                        
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-                                          Tem a certeza que pretende remover?
-                                        </div>
-                                        
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <form id="deleteModal" action="" method="post">
-                                                {% csrf_token %}
-                                          <button type=submit" class="btn btn-success" >Sim</button>
-                                          <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
-                                      </form>
-                                        </div>        
-                                      </div>
-                                    </div>
-                                  </div>
+            <div class="modal-dialog">
+              <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Aviso</h4>
+                  <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                  Tem a certeza que pretende remover?
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <form id="deleteModal" action="" method="post">
+                        {% csrf_token %}
+                  <button type=submit" class="btn btn-success" >Sim</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+              </form>
+                </div>        
+              </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="ImageModal" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Mapa do Local</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <img src=""  width="100%" height="100%">
+              </div>
+            </div>
+          </div>
+        </div>
 
 	{% endblock %}
 	
@@ -192,7 +213,7 @@
 
         $(".hide").hide();
         $("table").click(function(event) {
-            event.stopPropagation();
+            //event.stopPropagation();
             var target = $(event.target);
             if(!target.is('a')){
                 if ( target.closest('tbody').find('i').hasClass('fas fa-chevron-right') ){
@@ -206,13 +227,6 @@
                 }
             }
         })
-
-        $(function () {
-            $('.delete').click(function (){
-                var data_var = $(this).data('id');
-                $("#deleteModal").attr("action", data_var);
-            })
-        });
 
 $('th.Sortable').click(function(){
 
@@ -269,6 +283,18 @@ $(document).ready( function(){
         $(this).has('i').addClass('tableBorder')
     })
 })
+
+        
+        $('.delete').click(function (){
+            var data_var = $(this).data('id');
+            $("#deleteModal").attr("action", data_var);
+        })
+
+        $('.imageShow').click(function (){
+            var data_var = "/media/" + $(this).data('image');
+            $("#ImageModal").find('img').attr("src", data_var);
+        })
+
 
     </script>
     {% endblock %}

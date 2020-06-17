@@ -6,7 +6,7 @@
 	{% endblock%}
 	
 	{% block content %}
-    	<div class="mt-3 mx-2">
+    	<div class="mt-3 mx-2 pb-5">
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
@@ -21,7 +21,7 @@
             </div>
 			<hr class="mx-5">
     	    <div class = "row">
-    		    <div class = "col-sm-6 offset-sm-3">
+    		    <div class = "col-sm-6 offset-sm-3 mt-5">
 					<form action = "{% url 'diaAbertoConf:updateTransporte' id=dadosTransporte.id %}" method="post">
 						{% csrf_token %}
  						<div class="form-group row">
@@ -40,10 +40,18 @@
       							{{ transporteform.capacidade }}
     						</div>
   						</div>
-						<hr>
+						
 						{{rotaformset.management_form}}
 						{% for rota in rotaformset %}
-							<div class="rota-form-comp"> 
+							<div class="rota-form-comp">
+								<hr>
+								{% for key, value in rota.errors.items %}
+									{% for error in value %}
+            							<div class="alert alert-danger" style="text-align:center;">
+               								{{ error }}
+            							</div>
+									{% endfor%}
+								{% endfor %} 
 								<div class="form-group row">
 									<div class="col-sm-4 col-form-label">
 										<label>{{ rota.origem.label}}</label>
@@ -88,14 +96,13 @@
 										<button class="add-form-row btn btn-outline-success">Adicionar Rota</button>
 									</div>								
 								</div>
-							<hr>
+							
 							</div>
 						{% endfor %}
-						<div class="form-group row">
-							<div class="col-sm-2">
-								<a type="button" class="btn btn-secondary" href="{% url 'diaAbertoConf:allTransportes' %}">Cancelar</a>
-							</div>
-							<div class="col-sm-2">
+						<hr>
+						<div class="form-group row mt-5">
+							<div class="col-sm-10">
+								<a type="button" class="btn btn-secondary mr-3" href="{% url 'diaAbertoConf:allTransportes' %}">Cancelar</a>
 								<a class="btn btn-primary" href="" data-toggle="modal" data-target="#Modal">Editar</a>
 							</div>
 						</div>
