@@ -37,7 +37,7 @@
 				
 				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:addTematica' %}"> + Adicionar Temática</a>
     
-                {% if allTematicas %}
+                
     		    <table class="table">
                     <thead>
                         <tr>
@@ -58,9 +58,6 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                {% else %}
-                    <h2>Dados não se encontram disponiveis</h2>
-                {% endif %}
     	    </div>
     	</div>
 

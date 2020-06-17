@@ -23,20 +23,18 @@
             </div>
     	    <hr class="mx-5">
     	    <div class = "row">
-    		    <div class = "col-sm-6  offset-sm-3">
+    		    <div class = "col-sm-6  offset-sm-3 mt-5">
 					<form action = "{% url 'atividades:addSessao' %}" method="post">
 						{% csrf_token %}
-  						<div class="form-group row mb-4 mt-5">
+  						<div class="form-group row mb-4 ">
     						<label for="hora_de_inicio" class="col-sm-4 col-form-label">Hora de Inicio</label>
     						<div class="col-sm-8">
       							<input id="hora_de_inicio" type="time" name="hora_de_inicio" class="form-control" required>
     						</div>
   						</div>
 						<div class="form-group row mt-5">
-							<div class="col-sm-2">
-								<a type="button" class="btn btn-secondary" href="{% url 'atividades:allSessoes' %}">Cancelar</a>
-							</div>
-							<div class="col-sm-2">
+							<div class="col-sm-10">
+								<a type="button" class="btn btn-secondary mr-3" href="{% url 'atividades:allSessoes' %}">Cancelar</a>
 								<button type="submit" class="btn btn-primary">Guardar</button>
 							</div>
 						</div>

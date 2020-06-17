@@ -180,6 +180,6 @@ class DiaAbertoForm(ModelForm):
 
         if dInicInsc < dIpropAtiv:
             raise forms.ValidationError(
-                ('Data de incio do período de inscricao deve de ser depois  da data  de fim do período de proposta de atividades'),
+                ('Data de incio do período de inscricao deve de ser depois da data de fim do período de proposta de atividades'),
                 code='invalid'
             )                          

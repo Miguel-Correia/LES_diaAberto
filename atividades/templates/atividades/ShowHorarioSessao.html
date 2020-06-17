@@ -1,7 +1,7 @@
 {% extends "diaAbertoConf/Home.html"%}
 
 	{% block content %}
-		<div class = "row mx-4 my-4">
+		<div class = "row mx-4 my-4" style="height:40rem">
 			<div class="col-xs-3 col-sm-3 col-md-3">
 				<p class="text-muted">Filtros Horarios Sessões</p>
 				<form>
@@ -47,7 +47,7 @@
 
 				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:addSessao' %}"> + Adicionar Horário</a>
 
-				{% if allSessoes %}
+				
     		    		<table class="table">
                     	    <thead>
                     	        <tr>
@@ -92,9 +92,7 @@
 								{% endfor %}
                     	    </tbody>
                     	</table>
-					{% else %}
-						<h2>Dados não se encontram disponiveis</h2>
-					{% endif %}
+					
 			</div>
     	</div>
 	{% endblock %}

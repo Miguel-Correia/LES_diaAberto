@@ -45,7 +45,6 @@
 				
 				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:addMaterial' %}"> + Adicionar Material</a>
     
-                {% if allMateriais %}
     		    <table class="table">
                     <thead>
                         <tr>
@@ -76,7 +75,6 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                {% endif %}
 
                 <div class="pagination d-flex justify-content-end">
                     <span class="step-links">
