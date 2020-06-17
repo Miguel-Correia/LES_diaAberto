@@ -6,7 +6,7 @@
 	{% endblock%}
 
 	{% block content %}
-    	<div class="mt-3 mx-2">
+    	<div class="mt-3 mx-2 pb-5">
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
@@ -28,7 +28,7 @@
             </div>
 			<hr class="mx-5">
     	    <div class = "row">
-    		    <div class = "col-sm-6 offset-sm-3">
+    		    <div class = "col-sm-6 offset-sm-3 mt-5">
 					<form action = "{% url 'diaAbertoConf:createTransporte' %}" method="post">
 						{% csrf_token %}
 						
@@ -108,7 +108,7 @@
 							
 						{% endfor %}
 						<hr>
-						<div class="form-group row">
+						<div class="form-group row mt-5">
 							<div class="col-sm-10">
 								<a type="button" class="btn btn-secondary mr-3" href="{% url 'diaAbertoConf:allTransportes' %}">Cancelar</a>
 								<button type="submit" class="btn btn-primary">Guardar</button>
