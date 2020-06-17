@@ -2,7 +2,7 @@
     
     {% block css %}
         {% load static %}
-        <link rel="stylesheet" href="{% static "atividades/showAtividades.css" %}">
+        <link rel="stylesheet" href="{% static "atividades/showGestao.css" %}">
     {% endblock %}
 
 	{% block content %}
@@ -45,7 +45,6 @@
 				
 				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:addMaterial' %}"> + Adicionar Material</a>
     
-                {% if allMateriais %}
     		    <table class="table">
                     <thead>
                         <tr>
@@ -65,6 +64,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% if allMateriais %}
                         {% for material in page_obj %}
                         <tr>
                             <td>{{ material.nome }}</td>
@@ -74,9 +74,9 @@
 							</td>
                         </tr>
                         {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
-                {% endif %}
 
                 <div class="pagination d-flex justify-content-end">
                     <span class="step-links">
@@ -146,14 +146,6 @@
         }else{
             form.find("#id_order_by").val("nome")
             form.find("#id_direction").val("asc")    
-        }
-    }else if($(this).hasClass('Localizacao')){
-        if($(this).hasClass('asc')){
-            form.find("#id_order_by").val("localizacao")
-            form.find("#id_direction").val("desc")
-        }else{
-            form.find("#id_order_by").val("localizacao")
-            form.find("#id_direction").val("asc")
         }
     }
     form.submit()

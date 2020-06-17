@@ -19,6 +19,14 @@
                         O edifício foi guardado com sucesso!
                     </div>
                 {% endif %}
+
+                {% for key, value in form.errors.items %}
+                    {% for error in value %}
+                        <div class="alert alert-danger" style="text-align:center;">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
             	</div>
             </div>
 			<hr class="mx-5">

@@ -6,12 +6,12 @@
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
 					<li class="breadcrumb-item"><a href="{% url 'atividades:allTematicas' %}">Temática</a></li>
-					<li class="breadcrumb-item active">Adicionar Temática</li>
+					<li class="breadcrumb-item active">Adicionar temática</li>
 				</ol>
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4 style="text-align:center;">Adicionar Temática</h4>
+                    <h4 style="text-align:center;">Adicionar temática</h4>
     		    </div>
     		    <div class = "col-sm-4 offset-sm-4">
     		    {% if saved %}
@@ -19,6 +19,14 @@
                         A temática foi guardada com sucesso!
                     </div>
                 {% endif %}
+
+                {% for key, value in form.errors.items %}
+                    {% for error in value %}
+                        <div class="alert alert-danger" style="text-align:center;">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
             	</div>
             </div>
 			<hr class="mx-5">

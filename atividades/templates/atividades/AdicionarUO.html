@@ -5,13 +5,13 @@
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
-					<li class="breadcrumb-item"><a href="{% url 'atividades:allEdificios' %}">Unidade Orgânicas</a></li>
-					<li class="breadcrumb-item active">Adicionar Unidade Orgânica</li>
+					<li class="breadcrumb-item"><a href="{% url 'atividades:allUnidadeOrganicas' %}">Unidade Orgânicas</a></li>
+					<li class="breadcrumb-item active">Adicionar unidade orgânica</li>
 				</ol>
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4 style="text-align:center;">Adicionar Unidade Orgânica</h4>
+                    <h4 style="text-align:center;">Adicionar unidade orgânica</h4>
     		    </div>
     		    <div class = "col-sm-4 offset-sm-4">
     		    {% if saved %}
@@ -19,6 +19,14 @@
                         A unidade orgânica foi guardada com sucesso!
                     </div>
                 {% endif %}
+
+                {% for key, value in form.errors.items %}
+                    {% for error in value %}
+                        <div class="alert alert-danger" style="text-align:center;">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
             </div>
             </div>
 			<hr class="mx-5">
@@ -47,10 +55,4 @@
     	    </div>
     	</div>
 
-	{% endblock %}
-	{% block js %}
-    	<!-- Optional JavaScript -->
-    	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    	
-		
 	{% endblock %}

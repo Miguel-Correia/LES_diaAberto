@@ -6,15 +6,23 @@
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
 					<li class="breadcrumb-item"><a href="{% url 'atividades:allCampus' %}">Campus</a></li>
-					<li class="breadcrumb-item active">Editar Campus</li>
+					<li class="breadcrumb-item active">Editar campus</li>
 				</ol>
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4 style="text-align:center;">Editar Campus</h4>
+                    <h4 style="text-align:center;">Editar campus</h4>
     		    </div>
     		    <div class = "col-sm-4 offset-sm-4">
-            </div>
+              {% for key, value in form.errors.items %}
+                {% for error in value %}
+                  <div class="alert alert-danger" style="text-align:center;">
+                    {{ error }}
+                  </div>
+                {% endfor %}
+              {% endfor %}
+
+              </div>
             </div>
 			<hr class="mx-5">
     	    <div class = "row">
