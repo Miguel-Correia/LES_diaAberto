@@ -5,20 +5,29 @@
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
-						<li class="breadcrumb-item"><a href="{% url 'atividades:allSessoes' %}">Horários Sessões</a></li>
-					<li class="breadcrumb-item active">Adicionar Horário Sessão</li>
+						<li class="breadcrumb-item"><a href="{% url 'atividades:allSessoes' %}">Horários de sessões</a></li>
+					<li class="breadcrumb-item active">Adicionar horário de sessão</li>
 				</ol>
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4 style="text-align:center;">Adicionar Horário Sessão</h4>
+                    <h4 style="text-align:center;">Adicionar horário de sessão</h4>
     		    </div>
-				<div class = "col-sm-4 offset-sm-4">
+    		    <div class = "col-sm-4 offset-sm-4">
     		    {% if saved %}
                     <div class="alert alert-primary" role="alert" style="text-align:center;">
-                        O horário da sessão foi guardado com sucesso!
+                        O horário da sessão foi guardada com sucesso!
                     </div>
                 {% endif %}
+
+                {% for key, value in form.errors.items %}
+                    {% for error in value %}
+                        <div class="alert alert-danger" style="text-align:center;">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
             	</div>
             </div>
     	    <hr class="mx-5">
@@ -27,7 +36,7 @@
 					<form action = "{% url 'atividades:addSessao' %}" method="post">
 						{% csrf_token %}
   						<div class="form-group row mb-4 ">
-    						<label for="hora_de_inicio" class="col-sm-4 col-form-label">Hora de Inicio</label>
+    						<label for="hora_de_inicio" class="col-sm-4 col-form-label">Hora de início</label>
     						<div class="col-sm-8">
       							<input id="hora_de_inicio" type="time" name="hora_de_inicio" class="form-control" required>
     						</div>

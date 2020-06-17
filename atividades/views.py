@@ -22,13 +22,12 @@ def createEdificio(request):
     allCampus = Campus.objects.all()
     form = EdificioForm(request.POST)
     saved = False
-
     if request.method == "POST":
         if form.is_valid():
             form.save()
             saved = True
-    
-    context = {'allCampus' : allCampus, 'saved' : saved}
+            form = EdificioForm()
+    context = {'form' : form, 'saved' : saved, 'allCampus' : allCampus}
     return render(request, 'atividades/AdicionarEdificio.html', context)
 
 #show all edificios
@@ -36,21 +35,32 @@ def showEdificios(request):
     allEdificios = Edificio.objects.all()
     allCampus = Campus.objects.all()
     myFilter = EdificioFilter(request.GET, queryset=allEdificios)
-    allEdificios = myFilter.qs
+
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        allEdificios = myFilter.qs.order_by(ordering)
+    else:
+        allEdificios = myFilter.qs
+
     paginator = Paginator(allEdificios, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     nome_edificio = request.GET.get('nome_edificio')
     campusid__nome = request.GET.get('campusid__nome')
-    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'page_obj': page_obj,
- 'nome_edificio' : nome_edificio, 'campusid__nome' : campusid__nome}
+    context = {
+                'allCampus' : allCampus, 
+                'allEdificios' : allEdificios, 
+                'page_obj': page_obj,
+                'nome_edificio' : nome_edificio, 
+                'campusid__nome' : campusid__nome,
+                'order_by' : order_by, 
+                'direction' : direction
+            }
     return render(request, 'atividades/ShowEdificios.html', context)
-
-#gets a edificios with a specific id 
-def getEdificio(request, id):
-    dados_Edificio = Edicifio.objects.get(id = id)
-    #add later
-    return 0
 
 #upadates the fields of a spcific edificio
 def updateEdificio(request, id):
@@ -63,9 +73,8 @@ def updateEdificio(request, id):
             form.save()
             return  redirect('atividades:allEdificios')
 
-    context = {'allCampus' : allCampus, 'edificio' : dados_Edificio}
+    context = {'allCampus' : allCampus, 'edificio' : dados_Edificio, 'form' : form}
     return render(request, 'atividades/EditarEdificio.html' ,context)
-
 
 #deletes a edificio
 def deleteEdificio(request, id):
@@ -134,27 +143,42 @@ def deleteCampus(request, id):
 def createUnidadeOrganica(request):
     form = UnidadeOrganicaForm(request.POST or None)
     saved = False
-
     if request.method == "POST":
         if form.is_valid():
             form.save()
             saved = True
             form = UnidadeOrganicaForm()
-            
-    context = {'form' : UnidadeOrganicaForm(), 'saved' : saved}
+    context = {'form' : form, 'saved' : saved}       
+
     return render(request, 'atividades/AdicionarUO.html', context)
 
 #show all unidade
 def showUnidadeOrganicas(request):
     allUnidadeOrganicas = UnidadeOrganica.objects.all()
     myFilter = UnidadeOrganicaFilter(request.GET, queryset=allUnidadeOrganicas)
-    allUnidadeOrganicas = myFilter.qs
+    
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        allUnidadeOrganicas = myFilter.qs.order_by(ordering)
+    else:
+        allUnidadeOrganicas = myFilter.qs
+
     paginator = Paginator(allUnidadeOrganicas, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     nome = request.GET.get('nome')
-    context = {'allUnidadeOrganicas' : allUnidadeOrganicas, 'page_obj': page_obj,
-    'myFilter' : myFilter, 'nome' : nome}
+    context = {
+                'allUnidadeOrganicas' : allUnidadeOrganicas, 
+                'page_obj': page_obj,
+                'myFilter' : myFilter, 
+                'nome' : nome,
+                'order_by' : order_by, 
+                'direction' : direction
+                }
     return render(request, 'atividades/ShowUO.html', context)
 
 #upadates the fields of a spcific unidade
@@ -168,7 +192,7 @@ def updateUnidadeOrganica(request, id):
             form.save()
             return  redirect('atividades:allUnidadeOrganicas')
     
-    context = {'allCampus' : allCampus, 'unidadeorganica' : dados_UnidadeOrganica}
+    context = {'allCampus' : allCampus, 'unidadeorganica' : dados_UnidadeOrganica, 'form' : form}
     return render(request, 'atividades/EditarUO.html', context)
 
 #deletes a unidade
@@ -180,18 +204,16 @@ def deleteUnidadeOrganica(request, id):
 #Creates new departamento
 def createDepartamento(request):
     allUnidadeOrganicas = UnidadeOrganica.objects.all()
+    form = DepartamentoForm()
     saved = False
-    
     if request.method == "POST":
         form = DepartamentoForm(request.POST)
         if form.is_valid():
             form.save()
-            saved=True
-        
-    context = {
-        'allUnidadeOrganicas' : allUnidadeOrganicas, 
-        'saved' : saved
-        }
+            saved = True
+            form = DepartamentoForm()
+    context = {'form' : form, 'saved' : saved, 'allUnidadeOrganicas' : allUnidadeOrganicas}
+
     return render(request, 'atividades/AdicionarDepartamento.html', context)
 
 
@@ -199,29 +221,44 @@ def createDepartamento(request):
 def showDepartamentos(request):
     allDepartamentos = Departamento.objects.all()
     myFilter = DepartamentoFilter(request.GET, queryset=allDepartamentos)
-    allDepartamentos = myFilter.qs
+
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        allDepartamentos = myFilter.qs.order_by(ordering)
+    else:
+        allDepartamentos = myFilter.qs
+
     paginator = Paginator(allDepartamentos, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     nome = request.GET.get('nome')
     unidade_organicaid__nome = request.GET.get('unidade_organicaid__nome')
-    context = {'allDepartamentos' : allDepartamentos, 'page_obj': page_obj,
-    'myFilter' : myFilter, 'nome' : nome, 'unidade_organicaid__nome' : unidade_organicaid__nome}
+    context = {
+                'allDepartamentos' : allDepartamentos, 
+                'page_obj': page_obj,
+                'myFilter' : myFilter, 
+                'nome' : nome, 
+                'unidade_organicaid__nome' : unidade_organicaid__nome,
+                'order_by' : order_by, 
+                'direction' : direction
+                }
     return render(request, 'atividades/ShowDepartamentos.html', context)
-
 
 #upadates the fields of a spcific departamento
 def updateDepartamento(request, id):
     dados_Departamento = Departamento.objects.get(id = id)
     allUnidadeOrganicas = UnidadeOrganica.objects.all()
-
+    form = DepartamentoForm(request.POST, instance = dados_Departamento)
     if request.method == "POST":
-        form = DepartamentoForm(request.POST, instance = dados_Departamento)
         if form.is_valid():
             form.save()
             return  redirect('atividades:allDepartamentos')
 
-    context = {'allUnidadeOrganicas' : allUnidadeOrganicas, 'departamento' : dados_Departamento}
+    context = {'allUnidadeOrganicas' : allUnidadeOrganicas, 'departamento' : dados_Departamento, 'form' : form}
     return render(request, 'atividades/EditarDepartamento.html', context)
 
 #deletes a departamento
@@ -232,6 +269,7 @@ def deleteDepartamento(request, id):
 
 #Creates new local
 def createLocal(request):
+    form = LocalForm()
     saved = False
     allCampus = Campus.objects.all()
 
@@ -261,41 +299,48 @@ def createLocal(request):
             #form.save()
             #image.save()
             saved = True
-    form = LocalForm()
-    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'saved' : saved}
+            form = LocalForm()
+    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'saved' : saved, 'form' : form}
     return render(request, 'atividades/AdicionarLocal.html', context)
-
-
 
 #show all local
 def showLocais(request):
     allLocais = Local.objects.all()
     allCampus = Campus.objects.all()
     myFilter = LocalFilter(request.GET, queryset=allLocais)
-    allLocais = myFilter.qs
+
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        allLocais = myFilter.qs.order_by(ordering)
+    else:
+        allLocais = myFilter.qs
+
     paginator = Paginator(allLocais, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     edicifioid__nome_edificio = request.GET.get('edicifioid__nome_edificio')
     campusid__nome = request.GET.get('campusid__nome')
-    context = {'allCampus': allCampus, 'allLocais' : allLocais, 'page_obj': page_obj,
-    'myFilter' : myFilter, 'edicifioid__nome_edificio' : edicifioid__nome_edificio, 'campusid__nome' : campusid__nome}
+    context = {'allCampus': allCampus, 
+            'allLocais' : allLocais, 
+            'page_obj': page_obj,
+            'myFilter' : myFilter, 
+            'edicifioid__nome_edificio' : edicifioid__nome_edificio, 
+            'campusid__nome' : campusid__nome,
+            'order_by' : order_by, 
+            'direction' : direction}
     return render(request, 'atividades/ShowLocais.html', context)
-
-#gets a local with a specific id 
-def getLocal(request, id):
-    dados_Local = Local.objects.get(id = id)
-    #add later
-    return 0
 
 #upadates the fields of a spcific local
 def updateLocal(request, id):
     dados_Local = Local.objects.get(id = id)
     allEdificios = Edificio.objects.all()
     allCampus = Campus.objects.all()
-
+form = LocalForm(request.POST, request.FILES, instance= dados_Local)
     if request.method == "POST":
-        form = LocalForm(request.POST, request.FILES)
         if form.is_valid():
             if form.cleaned_data['indoor'] == True:
                 dados_Local.campusid = form.cleaned_data['campusid']
@@ -318,7 +363,7 @@ def updateLocal(request, id):
             dados_Local.save()
             return  redirect('atividades:allLocais')
     
-    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'local' : dados_Local,}
+    context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'local' : dados_Local, 'form' : form}
     return render(request, 'atividades/EditarLocal.html', context)
 
 
@@ -412,7 +457,16 @@ def showAtividades(request):
         pass
 
     myFilter = AtividadeFilter(request.GET, queryset=allAtividades)
-    allAtividades = myFilter.qs
+    
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        allAtividades = myFilter.qs.order_by(ordering)
+    else:
+        allAtividades = myFilter.qs
 
     paginator = Paginator(allAtividades, 5) 
     page_number = request.GET.get('page')
@@ -451,7 +505,9 @@ def showAtividades(request):
         'localedificioSearched': localedificioSearched,
         'daysDiaAberto' : daysDiaAberto, 
         'sessao_gte' : sessao_gte, 
-        'sessao_lte' : sessao_lte 
+        'sessao_lte' : sessao_lte,
+        'order_by' : order_by, 
+        'direction' : direction 
         }
     return render(request, 'atividades/ShowAtividades.html', context)
 
@@ -676,34 +732,53 @@ def getLocal(request, edificioid):
 def showTematicas(request):
     allTematicas = Tematica.objects.all()
     myFilter = TematicaFilter(request.GET, queryset=allTematicas)
-    allTematicas = myFilter.qs
+    
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        allTematicas = myFilter.qs.order_by(ordering)
+    else:
+        allTematicas = myFilter.qs
+
     paginator = Paginator(allTematicas, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     nome = request.GET.get('nome')
-    context = {'allTematicas': allTematicas, 'page_obj': page_obj, 'myFilter' : myFilter, 'nome' : nome}
+    context = {
+                'allTematicas': allTematicas, 
+                'page_obj': page_obj, 
+                'myFilter' : myFilter, 
+                'nome' : nome,
+                'order_by' : order_by, 
+                'direction' : direction
+                }
     return render(request, 'atividades/ShowTematicas.html', context)
 
 #Add tematica
 def addTematica(request):
-    form = AtividadeForm()
+    form = TematicaForm()
     saved = False
     if request.method == "POST":
         form = TematicaForm(request.POST)
         if form.is_valid():
             form.save()
             saved = True
-    return render(request, 'atividades/AdicionarTematica.html', {'saved' : saved})
+    context = {'form' : form, 'saved' : saved}
+    return render(request, 'atividades/AdicionarTematica.html', context)
 
 def updateTematica(request, id):
     dados = Tematica.objects.get(id = id)
+    form = SessaoForm(request.POST or None, instance=dados)
     if request.method == "POST":
-        form = TematicaForm(request.POST, instance = dados)
+        #form = TematicaForm(request.POST, instance = dados)
         if form.is_valid():
             form.save()
             return  redirect('atividades:allTematicas')
     
-    context = {'tematica': dados,}
+    context = {'tematica': dados, 'form' : form}
     return render(request, 'atividades/EditarTematica.html', context)
 
 def deleteTematica(request, id):
@@ -771,34 +846,53 @@ def deleteMaterial(request, id):
 def showSessoes(request):
     allSessoes = Sessao.objects.all()
     myFilter = SessaoFilter(request.GET, queryset=allSessoes)
-    allSessoes = myFilter.qs
+
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    if order_by:
+        ordering = Lower(order_by)
+        if direction == 'desc':
+            ordering = '-{}'.format(order_by)
+        allSessoes = myFilter.qs.order_by(ordering)
+    else:
+        allSessoes = myFilter.qs
+
     paginator = Paginator(allSessoes, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     hora_de_inicio = request.GET.get('hora_de_inicio')
-    context = {'allSessoes' : allSessoes, 'page_obj': page_obj, 'myFilter' : myFilter, 'hora_de_inicio' : hora_de_inicio}
+    context = {
+                'allSessoes' : allSessoes, 
+                'page_obj': page_obj, 
+                'myFilter' : myFilter, 
+                'hora_de_inicio' : hora_de_inicio,
+                'order_by' : order_by, 
+                'direction' : direction
+                }
     return render(request, 'atividades/ShowHorarioSessao.html', context)
 
 def addSessao(request):
-    saved=False
+    form = SessaoForm()
+    saved = False
     if request.method == "POST":
         form = SessaoForm(request.POST)
         if form.is_valid():
             form.save()
             saved = True
-    
-    return render(request, 'atividades/AdicionarHorarioSessao.html', {'saved':saved})
+            form = SessaoForm()
+    context = {'form' : form, 'saved' : saved}
+    return render(request, 'atividades/AdicionarHorarioSessao.html', context)
 
 def updateSessao(request, id):
     dados = Sessao.objects.get(id=id)
-
+    form = SessaoForm(request.POST or None, instance=dados)
     if request.method == "POST":
-        form = SessaoForm(request.POST, instance=dados)
+        #form = SessaoForm(request.POST, instance=dados)
         if form.is_valid():
             form.save()
             return redirect('atividades:allSessoes')
 
-    return render(request,'atividades/EditarHorarioSessao.html' , {'sessao':dados})
+    return render(request,'atividades/EditarHorarioSessao.html' , {'form' : form, 'sessao':dados})
 
 def deleteSessao(request, id):
     dados = Sessao.objects.get(id=id)

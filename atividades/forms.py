@@ -10,6 +10,24 @@ class EdificioForm(ModelForm):
         model = Edificio
         fields =    '__all__'
 
+    def clean(self):
+        cleaned_data = super().clean()
+        nome_edificio = cleaned_data.get("nome_edificio")
+        if self.instance.id:
+            for edificio in Edificio.objects.all():
+                if nome_edificio.lower() == edificio.nome_edificio.lower() and self.instance.id != edificio.id:
+                    raise forms.ValidationError(
+                        ('O edifício que pretende editar já existe'),
+                    code='invalid'
+                    )
+        else:
+            for edificio in Edificio.objects.all():
+                if nome_edificio.lower() == edificio.nome_edificio.lower():
+                    raise forms.ValidationError(
+                        ('O edifício que pretende criar já existe'),
+                    code='invalid'
+                    )
+
 class CampusForm(ModelForm):
     class Meta:
         model = Campus
@@ -38,15 +56,96 @@ class UnidadeOrganicaForm(ModelForm):
         model = UnidadeOrganica
         fields =    '__all__'
 
+    def clean(self):
+        cleaned_data = super().clean()
+        nome = cleaned_data.get("nome")
+        if self.instance.id:
+            for unidade_organica in UnidadeOrganica.objects.all():
+                if nome.lower() == unidade_organica.nome.lower() and self.instance.id != unidade_organica.id:
+                    raise forms.ValidationError(
+                        ('A unidade orgânica que pretende editar já existe'),
+                    code='invalid'
+                    )
+        else:
+            for unidade_organica in UnidadeOrganica.objects.all():
+                if nome.lower() == unidade_organica.nome.lower():
+                    raise forms.ValidationError(
+                        ('A unidade orgânica que pretende criar já existe'),
+                    code='invalid'
+                    )
+
 class DepartamentoForm(ModelForm):
     class Meta:
         model = Departamento
         fields =    '__all__'
 
+    def clean(self):
+        cleaned_data = super().clean()
+        nome = cleaned_data.get("nome")
+        if self.instance.id:
+            for departamento in Departamento.objects.all():
+                if nome.lower() == departamento.nome.lower() and self.instance.id != departamento.id:
+                    raise forms.ValidationError(
+                        ('O departamento que pretende editar já existe'),
+                    code='invalid'
+                    )
+        else:
+            for departamento in Departamento.objects.all():
+                if nome.lower() == departamento.nome.lower():
+                    raise forms.ValidationError(
+                        ('O departamento que pretende criar já existe'),
+                    code='invalid'
+                    )
+
 class LocalForm(ModelForm):
     class Meta:
         model = Local
-        fields =    ['campusid', 'indoor', 'descricao', 'sala', 'andar', 'mapa_sala']
+        fields =    ['campusid', 'indoor', 'descricao', 'sala', 'andar', 'mapa_sala', 'edicifioid']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        campusid = cleaned_data.get("campusid")
+        print(campusid)
+        edicifioid = cleaned_data.get("edicifioid")
+        print(edicifioid.id)
+        andar = cleaned_data.get("andar")
+        sala = cleaned_data.get("sala")
+        indoor = cleaned_data.get("indoor")
+        if indoor:
+            if self.instance.id:
+                for local in Local.objects.all():
+                    if campusid.id == local.campusid.id and self.instance.id != local.id:
+                        print("q")
+                        try:
+                            if edicifioid.id == local.edicifioid.id and self.instance.id != local.id:
+                                print("q") 
+                                if andar == local.andar and self.instance.id != local.id:
+                                    print("q")
+                                    if sala == local.sala and self.instance.id != local.id:
+                                        print("q")
+                                        raise forms.ValidationError(
+                                            ('O local que pretende editar já existe'),
+                                        code='invalid'
+                                        )
+                        except AttributeError:
+                            pass
+            else:
+                for local in Local.objects.all():
+                    if campusid.id == local.campusid.id:
+                        print("ca")
+                        try:
+                            if edicifioid.id == local.edicifioid.id:
+                                print("ed")
+                                if andar == local.andar:
+                                    print("an")
+                                    if sala == local.sala:
+                                        print("sa")
+                                        raise forms.ValidationError(
+                                            ('O local que pretende criar já existe'),
+                                        code='invalid'
+                                        )
+                        except AttributeError:
+                            pass 
 
 class AtividadeForm(ModelForm):
     class Meta:
@@ -114,6 +213,24 @@ class TematicaForm(ModelForm):
         model = Tematica
         fields =    '__all__'
 
+    def clean(self):
+        cleaned_data = super().clean()
+        nome = cleaned_data.get("nome")
+        if self.instance.id:
+            for tematica in Tematica.objects.all():
+                if nome.lower() == tematica.nome.lower() and self.instance.id != tematica.id:
+                    raise forms.ValidationError(
+                        ('A temática que pretende editar já existe'),
+                    code='invalid'
+                    )
+        else:
+            for tematica in Tematica.objects.all():
+                if nome.lower() == tematica.nome.lower():
+                    raise forms.ValidationError(
+                        ('A temática que pretende criar já existe'),
+                    code='invalid'
+                    )
+
 class MaterialForm(ModelForm):
     class Meta:
         model = Material
@@ -122,48 +239,20 @@ class MaterialForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         nome = cleaned_data.get("nome")
-        print(self.instance.id)
         if self.instance.id:
             for material in Material.objects.all():
                 if nome.lower() == material.nome.lower() and self.instance.id != material.id:
-                    raise forms.ValidationError(('O material que pretende editar já existe'),code='invalid')
+                    raise forms.ValidationError(
+                        ('O material que pretende editar já existe'),
+                    code='invalid'
+                    )
         else:
             for material in Material.objects.all():
-                if nome.lower() == material.nome.lower(): 
-                    raise forms.ValidationError(('O material que pretende criar já existe '),code='invalid')
-
-
-# AtividadeTematicaFormset = modelformset_factory(
-#     AtividadeTematica,
-#     fields=('tematicaid', ),
-#     extra = 1,
-#     labels = {
-#             'tematicaid' : _('Temática'),
-#             },
-#     widgets={'tematicaid': Select(attrs={
-#             'class': 'form-control',
-#         },choices = [(tematica.id, tematica.nome) for tematica in Tematica.objects.all()])
-#     }
-# )
-
-# AtividadeMaterialFormset = modelformset_factory(
-#     AtividadeMaterial,
-#     fields=('materialid', 'quantidade'),
-#     extra = 1,
-#     labels = {
-#             'materialid' : _('Material'),
-#             'quantidade' : _('Quantidade'),
-#             },
-#     widgets={'materialid': Select(attrs={
-#             'class': 'form-control',
-#         },choices = [(material.id, material.nome) for material in Material.objects.all()]),
-#         'quantidade': NumberInput(attrs={
-#             'class': 'form-control',
-#             'placeholder' : 'Introduza a quantidade',
-#             'min' : 1,
-#         }),
-#     }
-# )
+                if nome.lower() == material.nome.lower():
+                    raise forms.ValidationError(
+                        ('O material que pretende criar já existe'),
+                    code='invalid'
+                    )
 
 class AtividadeTematicaForm(ModelForm):
 
@@ -255,6 +344,24 @@ class SessaoForm(ModelForm):
     class Meta:
         model = Sessao
         fields =    '__all__'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        hora_de_inicio = cleaned_data.get("hora_de_inicio")
+        if self.instance.id:
+            for sessao in Sessao.objects.all():
+                if self.instance.id != sessao.id:
+                    raise forms.ValidationError(
+                        ('A sessão que pretende editar já existe'),
+                    code='invalid'
+                    )
+        else:
+            for sessao in Sessao.objects.all():
+                if hora_de_inicio == sessao.hora_de_inicio:
+                    raise forms.ValidationError(
+                        ('A sessão que pretende criar já existe'),
+                    code='invalid'
+                    )
 
 # class AtividadeSessaoForm(ModelForm):
 #     class Meta:

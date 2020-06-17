@@ -1,10 +1,18 @@
 {% extends "diaAbertoConf/Home.html" %}
 
+     {% block css %}
+        {% load static %}
+        <link rel="stylesheet" href="{% static "atividades/showAtividades.css" %}">
+    {% endblock %}
+
 	{% block content %}
     	<div class = "row mx-4 my-4">
 			<div class="col-xs-3 col-sm-3 col-md-3">
-				<p class="text-muted">Filtros Locais</p>
-				<form method="get">
+				<p class="text-muted">Filtros locais</p>
+				<form id="formfilters" method="get">
+                    <input id="id_page" name="page" value="{{page_obj.number}}" type="hidden">
+                    <input id="id_order_by" name="order_by" {% if order_by %} value="{{order_by}}" {% endif %} type="hidden">
+                    <input id="id_direction" name="direction" {% if direction %} value="{{direction}}" {% endif %} type="hidden">
 					<hr>
 					<div class="form-group row">
 						<div class="col">
@@ -44,18 +52,58 @@
 					</ol>
 				</nav>
 
-				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:addLocal' %}"> + Adicionar Local</a>
+				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:addLocal' %}"> + Adicionar local</a>
 
     	    	<table class="table">
                     <thead>
                         <tr>
-                        	<th scope="col"></th>
-                            <th scope="col">Campus</th>
-                            <th scope="col">Edifício</th>
-                            <th scope="col">Andar</th>
-                            <th scope="col">Sala</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
+                        	<th style="width: 8%" scope="col"></th>
+                            {% if order_by == "campusid" %}
+                            <th style="width: 25%" class="Sortable Campus {{direction}} tableBorderH" scope="col">Campus
+                            {% if direction == 'asc'%} 
+                                <i class="fas fa-caret-up fa-xs"></i>
+                            {% elif direction == 'desc' %}
+                                <i class="fas fa-caret-down fa-xs"></i>
+                            {% endif %}
+                            </th>
+                            {% else %}
+                            <th scope="col" class="Sortable Campus tableBorderH" style="width: 25%"> Campus</th>
+                            {% endif  %}
+                            {% if order_by == "edicifioid" %}
+                            <th style="width: 25%" class="Sortable Edificio {{direction}} tableBorderH" scope="col">Edifício
+                            {% if direction == 'asc'%} 
+                                <i class="fas fa-caret-up fa-xs"></i>
+                            {% elif direction == 'desc' %}
+                                <i class="fas fa-caret-down fa-xs"></i>
+                            {% endif %}
+                            </th>
+                            {% else %}
+                            <th scope="col" class="Sortable Edificio tableBorderH" style="width: 25%"> Edifício</th>
+                            {% endif  %}
+                            {% if order_by == "andar" %}
+                            <th style="width: 25%" class="Sortable Andar {{direction}} tableBorderH" scope="col">Andar
+                            {% if direction == 'asc'%} 
+                                <i class="fas fa-caret-up fa-xs"></i>
+                            {% elif direction == 'desc' %}
+                                <i class="fas fa-caret-down fa-xs"></i>
+                            {% endif %}
+                            </th>
+                            {% else %}
+                            <th scope="col" class="Sortable Andar tableBorderH" style="width: 25%"> Andar</th>
+                            {% endif  %}
+                            {% if order_by == "sala" %}
+                            <th style="width: 25%" class="Sortable Sala {{direction}} tableBorderH" scope="col">Sala
+                            {% if direction == 'asc'%} 
+                                <i class="fas fa-caret-up fa-xs"></i>
+                            {% elif direction == 'desc' %}
+                                <i class="fas fa-caret-down fa-xs"></i>
+                            {% endif %}
+                            </th>
+                            {% else %}
+                            <th scope="col" class="Sortable Sala tableBorderH" style="width: 25%"> Sala</th>
+                            {% endif  %}
+                            <th style="width: 8%" scope="col"></th>
+							<th style="width: 8%" scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,22 +142,21 @@
                 </table>
 
 				<div class="pagination d-flex justify-content-end">
-				    <span class="step-links">
-				        {% if page_obj.has_previous %}
-				            <a class="btn btn-outline-secondary fas fa-angle-double-left" href="?page=1"></a>
-				            <a class="btn btn-outline-secondary fas fa-angle-left" href="?page={{ page_obj.previous_page_number }}"></a>
-				        {% endif %}
+                    <span class="step-links">
+                        {% if page_obj.has_previous %}
+                            <button class="btn btn-outline-secondary  fas fa-angle-double-left page" data-page="1"></button>
+                            <button class="btn btn-outline-secondary  fas fa-angle-left page" data-page="{{page_obj.previous_page_number}}"></button>
+                        {% endif %}
 
-				        <span class="current">
-				            &nbsp{{ page_obj.number }}&nbsp
-				        </span>
+                        <span class="current">{{ page_obj.number }}</span>
 
-				        {% if page_obj.has_next %}
-				            <a class="btn btn-outline-secondary fas fa-angle-double-right" href="?page={{ page_obj.next_page_number }}"></a>
-				            <a class="btn btn-outline-secondary fas fa-angle-right" href="?page={{ page_obj.paginator.num_pages }}"></a>
-				        {% endif %}
-				    </span>
-				</div>
+                        {% if page_obj.has_next %}
+                            <button class="btn btn-outline-secondary  fas fa-angle-right page" data-page="{{page_obj.next_page_number}}"></button>
+                            <button class="btn btn-outline-secondary  fas fa-angle-double-right page" data-page="{{page_obj.paginator.num_pages}}"></button>
+                        {% endif %}
+                    </span>
+                </div>
+
 			</div>
         </div>
 
@@ -163,7 +210,6 @@
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<script type="text/javascript">
-        
 
         $(".hide").hide();
         $("table").click(function(event) {
@@ -182,6 +228,62 @@
             }
         })
 
+$('th.Sortable').click(function(){
+
+    var form = $('#formfilters')
+
+    if($(this).hasClass('Campus')){
+        if($(this).hasClass('asc')){
+            form.find("#id_order_by").val("campusid")
+            form.find("#id_direction").val("desc")
+        }else{
+            form.find("#id_order_by").val("campusid")
+            form.find("#id_direction").val("asc")    
+        }
+    }
+    else if($(this).hasClass('Edificio')){
+        if($(this).hasClass('asc')){
+            form.find("#id_order_by").val("edicifioid")
+            form.find("#id_direction").val("desc")
+        }else{
+            form.find("#id_order_by").val("edicifioid")
+            form.find("#id_direction").val("asc")    
+        }
+    }
+    else if($(this).hasClass('Andar')){
+        if($(this).hasClass('asc')){
+            form.find("#id_order_by").val("andar")
+            form.find("#id_direction").val("desc")
+        }else{
+            form.find("#id_order_by").val("andar")
+            form.find("#id_direction").val("asc")    
+        }
+    }
+    else if($(this).hasClass('Sala')){
+        if($(this).hasClass('asc')){
+            form.find("#id_order_by").val("sala")
+            form.find("#id_direction").val("desc")
+        }else{
+            form.find("#id_order_by").val("sala")
+            form.find("#id_direction").val("asc")    
+        }
+    }
+    form.submit()
+})
+
+$('button.page').click(function(){
+    var page = $(this).data('page')
+    var form = $('#formfilters')
+    form.find("#id_page").val(page)
+    form.submit()
+})
+
+$(document).ready( function(){
+    $('th.Sortable').each(function(){
+        $(this).has('i').addClass('tableBorder')
+    })
+})
+
         
         $('.delete').click(function (){
             var data_var = $(this).data('id');
@@ -192,6 +294,7 @@
             var data_var = "/media/" + $(this).data('image');
             $("#ImageModal").find('img').attr("src", data_var);
         })
+
 
     </script>
     {% endblock %}

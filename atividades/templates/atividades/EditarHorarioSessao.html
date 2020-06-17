@@ -5,22 +5,34 @@
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
-						<li class="breadcrumb-item"><a href="{% url 'atividades:allSessoes' %}">Horários Sessões</a></li>
-					<li class="breadcrumb-item active">Editar Horário Sessão</li>
+						<li class="breadcrumb-item"><a href="{% url 'atividades:allSessoes' %}">Horários de sessões</a></li>
+					<li class="breadcrumb-item active">Editar horário de sessão</li>
 				</ol>
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4 style="text-align:center;">Editar Horário Sessão</h4>
+                    <h4 style="text-align:center;">Editar horário de sessão</h4>
     		    </div>
+    		    <div class = "col-sm-4 offset-sm-4">
+              {% for key, value in form.errors.items %}
+                {% for error in value %}
+                  <div class="alert alert-danger" style="text-align:center;">
+                    {{ error }}
+                  </div>
+                {% endfor %}
+              {% endfor %}
+
+              </div>
             </div>
     	    <hr class="mx-5">
     	    <div class = "row">
     		    <div class = "col-sm-6  offset-sm-3 mt-5">
 					<form action = "{% url 'atividades:updateSessao'  id=sessao.id%}" method="post">
 						{% csrf_token %}
+
   						<div class="form-group row mb-4 ">
-    						<label for="hora_de_inicio" class="col-sm-4 col-form-label">Hora de Inicio</label>
+    						<label for="hora_de_inicio" class="col-sm-4 col-form-label">Hora de início</label>
+
     						<div class="col-sm-8">
       							<input id="hora_de_inicio" type="time" name="hora_de_inicio" class="form-control" required value="{{sessao.hora_de_inicio|time:"H:i"}}">
     						</div>
