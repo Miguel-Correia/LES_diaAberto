@@ -123,7 +123,7 @@
                             <span class="input-group-text"><i class="far fa-calendar"></i></span>
                           </div>
                           <select id="id_data" name="data" class="form-control">
-                                <option value="" disabled selected>Data inicial</option>
+                                <option disabled selected>Data inicial</option>
                                 {% for dia in daysDiaAberto %}
                                     {% if dia|date:"d/m/Y" == data_inicialTarefaSearched %}
                                         <option selected value={{ dia | date:"d/m/Y"}}>{{dia |date:"d-m-Y"}}</option>
@@ -245,6 +245,13 @@
                                                 <a href="" class="recuse btn btn-outline-danger" data-toggle="modal" data-target="#Modalrecusar" data-id="{% url 'atividades:recuseAtividade' id=atividade.id %}">Recusar atividade</a>
                                                 </p>
                                                 {% endif %}
+                                                {% if atividade.validada == 1 %}
+                                                <p>
+                                                <br>
+                                                <a href="{% url 'atividades:updateAtribuirLocal' id=atividade.id %}" class="btn btn-outline-success mr-3">Alterar local</a>
+                                                </p>
+                                                {% endif %}
+
                                             </td>
                                         </tr>
 							<tbody>

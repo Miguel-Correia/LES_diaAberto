@@ -56,11 +56,12 @@ class Local(models.Model):
     indoor = models.BooleanField(db_column='Indoor', blank=True, null=True)  # Field name made lowercase.
     campusid = models.ForeignKey(Campus, on_delete = models.CASCADE, db_column='CampusID', blank=True, null=True)  # Field name made lowercase.
     mapa_sala = models.ImageField(upload_to='mapas_salas', blank=True, null=True)
+    nome_local_exterior = models.CharField(db_column='nome_local_exterior', blank=True, null=True, max_length=255)
 
     def __str__ (self):
         if self.indoor:
-            return str(self.campusid.nome) + "," + " " + str(self.edicifioid.nome_edificio) + "," + " " + "Andar" + " " + str(self.andar) + "," + " " + "Sala" + " " + str(self.sala)
-        return str(self.campusid.nome) + " Exterior"
+            return str(self.campusid.nome) + ", " + str(self.edicifioid.nome_edificio) + ", " + "Andar" + " " + str(self.andar) + ", " + "Sala" + " " + str(self.sala)
+        return str(self.campusid.nome) + ", " + str(self.nome_local_exterior)
 
     class Meta:
         

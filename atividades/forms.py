@@ -100,14 +100,12 @@ class DepartamentoForm(ModelForm):
 class LocalForm(ModelForm):
     class Meta:
         model = Local
-        fields =    ['campusid', 'indoor', 'descricao', 'sala', 'andar', 'mapa_sala', 'edicifioid']
+        fields =    ['campusid', 'indoor', 'descricao', 'sala', 'andar', 'mapa_sala', 'edicifioid', 'nome_local_exterior']
 
     def clean(self):
         cleaned_data = super().clean()
         campusid = cleaned_data.get("campusid")
-        print(campusid)
         edicifioid = cleaned_data.get("edicifioid")
-        print(edicifioid.id)
         andar = cleaned_data.get("andar")
         sala = cleaned_data.get("sala")
         indoor = cleaned_data.get("indoor")
@@ -115,14 +113,10 @@ class LocalForm(ModelForm):
             if self.instance.id:
                 for local in Local.objects.all():
                     if campusid.id == local.campusid.id and self.instance.id != local.id:
-                        print("q")
                         try:
                             if edicifioid.id == local.edicifioid.id and self.instance.id != local.id:
-                                print("q") 
                                 if andar == local.andar and self.instance.id != local.id:
-                                    print("q")
                                     if sala == local.sala and self.instance.id != local.id:
-                                        print("q")
                                         raise forms.ValidationError(
                                             ('O local que pretende editar já existe'),
                                         code='invalid'
@@ -132,14 +126,10 @@ class LocalForm(ModelForm):
             else:
                 for local in Local.objects.all():
                     if campusid.id == local.campusid.id:
-                        print("ca")
                         try:
                             if edicifioid.id == local.edicifioid.id:
-                                print("ed")
                                 if andar == local.andar:
-                                    print("an")
                                     if sala == local.sala:
-                                        print("sa")
                                         raise forms.ValidationError(
                                             ('O local que pretende criar já existe'),
                                         code='invalid'
