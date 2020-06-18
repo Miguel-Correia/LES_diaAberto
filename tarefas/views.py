@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.forms import formset_factory
 from django.db.models.functions import Lower
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 from tarefas.filters import TarefaFilter, ColaboradorFilter
 from tarefas.models import Tarefa, InscricaoTarefa
@@ -19,6 +19,7 @@ from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm,
 # ---------------------------------------------------------
 # Tarefas CRUD- Create Read Update Delete
 # ----------------------------------------------------------
+
 
 def createTarefa(request):
 
