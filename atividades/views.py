@@ -282,7 +282,8 @@ def createLocal(request):
         form = LocalForm(request.POST, request.FILES)
         if form.is_valid():
             if form.cleaned_data['indoor'] == False:
-                l = Local(campusid=form.cleaned_data['campusid'],  
+                l = Local(campusid=form.cleaned_data['campusid'], 
+                    nome_local_exterior = form.cleaned_data['nome_local_exterior'], 
                     descricao=form.cleaned_data['descricao'],
                     indoor = form.cleaned_data['indoor'],
                     mapa_sala = form.cleaned_data['mapa_sala'])
@@ -339,7 +340,7 @@ def updateLocal(request, id):
     dados_Local = Local.objects.get(id = id)
     allEdificios = Edificio.objects.all()
     allCampus = Campus.objects.all()
-form = LocalForm(request.POST, request.FILES, instance= dados_Local)
+    form = LocalForm(request.POST, request.FILES, instance= dados_Local)
     if request.method == "POST":
         if form.is_valid():
             if form.cleaned_data['indoor'] == True:
@@ -355,6 +356,7 @@ form = LocalForm(request.POST, request.FILES, instance= dados_Local)
                 dados_Local.campusid = form.cleaned_data['campusid']
                 dados_Local.indoor = form.cleaned_data['indoor']
                 dados_Local.descricao = form.cleaned_data['descricao']
+                dados_Local.nome_local_exterior = form.cleaned_data['nome_local_exterior']
                 dados_Local.andar = None
                 dados_Local.sala = None
                 dados_Local.edicifioid = None
@@ -475,8 +477,9 @@ def showAtividades(request):
     nome = request.GET.get('nome')
     tipo_atividade = request.GET.get('tipo_atividade')
     validada = request.GET.get('validada')
-    sessao_gte = request.GET.get('sessaoatividade__sessaoid__hora_de_inicio')
-    sessao_lte = request.GET.get('sessaoatividade__sessaoid__hora_de_inicio')
+    sessao_gte = request.GET.get('sessao_gte')
+    sessao_lte = request.GET.get('sessao_lte')
+    data = request.GET.get('data')
 
     #local_campus = request.GET.get('localid__campusid')
     #localid__edicifioid = request.GET.get('localid__edicifioid')
@@ -507,7 +510,10 @@ def showAtividades(request):
         'sessao_gte' : sessao_gte, 
         'sessao_lte' : sessao_lte,
         'order_by' : order_by, 
-        'direction' : direction 
+        'direction' : direction,
+        'sessao_gte' : sessao_gte,
+        'sessao_lte' : sessao_lte,
+        'data' : data
         }
     return render(request, 'atividades/ShowAtividades.html', context)
 
@@ -692,6 +698,7 @@ def atribuirLocal(request, id):
     allTematicaAtividade = AtividadeTematica.objects.all()
     allMaterialAtividade = AtividadeMaterial.objects.all()
     allSessaoAtividade = SessaoAtividade.objects.all()
+
     try:
         allEdificios = Edificio.objects.filter(campusid = allCampus[0].id)
     except IndexError:
@@ -718,7 +725,38 @@ def atribuirLocal(request, id):
             }
     return render(request, 'atividades/AtribuirLocal.html', context)
 
+def updateAtribuirLocal(request, id):
+    dados_atividade = Atividade.objects.get(id = id)
+    local = dados_atividade.localid
+    allCampus = Campus.objects.all()
+    allEdificios = Edificio.objects.filter(campusid=local.campusid)
+    locais = Local.objects.filter(campusid=local.campusid).filter(edicifioid=local.edicifioid)
+    allTematicaAtividade = AtividadeTematica.objects.all()
+    allMaterialAtividade = AtividadeMaterial.objects.all()
+    allSessaoAtividade = SessaoAtividade.objects.all()
+
+    if request.method == "POST":
+        if form.is_valid():
+            dados_atividade.localid = form.cleaned_data['localid']
+            dados_atividade.save()
+            return  redirect('atividades:allAtividades')
+
+    context = { 'allLocais' : locais, 
+                'allEdificios' : allEdificios, 
+                'allCampus' : allCampus, 
+                'atividade' : dados_atividade, 
+                'listTematica' : allTematicaAtividade, 
+                'listMaterial' : allMaterialAtividade, 
+                'listSessao' : allSessaoAtividade,
+                'local' : local
+            }
+    return render(request, 'atividades/AtribuirLocal.html', context)
+
 def getEdificio(request, campusid):
+    dados_edificio = [(e.id, e.nome_edificio) for e in Edificio.objects.filter(campusid = campusid)]
+    return JsonResponse(dict(dados_edificio))
+
+def getEdificioCampus(request, campusid):
     dados_edificio = [(e.id, e.nome_edificio + ", " + str(e.campusid))for e in Edificio.objects.filter(campusid = campusid)]
     return JsonResponse(dict(dados_edificio))
 
@@ -867,7 +905,9 @@ def showSessoes(request):
                 'myFilter' : myFilter, 
                 'hora_de_inicio' : hora_de_inicio,
                 'order_by' : order_by, 
-                'direction' : direction
+                'direction' : direction,
+                'sessao_gte' : request.GET.get('sessao_gte'),
+                'sessao_lte' : request.GET.get('sessao_lte')
                 }
     return render(request, 'atividades/ShowHorarioSessao.html', context)
 

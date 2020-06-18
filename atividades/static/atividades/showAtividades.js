@@ -15,7 +15,7 @@ $('#id_localcampus').change(function(){
     })
 
     campusid = $(this).val();
-    request_url = '/GestaoAtividades/getEdificio/' + campusid;
+    request_url = '/GestaoAtividades/getEdificioCampus/' + campusid;
     $.ajax({
         url: request_url,
         dataType: "json",

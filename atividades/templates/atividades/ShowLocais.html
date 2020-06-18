@@ -57,9 +57,9 @@
     	    	<table class="table">
                     <thead>
                         <tr>
-                        	<th style="width: 8%" scope="col"></th>
+                        	<th style="width: 6%" scope="col"></th>
                             {% if order_by == "campusid" %}
-                            <th style="width: 25%" class="Sortable Campus {{direction}} tableBorderH" scope="col">Campus
+                            <th style="width: 40%" class="Sortable Campus {{direction}} tableBorderH" scope="col">Campus
                             {% if direction == 'asc'%} 
                                 <i class="fas fa-caret-up fa-xs"></i>
                             {% elif direction == 'desc' %}
@@ -67,10 +67,10 @@
                             {% endif %}
                             </th>
                             {% else %}
-                            <th scope="col" class="Sortable Campus tableBorderH" style="width: 25%"> Campus</th>
+                            <th scope="col" class="Sortable Campus tableBorderH" style="width: 40%"> Campus</th>
                             {% endif  %}
-                            {% if order_by == "edicifioid" %}
-                            <th style="width: 25%" class="Sortable Edificio {{direction}} tableBorderH" scope="col">Edifício
+                            {% if order_by == "indoor" %}
+                            <th style="width: 40%" class="Sortable Indoor {{direction}} tableBorderH" scope="col">Tipo de local
                             {% if direction == 'asc'%} 
                                 <i class="fas fa-caret-up fa-xs"></i>
                             {% elif direction == 'desc' %}
@@ -78,32 +78,10 @@
                             {% endif %}
                             </th>
                             {% else %}
-                            <th scope="col" class="Sortable Edificio tableBorderH" style="width: 25%"> Edifício</th>
+                            <th scope="col" class="Sortable Indoor tableBorderH" style="width: 40%">Tipo de local</th>
                             {% endif  %}
-                            {% if order_by == "andar" %}
-                            <th style="width: 25%" class="Sortable Andar {{direction}} tableBorderH" scope="col">Andar
-                            {% if direction == 'asc'%} 
-                                <i class="fas fa-caret-up fa-xs"></i>
-                            {% elif direction == 'desc' %}
-                                <i class="fas fa-caret-down fa-xs"></i>
-                            {% endif %}
-                            </th>
-                            {% else %}
-                            <th scope="col" class="Sortable Andar tableBorderH" style="width: 25%"> Andar</th>
-                            {% endif  %}
-                            {% if order_by == "sala" %}
-                            <th style="width: 25%" class="Sortable Sala {{direction}} tableBorderH" scope="col">Sala
-                            {% if direction == 'asc'%} 
-                                <i class="fas fa-caret-up fa-xs"></i>
-                            {% elif direction == 'desc' %}
-                                <i class="fas fa-caret-down fa-xs"></i>
-                            {% endif %}
-                            </th>
-                            {% else %}
-                            <th scope="col" class="Sortable Sala tableBorderH" style="width: 25%"> Sala</th>
-                            {% endif  %}
-                            <th style="width: 8%" scope="col"></th>
-							<th style="width: 8%" scope="col"></th>
+                            <th style="width: 6%" scope="col"></th>
+							<th style="width: 6%" scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -112,16 +90,10 @@
                         	<tr>
                         		<td><i class="fas fa-chevron-right"></i></td>
                         	    <td>{{ local.campusid.nome}}</td>
-                        	    <td>{{ local.edicifioid.nome_edificio}}</td>
-                        	    {% if local.andar == None %}
-                        	    <td> </td>
-                        	    {% else %}
-                                <td>{{ local.andar }}</td>
-                                {% endif %}
-                                {% if local.sala == None %}
-                                <td> </td>
+                                {% if local.indoor %}
+                                <td>Interior</td>
                                 {% else %}
-                                <td>{{ local.sala }}</td>
+                                <td>Exterior</td>
                                 {% endif %}
                         	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateLocal' id=local.id %}"></a></td>
                         	    <td><a href="" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteLocal' id=local.id %}"></a></td>
@@ -130,9 +102,25 @@
                         <tbody class="hide">
                         	<tr>
                         		<td colspan="1"></td>
-                        	    <td colspan="5"><div><b>Descrição:</b> {{local.descricao}}</div></td>
-                              {% if local.mapa_sala %}
-                                <td><b>Mapa: </b><a class="imageShow" href="" data-toggle="modal" data-target="#ImageModal" data-image="{{local.mapa_sala}}">Visualizar a imagem</a></td>
+                        	    <td colspan="1">
+                                    <div>
+                                        {% if local.indoor %}
+                                        <p><b>Edifício:</b> {{local.edicifioid.nome_edificio}}</p>
+                                        <p><b>Andar:</b> {{local.andar}}</p>
+                                        <p><b>Sala:</b> {{local.sala}}</p>
+                                        <p><b>Descrição:</b> {{local.descricao}}</p>
+                                        {% else %}
+                                        <p><b>Nome do local:</b> {{local.nome_local_exterior}}</p>
+                                        <p><b>Descrição:</b> {{local.descricao}}</p>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                {% if local.mapa_sala %}
+                                <td colspan="3">
+                                    <div>
+                                        <p style="text-align:right;"><b>Mapa: </b><a class="imageShow" href="" data-toggle="modal" data-target="#ImageModal" data-image="{{local.mapa_sala}}">Visualizar a imagem</a></p>
+                                    </div>
+                                </td>
                         	    {% endif %}
                           </tr>
                             
@@ -241,30 +229,12 @@ $('th.Sortable').click(function(){
             form.find("#id_direction").val("asc")    
         }
     }
-    else if($(this).hasClass('Edificio')){
+    else if($(this).hasClass('Indoor')){
         if($(this).hasClass('asc')){
-            form.find("#id_order_by").val("edicifioid")
+            form.find("#id_order_by").val("indoor")
             form.find("#id_direction").val("desc")
         }else{
-            form.find("#id_order_by").val("edicifioid")
-            form.find("#id_direction").val("asc")    
-        }
-    }
-    else if($(this).hasClass('Andar')){
-        if($(this).hasClass('asc')){
-            form.find("#id_order_by").val("andar")
-            form.find("#id_direction").val("desc")
-        }else{
-            form.find("#id_order_by").val("andar")
-            form.find("#id_direction").val("asc")    
-        }
-    }
-    else if($(this).hasClass('Sala')){
-        if($(this).hasClass('asc')){
-            form.find("#id_order_by").val("sala")
-            form.find("#id_direction").val("desc")
-        }else{
-            form.find("#id_order_by").val("sala")
+            form.find("#id_order_by").val("indoor")
             form.find("#id_direction").val("asc")    
         }
     }

@@ -14,8 +14,10 @@ urlpatterns = [
     path('Atividades/valid/<int:id>', views.validAtividade, name='validAtividade'),
     path('Atividades/recuse/<int:id>', views.recuseAtividade, name='recuseAtividade'),
     path('Atividades/atribuir/<int:id>', views.atribuirLocal, name='atribuirLocal'),
+    path('Atividades/changeAtribuir/<int:id>', views.updateAtribuirLocal, name='updateAtribuirLocal'),
     
     path('getEdificio/<int:campusid>', views.getEdificio, name='getEdificio'),
+    path('getEdificioCampus/<int:campusid>', views.getEdificioCampus, name='getEdificioCampus'),
     path('getLocal/<int:edificioid>', views.getLocal, name='getLocal'),
     
     path('Edificios/', views.showEdificios, name='allEdificios'),
