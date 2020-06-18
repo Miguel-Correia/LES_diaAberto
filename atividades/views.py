@@ -339,7 +339,7 @@ def updateLocal(request, id):
     dados_Local = Local.objects.get(id = id)
     allEdificios = Edificio.objects.all()
     allCampus = Campus.objects.all()
-form = LocalForm(request.POST, request.FILES, instance= dados_Local)
+    form = LocalForm(request.POST, request.FILES, instance= dados_Local)
     if request.method == "POST":
         if form.is_valid():
             if form.cleaned_data['indoor'] == True:

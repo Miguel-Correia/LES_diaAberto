@@ -125,10 +125,10 @@
                           <select id="id_data" name="data" class="form-control">
                                 <option value="" disabled selected>Data inicial</option>
                                 {% for dia in daysDiaAberto %}
-                                    {% if dia|date:"m/d/Y" == data_inicialTarefaSearched %}
-                                        <option selected value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
+                                    {% if dia|date:"d/m/Y" == data_inicialTarefaSearched %}
+                                        <option selected value={{ dia | date:"d/m/Y"}}>{{dia |date:"d-m-Y"}}</option>
                                     {% else %}
-                                        <option value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
+                                        <option value={{ dia | date:"d/m/Y"}}>{{dia |date:"d-m-Y"}}</option>
                                     {% endif %}
                                 {% endfor %}
                             </select>
