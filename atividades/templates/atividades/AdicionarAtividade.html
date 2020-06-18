@@ -20,12 +20,21 @@
                     </div>
                 {% endif %}
             </div>
+            <div class="col-sm-8 offset-sm-2 mt-3">
+                <div class="progress" style="height: 35px;">
+                    <div class="progress-bar step1" role="progressbar" style="width: 25%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">Informação da atividade</div>
+                    <div class="progress-bar bg-secondary step2" role="progressbar" style="width: 25%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">Temática</div>
+                    <div class="progress-bar bg-secondary step3" role="progressbar" style="width: 25%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">Materiais</div>
+                    <div class="progress-bar bg-secondary step4" role="progressbar" style="width: 25%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">Sessões</div>
+                </div>
+            </div>
             </div>
 			<hr class="mx-5">
     	    <div class = "row">
     		    <div class = "col-sm-6 offset-sm-3 mt-5">
 					<form action = "{% url 'atividades:createAtividade' %}" method="post">
 						{% csrf_token %}
+                        <div class="InfoAtividades">
  						<div class="form-group row">
 							<div class="col-sm-4 col-form-label">
     							{{form.nome.label}}
@@ -82,6 +91,7 @@
                                 {{form.duracao}}
                             </div>
                         </div>
+                    </div>
                         <!-- <div class="form-group row">
                             <div class="col-sm-4 col-form-label">
                                 <label for="unidadeorganicaid">Unidade Orgânica</label>
@@ -106,7 +116,7 @@
                                 </select>
                             </div>
                         </div> -->
-                        <hr>
+                        <div class="InfoTematicas" style="display: none;">
                         {{ AtividadeTematicaFormset.management_form }}
                         {% for form in AtividadeTematicaFormset %}
                         <div class = "tematica-form-comp">
@@ -124,9 +134,12 @@
                                 <button class="btn btn-outline-success add-form-row">Adicionar temática</button>
                             </div>
                         </div>
-                        </div>
                         <hr>
+                        </div>
                         {% endfor %}
+                        </div>
+
+                        <div class="InfoMateriais" style="display: none;">
                         {{ AtividadeMaterialFormset.management_form }}
                         {% for form in AtividadeMaterialFormset %}
                         <div class = "material-form-comp">
@@ -150,9 +163,12 @@
                                 <button class="btn btn-outline-success add-form-row">Adicionar material</button>
                             </div>
                         </div>
+                        <hr>
                         </div>
                         {% endfor %}
-                        <hr>
+                        </div>
+
+                        <div class="InfoSessoes" style="display: none;">
                         {{ AtividadeSessaoFormset.management_form }}
                         {% for form in AtividadeSessaoFormset %}
                         <div class = "sessao-form-comp">
@@ -176,14 +192,19 @@
                                 <button class="btn btn-outline-success add-form-row">Adicionar sessão</button>
                             </div>
                         </div>
+                        <hr>
                         </div>
                         {% endfor %}
-                        <hr>
+                        </div>
                         <div class="form-group row mt-5">
 							<div class="col-sm-10">
 								<a type="button" class="btn btn-secondary mr-3" href="{% url 'atividades:allAtividades' %}">Cancelar</a>
-								<button type="submit" class="btn btn-primary">Guardar</button>
+								<button type="submit" class="btn btn-primary save">Guardar</button>
 							</div>
+                            <div class="col-sm-2 d-flex justify-content-end">
+                            <button type="button" class="btn btn-outline-secondary  fas fa-angle-left previousStep mr-3"></a>
+                            <button type="button" class="btn btn-outline-secondary  fas fa-angle-right nextStep"></a>                       
+                            </div>
 						</div>
 					</form>
     		    </div>
@@ -286,6 +307,64 @@ $(document).on('click', '.remove-form-row', function(e){
     }
     return false;
 });
+
+$('.save').hide()
+$('.previousStep').attr("disabled", true)
+
+currentStep = 1
+
+$('.nextStep').click(function(){
+    if( currentStep > 0 && currentStep < 5)
+    currentStep++
+    if(currentStep == 2){
+        $('.InfoAtividades').hide()
+        $('.InfoTematicas').show()
+        $('.step1').addClass("bg-secondary") 
+        $('.step2').removeClass("bg-secondary") 
+
+        $('.previousStep').attr("disabled", false);
+    }else if(currentStep == 3){
+        $('.InfoTematicas').hide()
+        $('.InfoMateriais').show()
+        $('.step2').addClass("bg-secondary") 
+        $('.step3').removeClass("bg-secondary") 
+    }else if(currentStep == 4){
+        $('.InfoMateriais').hide()
+        $('.InfoSessoes').show()
+        $('.step3').addClass("bg-secondary") 
+        $('.step4').removeClass("bg-secondary") 
+
+        $('.nextStep').attr("disabled", true);
+        $('.save').show()
+    }
+})
+
+$('.previousStep').click(function(){
+    if( currentStep > 1 && currentStep < 6){
+        currentStep--
+        if(currentStep == 1){
+            $('.previousStep').attr("disabled", true);
+
+            $('.InfoTematicas').hide()
+            $('.InfoAtividades').show()
+            $('.step2').addClass("bg-secondary") 
+            $('.step1').removeClass("bg-secondary") 
+        }else if(currentStep == 2){
+            $('.InfoMateriais').hide()
+            $('.InfoTematicas').show()
+            $('.step3').addClass("bg-secondary") 
+            $('.step2').removeClass("bg-secondary") 
+        }else if(currentStep == 3){
+            $('.InfoSessoes').hide()
+            $('.InfoMateriais').show()
+            $('.step4').addClass("bg-secondary") 
+            $('.step3').removeClass("bg-secondary") 
+            
+            $('.nextStep').attr("disabled", false);
+            $('.save').hide()
+        }
+    }
+})
 </script>
 		
 	{% endblock %}
