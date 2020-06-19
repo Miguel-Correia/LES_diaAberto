@@ -6,16 +6,16 @@
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
 					<li class="breadcrumb-item"><a href="{% url 'atividades:allAtividades' %}">Atividades</a></li>
-					<li class="breadcrumb-item active">Adicionar Atividade</li>
+					<li class="breadcrumb-item active">Adicionar atividade</li>
 				</ol>
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4 style="text-align:center;">Adicionar Atividade</h4>
+                    <h4 style="text-align:center;">Adicionar atividade</h4>
     		    </div>
     		    <div class = "col-sm-4 offset-sm-4">
     		    {% if saved %}
-                    <div class="alert alert-primary" role="alert">
+                    <div style="text-align:center;" class="alert alert-primary" role="alert">
                         A atividade foi guardada com sucesso!
                     </div>
                 {% endif %}
