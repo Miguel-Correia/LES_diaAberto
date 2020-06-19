@@ -15,14 +15,14 @@
     		    </div>
     		    <div class = "col-sm-4 offset-sm-4">
     		    {% if saved %}
-                    <div class="alert alert-primary" role="alert" style="text-align:center;">
+                    <div style="text-align:center;" class="alert alert-primary" role="alert" style="text-align:center;">
                         O local foi guardado com sucesso!
                     </div>
                 {% endif %}
 
                 {% for key, value in form.errors.items %}
                     {% for error in value %}
-                        <div class="alert alert-danger" style="text-align:center;">
+                        <div style="text-align:center;" class="alert alert-danger" style="text-align:center;">
                             {{ error }}
                         </div>
                     {% endfor %}

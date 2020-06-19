@@ -19,6 +19,8 @@ urlpatterns = [
     path('getEdificio/<int:campusid>', views.getEdificio, name='getEdificio'),
     path('getEdificioCampus/<int:campusid>', views.getEdificioCampus, name='getEdificioCampus'),
     path('getLocal/<int:edificioid>', views.getLocal, name='getLocal'),
+    path('getLocalExterior/<int:campusid>', views.getLocalExterior, name='getLocalExterior'),
+    path('getDescricaoLocal/<int:localid>', views.getDescricaoLocal, name='getDescricaoLocal'),
     
     path('Edificios/', views.showEdificios, name='allEdificios'),
     path('Edificios/create', views.createEdificio, name='createEdificio'),

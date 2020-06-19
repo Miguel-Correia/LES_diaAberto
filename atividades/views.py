@@ -402,13 +402,14 @@ def createAtividade(request):
             atividade.editavel = True
             atividade.save()
             
-            for form in materialformset:
-                material = AtividadeMaterial(
-                    atividadeid = atividade,
-                    materialid = form.cleaned_data['materialid'],
-                    quantidade = form.cleaned_data['quantidade']
-                )
-                material.save()
+            if form.cleaned_data.get('materialid'):
+                for form in materialformset:
+                    material = AtividadeMaterial(
+                        atividadeid = atividade,
+                        materialid = form.cleaned_data['materialid'],
+                        quantidade = form.cleaned_data['quantidade']
+                    )
+                    material.save()
             for form in tematicaformset:
                 tematica = AtividadeTematica(
                     atividadeid = atividade,
@@ -698,6 +699,10 @@ def atribuirLocal(request, id):
     allCampus = Campus.objects.all()
     allTematicaAtividade = AtividadeTematica.objects.all()
     allMaterialAtividade = AtividadeMaterial.objects.all()
+    listMateriais = []
+    for material in allMaterialAtividade:
+        if material.atividadeid.id == dados_atividade.id:
+            listMateriais.append(material)
     allSessaoAtividade = SessaoAtividade.objects.all()
 
     try:
@@ -711,7 +716,11 @@ def atribuirLocal(request, id):
         allLocais = None
 
     if request.method == 'POST':
-        dados_atividade.localid = Local.objects.get(id = request.POST.get("localid"))
+        indoor = request.POST.get('indoor')
+        if indoor == "True":
+            dados_atividade.localid = Local.objects.get(id = request.POST.get("localid_interior"))
+        else:
+            dados_atividade.localid = Local.objects.get(id = request.POST.get("localid_exterior"))
         dados_atividade.validada = 1
         dados_atividade.save()
         return redirect('atividades:allAtividades')
@@ -721,7 +730,7 @@ def atribuirLocal(request, id):
                 'allCampus' : allCampus, 
                 'atividade' : dados_atividade, 
                 'listTematica' : allTematicaAtividade, 
-                'listMaterial' : allMaterialAtividade, 
+                'listMaterial' : listMateriais, 
                 'listSessao' : allSessaoAtividade
             }
     return render(request, 'atividades/AtribuirLocal.html', context)
@@ -763,6 +772,15 @@ def getEdificioCampus(request, campusid):
 
 def getLocal(request, edificioid):
     dados_local = [(l.id, "Andar " + str(l.andar) + ", " + "Sala " + str(l.sala))for l in Local.objects.filter(edicifioid = edificioid)]
+    return JsonResponse(dict(dados_local))
+
+def getLocalExterior(request, campusid):
+    dados_local = [(l.id, str(l.nome_local_exterior)) for l in Local.objects.filter(campusid = campusid).filter(indoor=False)]
+    return JsonResponse(dict(dados_local))
+
+def getDescricaoLocal(request, localid):
+    l = Local.objects.get(id = localid)
+    dados_local = [(l.id, str(l.descricao))]
     return JsonResponse(dict(dados_local))
 #-----------------------------------------------------
 # Tematica CRUD- Create Read Update Delete

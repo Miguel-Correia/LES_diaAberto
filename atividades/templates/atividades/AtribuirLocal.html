@@ -19,12 +19,14 @@
                 <p>{{ form.tematicaid.nome }}</p>
                 {% endif %}
                 {% endfor %}
+                {% if listMaterial %}
                 <b>Material:</b> 
                 {% for form in listMaterial %}
                 {% if form.atividadeid.id == atividade.id %}
                 <p>{{ form.materialid.nome }} x {{ form.quantidade }}</p>
                 {% endif %}
                 {% endfor %}
+                {% endif %}
                 <b>Sessao:</b>
                 {% for form in listSessao %}
                 {% if form.atividadeid.id == atividade.id %}
@@ -60,50 +62,44 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                            <div class="col-sm-4 col-form-label">
-                                <label for="nome">Interior</label>
-                            </div>
-                            <div class="col-sm-8">
-                                &nbsp;&nbsp;&nbsp;&nbsp;<input class="show-indoor form-check-input" type="radio" value="True" id="indoor" name="indoor">
-                                <label class="form-check-label" for="Sim">Sim</label>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <input class="hide-indoor form-check-input" type="radio" value="False" id="indoor" name="indoor">
-                                <label class="form-check-label" for="Nao">Não</label>
-                            </div>
+                        <div class="col-sm-4 col-form-label">
+                            <label for="nome">Interior</label>
                         </div>
-                    <div class="hideable form-group row" style="display:none">
+                        <div class="col-sm-8">
+                            &nbsp;&nbsp;&nbsp;&nbsp;<input class="show-indoor form-check-input" type="radio" value="True" id="indoor" name="indoor">
+                            <label class="form-check-label" for="Sim">Sim</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input class="hide-indoor form-check-input" type="radio" value="False" id="indoor" name="indoor">
+                            <label class="form-check-label" for="Nao">Não</label>
+                        </div>
+                    </div>
+                    <div class="outdoor form-group row" style="display:none">
+                        <div class="col-sm-4 col-form-label">
+                            <label for="descricao">Nome do local</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <select id="localid_exterior" type="text" name="localid_exterior" class="form-control"> </select>
+                        </div>
+                    </div>
+                    <div class="outdoor form-group row" style="display:none">
                         <div class="col-sm-4 col-form-label">
                             <label for="descricao">Descrição</label>
                         </div>
-                        <div class="col-sm-8">
-                            <textarea rows="5" cols="3"  id="descricao" type="text" name="descricao" class="form-control"> </textarea required>
+                        <div class="col-sm-6">
+                            <textarea rows="5" cols="3" id="descricao" type="text" name="descricao" class="form-control"> </textarea>
                         </div>
                     </div>
-                    <div class="hideable form-group row" style="display:none">
+                    <div class="indoor form-group row" style="display:none">
                         <label for="edificio" class="col-sm-4 col-form-label">Edifício</label>
                         <div class="col-sm-6">
                             <select name="edicifioid" id = "id_edicifioid" class = "form-control">
-                            {% for edificio in allEdificios %}
-                            {% if local.edicifioid == edificio %}
-                                <option value="{{edificio.id}}" selected>{{edificio.nome_edificio}}</option>
-                            {% else %}
-                                <option value="{{edificio.id}}">{{edificio.nome_edificio}}</option>
-                            {% endif %}
-                            {% endfor %}
                             </select>
                         </div>
                     </div>
-                    <div class="hideable form-group row" style="display:none">
+                    <div class="indoor form-group row" style="display:none">
                         <label for="andar" class="col-sm-4 col-form-label">Local</label>
                         <div class="col-sm-6">
-                            <select name="localid" id = "id_localid" class = "form-control">
-                            {% for l in allLocais %}
-                            {% if local == l %}
-                                <option value="{{l.id}}" selected>Andar {{l.andar}}, Sala {{l.sala}}</option>
-                            {% else %}
-                                <option value="{{l.id}}">Andar {{l.andar}}, Sala {{l.sala}}</option>
-                            {% endif %}
-                            {% endfor %}
+                            <select name="localid_interior" id = "id_localid_interior" class = "form-control">
                             </select>
                         </div>
                     </div>
@@ -124,11 +120,55 @@
 	{% block js %}
 		<script type='text/javascript'> 
             $(document).on('click', '.show-indoor', function(){
-            $('.hideable').show();
+            $('.indoor').show();
+            $('.outdoor').hide();
         });
         $(document).on('click', '.hide-indoor', function(){
-            $('.hideable').hide();
+            $('.indoor').hide();
+            $('.outdoor').show();
         });
+
+        $('input[type=radio]').change(function(){
+            console.log("oi");
+            if ($(this).val() == 'True'){
+                getEdificio();
+            }
+            else{
+                console.log("aa");
+                getLocalExterior();
+            }
+        })
+
+        function getDescricao(){
+            localid = $('select[name=localid_exterior]').val();
+            request_url = '/GestaoAtividades/getDescricaoLocal/' + localid;
+            $.ajax({
+                    url: request_url,
+                    dataType: "json",
+                    success: function(data){
+                        $.each(data, function(index, text){
+                            $('textarea[name=descricao]').html(text)
+                        })
+                    },
+                });
+        }
+
+        function getLocalExterior(){
+            campusid = $('select[name=campusid]').val();
+            request_url = '/GestaoAtividades/getLocalExterior/' + campusid;
+            $.ajax({
+                    url: request_url,
+                    dataType: "json",
+                    success: function(data){
+                        $.each(data, function(index, text){
+                            $('select[name=localid_exterior]').append(
+                                $('<option></option>').val(index).html(text)
+                            )
+                        })
+                        getDescricao();
+                    },
+                });
+        }
 
             function getLocais(){
                 edificioid = $('select[name=edicifioid]').val();
@@ -138,7 +178,7 @@
                     dataType: "json",
                     success: function(data){
                         $.each(data, function(index, text){
-                            $('select[name=localid]').append(
+                            $('select[name=localid_interior]').append(
                                 $('<option></option>').val(index).html(text)
                             )
                         })
@@ -146,14 +186,14 @@
                 });
             }
 
-            $('select[name=campusid]').change(function(){
-                $('select[name=edicifioid]').find('option').each(function(){
+            function getEdificio(){
+                 $('select[name=edicifioid]').find('option').each(function(){
                     $(this).remove();
                 })
-                $('select[name=localid]').find('option').each(function(){
+                $('select[name=localid_interior]').find('option').each(function(){
                     $(this).remove();
                 })
-                campusid = $(this).val();
+                campusid = $('select[name=campusid]').val();
                 console.log(campusid);
                 request_url = '/GestaoAtividades/getEdificio/' + campusid;
                 $.ajax({
@@ -168,10 +208,19 @@
                         getLocais()
                     },
                 });
+            }
+
+            $('select[name=localid_exterior]').change(function(){
+               getDescricao();
+            })
+
+            $('select[name=campusid]').change(function(){
+               getEdificio();
+               getLocalExterior();
             })
 
             $('select[name=edicifioid]').change(function(){
-                $('select[name=localid]').find('option').each(function(){
+                $('select[name=localid_interior]').find('option').each(function(){
                     $(this).remove();
                 })
                 getLocais()
