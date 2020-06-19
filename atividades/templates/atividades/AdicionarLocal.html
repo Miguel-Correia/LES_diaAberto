@@ -125,10 +125,15 @@
         $(document).on('click', '.show-indoor', function(){
             $('.indoor').show();
             $('.outdoor').hide();
+            $('.outdoor').find('input').prop('required', false);
+            $('.indoor').find('input, select').prop('required', true);
+
         });
         $(document).on('click', '.hide-indoor', function(){
             $('.indoor').hide();
             $('.outdoor').show();
+            $('.outdoor').find('input').prop('required', true);
+            $('.indoor').find('input, select').prop('required', false);
         });
 
         $('select[name=campusid]').change(function(){

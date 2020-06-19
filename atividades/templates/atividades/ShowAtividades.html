@@ -200,7 +200,7 @@
 												<div>
 													<p><b>Descrição:</b> {{ atividade.descricao}}</p>
 													
-													<p><b>Local:</b> {{ atividade.localid}}</p>
+													<p><b>Local:</b> {% if atividade.localid %} {{atividade.localid}} {% else %} Não atribuído {% endif %}</p>
 													<p><b>Duração:</b> {{ atividade.duracao}}</p>
                         				    		<p><b>Sessão:</b><p>
                         							{% for form in listSessao %}
@@ -220,12 +220,15 @@
                         				    		{% endif %}
                         				    		{% endfor %}
                         				    		<p><b>Limite de participantes:</b> {{ atividade.limite_de_participantes}}</p>
-                        				    		<p><b>Material:</b></p>
-                        							{% for form in listMaterial %}
-                        							{% if form.atividadeid.id == atividade.id %} 
-                        				    		<p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{form.materialid.nome}} x {{form.quantidade}}</p>
-                        				    		{% endif %}
-                        				    		{% endfor %}
+
+                                        {% for  key, material in listMaterial.items %}
+												                  {% if key == atividade.id %}
+                                            <p><b>Material:</b></p>
+                                            {% for m in material %}                        				    		                     							
+                        				    		      <p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{m.materialid.nome}} x {{m.quantidade}}</p>
+                        				    		    {% endfor %}
+                                          {% endif %}
+                                        {% endfor %}
 												</div>
 											</td>
                         				</tr>
@@ -233,7 +236,7 @@
                                             <td></td>
                                             <td colspan="5">
                                                 {% if atividade.validada == -1 %}
-                                                <p><!-- <a href="" class="btn btn-outline-success validate" data-toggle="modal" data-target="#myModal1" data-id="{% url 'atividades:validAtividade' id=atividade.id %}">Aceitar atividade</a> -->
+                                                <p>
                                                 <br>
                                                 <a href="{% url 'atividades:atribuirLocal' id=atividade.id %}" class="btn btn-outline-success mr-3">Aceitar atividade</a>
                                                 <a href="" class="recuse btn btn-outline-danger" data-toggle="modal" data-target="#Modalrecusar" data-id="{% url 'atividades:recuseAtividade' id=atividade.id %}">Recusar atividade</a>

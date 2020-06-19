@@ -13,20 +13,23 @@ class EdificioForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         nome_edificio = cleaned_data.get("nome_edificio")
+        campusid = cleaned_data.get("campusid")
         if self.instance.id:
             for edificio in Edificio.objects.all():
                 if nome_edificio.lower() == edificio.nome_edificio.lower() and self.instance.id != edificio.id:
-                    raise forms.ValidationError(
-                        ('O edifício que pretende editar já existe'),
-                    code='invalid'
-                    )
+                    if  campusid == edificio.campusid:
+                        raise forms.ValidationError(
+                            ('O edifício que pretende editar já existe'),
+                        code='invalid'
+                        )
         else:
             for edificio in Edificio.objects.all():
                 if nome_edificio.lower() == edificio.nome_edificio.lower():
-                    raise forms.ValidationError(
-                        ('O edifício que pretende criar já existe'),
-                    code='invalid'
-                    )
+                    if  campusid == edificio.campusid:
+                        raise forms.ValidationError(
+                            ('O edifício que pretende criar já existe'),
+                        code='invalid'
+                        )
 
 class CampusForm(ModelForm):
     class Meta:
@@ -36,18 +39,21 @@ class CampusForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         nome = cleaned_data.get("nome")
-        if not self.instance:
+        if self.instance.id:
             for campus in Campus.objects.all():
-                if nome == campus.nome:
-                    raise forms.ValidationError(
-                        ('O campus que pretende criar já existe'),
-                    code='invalid'
-                    )
+                try:
+                    if nome.lower() == campus.nome.lower() and self.instance.id != campus.id:
+                        raise forms.ValidationError(
+                            ('O campus que pretende editar já existe'),
+                        code='invalid'
+                        )
+                except AttributeError:
+                    pass
         else:
             for campus in Campus.objects.all():
-                if nome == campus.nome and self.instance.id != campus.id:
+                if nome.lower() == campus.nome.lower():
                     raise forms.ValidationError(
-                        ('O campus que pretende editar já existe'),
+                        ('O campus que pretende criar já existe'),
                     code='invalid'
                     )
 
@@ -109,6 +115,8 @@ class LocalForm(ModelForm):
         andar = cleaned_data.get("andar")
         sala = cleaned_data.get("sala")
         indoor = cleaned_data.get("indoor")
+        nome_exterior = cleaned_data.get("nome_local_exterior")
+
         if indoor:
             if self.instance.id:
                 for local in Local.objects.all():
@@ -135,7 +143,26 @@ class LocalForm(ModelForm):
                                         code='invalid'
                                         )
                         except AttributeError:
-                            pass 
+                            pass
+        else:
+            if self.instance.id:
+                for local in Local.objects.all():
+                    if campusid.id == local.campusid.id and self.instance.id != local.id:
+                            if nome_exterior == local.nome_local_exterior:
+                                raise forms.ValidationError(
+                                            ('O local que pretende editar já existe'),
+                                        code='invalid'
+                                        )
+            else:
+                for local in Local.objects.all():
+                    if campusid.id == local.campusid.id:
+                            if nome_exterior == local.nome_local_exterior:
+                                raise forms.ValidationError(
+                                            ('O local que pretende criar já existe'),
+                                        code='invalid'
+                                        )
+                       
+
 
 class AtividadeForm(ModelForm):
     class Meta:
@@ -147,13 +174,14 @@ class AtividadeForm(ModelForm):
                 'class' : 'form-control',
                 'placeholder' : 'Introduza o nome da atividade',
                 'required' : 'required',
-
+                'oninvalid': "goToStep('1')",
             }),
 
             'descricao' : Textarea(attrs={
                 'class' : 'form-control',
                 'placeholder' : 'Introduza uma descrição da atividade',
                 'required' : 'required',
+                'oninvalid': "goToStep('1')",
             }),
 
             'duracao' : NumberInput(attrs={
@@ -161,6 +189,7 @@ class AtividadeForm(ModelForm):
                 'placeholder' : 'Introduza a duração da atividade em minutos',
                 'min' : 10,
                 'required' : 'required',
+                'oninvalid': "goToStep('1')",
             }),
 
             'limite_de_participantes' : NumberInput(attrs={
@@ -168,6 +197,7 @@ class AtividadeForm(ModelForm):
                 'placeholder' : 'Introduza um limite de participantes',
                 'min' : 1,
                 'required' : 'required',
+                'oninvalid': "goToStep('1')",
             }),
 
             'num_colaboradores' : NumberInput(attrs={
@@ -175,6 +205,7 @@ class AtividadeForm(ModelForm):
                 'placeholder' : 'Introduza o número de colaboradores',
                 'min' : 0,
                 'required' : 'required',
+                'oninvalid': "goToStep('1')",
             }),
 
             'tipo_atividade' : Select(attrs={
@@ -186,6 +217,7 @@ class AtividadeForm(ModelForm):
                 'class' : 'form-control',
                 'placeholder' : 'Introduza o público alvo',
                 'required' : 'required',
+                'oninvalid': "goToStep('1')",
             }),
         }
         labels = {
@@ -251,15 +283,20 @@ class AtividadeTematicaForm(ModelForm):
         fields = ['tematicaid']
         widgets = { 
             'tematicaid': Select(
-                choices= [(tematica.id, tematica.nome) for tematica in Tematica.objects.all()],
+                choices= [],
                 attrs= {
                     'class' : 'form-control',
                     'required': 'required',
+                    'oninvalid': "goToStep('2')",
                 }),
         }
         labels = {
             'tematicaid': ('Temática'),
         } 
+
+        def __init__(self, *args, **kwargs):
+            super(AtividadeTematicaForm,self).__init__(*args,**kwargs)   
+            self.fields['tematicaid'].choices = [(tematica.id, tematica.nome) for tematica in Tematica.objects.all()]
 
 AtividadeTematicaFormset = formset_factory(AtividadeTematicaForm, extra=1)
 
@@ -294,7 +331,7 @@ class AtividadeSessaoForm(ModelForm):
         fields = ['sessaoid', 'data']
         widgets = { 
             'sessaoid': Select(
-                choices= [(sessao.id, sessao.hora_de_inicio) for sessao in Sessao.objects.all()],
+                choices= [],
                 attrs= {
                     'class' : 'form-control',
                     'required' : 'required',
@@ -326,7 +363,7 @@ class AtividadeSessaoForm(ModelForm):
             pass
 
         self.fields['data'].widget.choices = daysDiaAberto
-
+        self.fields['sessaoid'].choices = [(sessao.id, sessao.hora_de_inicio.strftime("%H:%M")) for sessao in Sessao.objects.all()]
 
 AtividadeSessaoFormset = formset_factory(AtividadeSessaoForm, extra=1)
 
@@ -340,7 +377,7 @@ class SessaoForm(ModelForm):
         hora_de_inicio = cleaned_data.get("hora_de_inicio")
         if self.instance.id:
             for sessao in Sessao.objects.all():
-                if self.instance.id != sessao.id:
+                if hora_de_inicio == sessao.hora_de_inicio and self.instance.id != sessao.id:
                     raise forms.ValidationError(
                         ('A sessão que pretende editar já existe'),
                     code='invalid'

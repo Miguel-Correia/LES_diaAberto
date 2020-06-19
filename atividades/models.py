@@ -11,10 +11,10 @@ class Campus(models.Model):
     contacto = models.CharField(db_column='Contacto', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        db_table = 'campus'
+        db_table = 'campus' 
 
     def __str__(self):
-        return self.nome
+        return str(self.nome)
 
 class Edificio(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
@@ -95,7 +95,7 @@ class Utilizador(models.Model):
 
 class Atividade(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    localid = models.ForeignKey('Local', on_delete = models.CASCADE, db_column='LocalID', blank=True, null=True)  # Field name made lowercase.
+    localid = models.ForeignKey('Local', on_delete = models.DO_NOTHING, db_column='LocalID', blank=True, null=True)  # Field name made lowercase.
     utilizadorid = models.ForeignKey('Utilizador', default = "", on_delete = models.CASCADE, db_column='UtilizadorID', null=True)  # Field name made lowercase.
     unidadeorganicaid = models.ForeignKey('UnidadeOrganica', default = "", on_delete = models.CASCADE, db_column='UnidadeOrganicaID')  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.

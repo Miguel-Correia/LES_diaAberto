@@ -48,7 +48,7 @@
 							<div class="col-sm-4 col-form-label">
     							<label for="nome">Interior</label>
 							</div>
-    						<div class="form-check col-sm-7">
+    					<div class="form-check col-sm-7">
                                 {% if local.indoor %}
                                 &nbsp;&nbsp;&nbsp;&nbsp;<input class="show-indoor form-check-input" type="radio" value="True" id="indoor" name="indoor" checked>
                                 <label class="form-check-label" for="Sim">Sim</label>
@@ -69,7 +69,7 @@
                   <label for="descricao">Nome do local</label>
                 </div>
                 <div class="col-sm-8">
-                  <input {% if local.nome_local_exterior %} value={{local.nome_local_exterior}} {% endif %} id="nome_local_exterior" type="text" name="nome_local_exterior" class="form-control" required> 
+                  <input {% if local.nome_local_exterior %} value="{{local.nome_local_exterior}}" {% endif %} id="nome_local_exterior" type="text" name="nome_local_exterior" class="form-control" required> 
                 </div>
               </div>
   						<div class="form-group row">
@@ -109,7 +109,7 @@
                         <div class="form-group row">
                             <label for="mapa_sala" class="col-sm-4 col-form-label">Mapa</label>
                             <div class="col-sm-8">
-                                <input id="mapa_sala" type="file" name="mapa_sala" value="{{local.mapa_sala}}">
+                                <input type="file" id="mapa_sala"  name="mapa_sala">
                             </div>
                         </div>
                         <div class="form-group row mt-5">
@@ -154,10 +154,14 @@
             $('.indoor').show();
             getEdificios();
             $('.outdoor').hide();
+            $('.outdoor').find('input').prop('required', false);
+            $('.indoor').find('input, select').prop('required', true);
         });
         $(document).on('click', '.hide-indoor', function(){
             $('.indoor').hide();
             $('.outdoor').show();
+            $('.outdoor').find('input').prop('required', true);
+            $('.indoor').find('input, select').prop('required', false);
         });
 
         function getEdificios(){
@@ -182,6 +186,16 @@
         $('select[name=campusid]').change(function(){
               getEdificios(); 
             })
+
+        $(document).ready(function(){
+            if($('.show-indoor').is(':checked')){
+              $('.outdoor').find('input').prop('required', false);
+              $('.indoor').find('input, select').prop('required', true);
+            }else if($('.hide-indoor').is(':checked')){
+              $('.outdoor').find('input').prop('required', true);
+              $('.indoor').find('input, select').prop('required', false);
+            }
+        })
     </script>
 
     {% endblock %}

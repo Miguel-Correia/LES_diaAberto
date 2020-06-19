@@ -56,7 +56,7 @@
     	    	<table class="table">
                     <thead>
                         <tr>
-                            {% if order_by == "campusid" %}
+                            {% if order_by == "campusid__nome" %}
                             <th style="width: 25%" class="Sortable Campus {{direction}} tableBorderH" scope="col">Campus
                             {% if direction == 'asc'%} 
                                 <i class="fas fa-caret-up fa-xs"></i>
@@ -180,10 +180,10 @@
     }
     else if($(this).hasClass('Campus')){
         if($(this).hasClass('asc')){
-            form.find("#id_order_by").val("campusid")
+            form.find("#id_order_by").val("campusid__nome")
             form.find("#id_direction").val("desc")
         }else{
-            form.find("#id_order_by").val("campusid")
+            form.find("#id_order_by").val("campusid__nome")
             form.find("#id_direction").val("asc")    
         }
     }

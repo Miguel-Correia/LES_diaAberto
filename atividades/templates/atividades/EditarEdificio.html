@@ -35,7 +35,7 @@
     						<div class="col-sm-8">
 								<select name="campusid" id = "campusid" class = "form-control">
                                     {% for campus in allCampus %}
-                                    {% if campus.id == unidadeorganica.campusid.id %}
+                                    {% if campus.id == edificio.campusid.id %}
                                     <option selected="selected" value="{{campus.id}}">{{campus.nome}}</option>
                                     {% else %}
                                     <option value="{{campus.id}}">{{campus.nome}}</option>

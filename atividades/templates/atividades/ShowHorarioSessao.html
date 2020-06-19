@@ -55,37 +55,37 @@
 
 				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:addSessao' %}"> + Adicionar horário</a>
 
-    		    		<table class="table">
-                    	    <thead>
-                    	        <tr>
-                    	            {% if order_by == "hora_de_inicio" %}
-                                    <th style="width: 25%" class="Sortable Hora {{direction}} tableBorderH" scope="col">Hora de início
-                                    {% if direction == 'asc'%} 
-                                    <i class="fas fa-caret-up fa-xs"></i>
-                                    {% elif direction == 'desc' %}
-                                    <i class="fas fa-caret-down fa-xs"></i>
-                                    {% endif %}
-                                    </th>
-                                    {% else %}
-                                    <th scope="col" class="Sortable Hora tableBorderH" style="width: 25%"> Hora de início</th>
-                                    {% endif  %}
-                    	            <th style="width: 8%" scope="col"></th>
-                    	            <th style="width: 8%" scope="col"></th>
-                    	        </tr>
-                    	    </thead>
-                    	    <tbody>
-                                {% if allSessoes %}
-								{% for sessao in page_obj %}
-                    	        	<tr>
-                    	        	    <td>{{ sessao.hora_de_inicio|time:"H:i" }}</td>
-                    	        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateSessao'  id=sessao.id %}"></a></td>
-                    	        	    <td><a class="btn btn-outline-danger fas fa-trash-alt delete" href="" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteSessao' id=sessao.id %}"></a></td>
-
-                                		</tr>
-                        {% endfor %}
+    		    <table class="table">
+                    <thead>
+                        <tr>
+                            {% if order_by == "hora_de_inicio" %}
+                            <th style="width: 25%" class="Sortable Hora {{direction}} tableBorderH" scope="col">Hora de início
+                            {% if direction == 'asc'%} 
+                            <i class="fas fa-caret-up fa-xs"></i>
+                            {% elif direction == 'desc' %}
+                            <i class="fas fa-caret-down fa-xs"></i>
+                            {% endif %}
+                            </th>
+                            {% else %}
+                            <th scope="col" class="Sortable Hora tableBorderH" style="width: 25%"> Hora de início</th>
+                            {% endif  %}
+                            <th style="width: 8%" scope="col"></th>
+                            <th style="width: 8%" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if allSessoes %}
+						    {% for sessao in page_obj %}
+                        	    <tr>
+                        	        <td>{{ sessao.hora_de_inicio|time:"H:i" }}</td>
+                        	        <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateSessao'  id=sessao.id %}"></a></td>
+                        	        <td><a class="btn btn-outline-danger fas fa-trash-alt delete" href="" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteSessao' id=sessao.id %}"></a></td>
+                        	    </tr>
+                            {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
-                {% endif %}
+                
 
                 <div class="pagination d-flex justify-content-end">
                     <span class="step-links">
@@ -109,28 +109,28 @@
 
         <div class="modal fade" id="Modal">
             <div class="modal-dialog">
-              <div class="modal-content">
+                <div class="modal-content">
               
-                <!-- Modal Header -->
-                <div class="modal-header">
-                  <h4 class="modal-title">Aviso</h4>
-                  <button type="button" class="close" data-dismiss="modal">×</button>
-                </div>
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h4 class="modal-title">Aviso</h4>
+                      <button type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
                 
-                <!-- Modal body -->
-                <div class="modal-body">
-                  Tem a certeza que pretende remover?
-                </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                      Tem a certeza que pretende remover?
+                    </div>
                 
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <form id="deleteModal" action="" method="post">
-                        {% csrf_token %}
-                  <button type=submit" class="btn btn-success" >Sim</button>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
-                </form>
-                </div>        
-              </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <form id="deleteModal" action="" method="post">
+                            {% csrf_token %}
+                            <button type=submit" class="btn btn-success" >Sim</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+                        </form>
+                    </div>        
+                </div>
             </div>
         </div>
 

@@ -1,6 +1,6 @@
 import django_filters
 
-from django_filters import DateFilter, CharFilter, NumberFilter, TimeFilter
+from django_filters import DateFilter, CharFilter, NumberFilter, TimeFilter, BooleanFilter
 
 from .models import *
 
@@ -20,9 +20,10 @@ class DepartamentoFilter(django_filters.FilterSet):
 class LocalFilter(django_filters.FilterSet):
 	edicifioid__nome_edificio = CharFilter(field_name='edicifioid__nome_edificio', lookup_expr='icontains')
 	campusid__nome = CharFilter(field_name='campusid__nome', lookup_expr='icontains')
+	indoor = BooleanFilter(field_name='indoor')
 	class Meta:
 		model = Local
-		fields = ['edicifioid' ,'campusid']
+		fields = ['edicifioid' ,'campusid', 'indoor']
 
 class CampusFilter(django_filters.FilterSet):
 	nome = CharFilter(field_name='nome', lookup_expr='icontains')
@@ -56,9 +57,9 @@ class AtividadeFilter(django_filters.FilterSet):
 	validada = NumberFilter(field_name='validada')
 	localcampus = CharFilter(field_name='localid__campusid')
 	localedicifio = CharFilter(field_name='localid__edicifioid')
-	data = DateFilter(field_name="sessaoatividade__data")
-	sessao_gte = TimeFilter(field_name="sessaoatividade__sessaoid__hora_de_inicio", lookup_expr='gte')
-	sessao_lte = TimeFilter(field_name="sessaoatividade__sessaoid__hora_de_inicio", lookup_expr='lte')
+	data = DateFilter(field_name="sessaoatividade__data", distinct=True)
+	sessao_gte = TimeFilter(field_name="sessaoatividade__sessaoid__hora_de_inicio", lookup_expr='gte', distinct=True)
+	sessao_lte = TimeFilter(field_name="sessaoatividade__sessaoid__hora_de_inicio", lookup_expr='lte', distinct=True)
 	class Meta:
 		model = Atividade
 		fields = '__all__'

@@ -20,7 +20,7 @@ from diaAbertoConf.models import DiaAberto
 #Creates new edificio
 def createEdificio(request):
     allCampus = Campus.objects.all()
-    form = EdificioForm(request.POST)
+    form = EdificioForm(request.POST or None)
     saved = False
     if request.method == "POST":
         if form.is_valid():
@@ -39,7 +39,7 @@ def showEdificios(request):
     order_by = request.GET.get('order_by')
     direction = request.GET.get('direction')
     if order_by:
-        ordering = Lower(order_by)
+        ordering = order_by
         if direction == 'desc':
             ordering = '-{}'.format(order_by)
         allEdificios = myFilter.qs.order_by(ordering)
@@ -124,7 +124,7 @@ def showCampus(request):#, ordena):
 #upadates the fields of a spcific campus
 def updateCampus(request, id):
     dados_Campus = Campus.objects.get(id = id)
-    form = CampusForm(request.POST, instance = dados_Campus)
+    form = CampusForm(request.POST or None, instance = dados_Campus)
     
     if request.method == "POST":
         if form.is_valid():
@@ -252,7 +252,7 @@ def showDepartamentos(request):
 def updateDepartamento(request, id):
     dados_Departamento = Departamento.objects.get(id = id)
     allUnidadeOrganicas = UnidadeOrganica.objects.all()
-    form = DepartamentoForm(request.POST, instance = dados_Departamento)
+    form = DepartamentoForm(request.POST or None, instance = dados_Departamento)
     if request.method == "POST":
         if form.is_valid():
             form.save()
@@ -325,12 +325,14 @@ def showLocais(request):
     page_obj = paginator.get_page(page_number)
     edicifioid__nome_edificio = request.GET.get('edicifioid__nome_edificio')
     campusid__nome = request.GET.get('campusid__nome')
+    indoor = request.GET.get('indoor')
     context = {'allCampus': allCampus, 
             'allLocais' : allLocais, 
             'page_obj': page_obj,
             'myFilter' : myFilter, 
             'edicifioid__nome_edificio' : edicifioid__nome_edificio, 
             'campusid__nome' : campusid__nome,
+            'localTipoSearched': indoor,
             'order_by' : order_by, 
             'direction' : direction}
     return render(request, 'atividades/ShowLocais.html', context)
@@ -340,7 +342,9 @@ def updateLocal(request, id):
     dados_Local = Local.objects.get(id = id)
     allEdificios = Edificio.objects.all()
     allCampus = Campus.objects.all()
-    form = LocalForm(request.GET or None, instance= dados_Local)
+
+    #form = LocalForm(instance= dados_Local)
+
     if request.method == "POST":
         form = LocalForm(request.POST, request.FILES, instance= dados_Local)
         if form.is_valid():
@@ -373,8 +377,13 @@ def updateLocal(request, id):
 #deletes a local
 def deleteLocal(request, id):
     dados_local = Local.objects.get(id = id)
+    atividades = Atividade.objects.filter(localid= dados_local.id)
+    for a in atividades:
+        a.localid = None
+        a.validada = -1
+        a.save()
     dados_local.delete()
-    return HttpResponseRedirect(reverse('atividades:allLocais'))
+    return redirect('atividades:allLocais')
 
 #Creates new atvidade
 def createAtividade(request):
@@ -402,8 +411,9 @@ def createAtividade(request):
             atividade.editavel = True
             atividade.save()
             
-            if form.cleaned_data.get('materialid'):
-                for form in materialformset:
+            
+            for form in materialformset:
+                if form.cleaned_data.get('materialid'):
                     material = AtividadeMaterial(
                         atividadeid = atividade,
                         materialid = form.cleaned_data['materialid'],
@@ -444,7 +454,6 @@ def showAtividades(request):
     allCampus = Campus.objects.all()
     allEdificios = Edificio.objects.all()
     allTematicaAtividade = AtividadeTematica.objects.all()
-    allMaterialAtividade = AtividadeMaterial.objects.all()
     allSessaoAtividade = SessaoAtividade.objects.all()
 
     daysDiaAberto = []
@@ -476,6 +485,14 @@ def showAtividades(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    allMateriais = {}
+    #Gets all materiais that are in the atividades of page_obj
+    for atividade in page_obj:
+        materiais = AtividadeMaterial.objects.filter(atividadeid = atividade.id)
+        if materiais:
+            allMateriais[atividade.id] = materiais
+        
+
     nome = request.GET.get('nome')
     tipo_atividade = request.GET.get('tipo_atividade')
     validada = request.GET.get('validada')
@@ -501,7 +518,7 @@ def showAtividades(request):
         'allCampus' : allCampus, 
         'allEdificios' : allEdificios,
         'listTematica' : allTematicaAtividade, 
-        'listMaterial' : allMaterialAtividade,
+        'listMaterial' : allMateriais,
         'listSessao' : allSessaoAtividade, 
         'nome' : nome, 
         'tipo_atividade' : tipo_atividade,
@@ -533,11 +550,6 @@ def showDetailsAtividade(request, id):
     'listTematica' : listTematica, 'listMaterial' : listMaterial}
     return render(request, 'atividades/ShowDetailsAtividade.html', context)
 
-#gets a atividade with a specific id 
-def getAtividade(request, id):
-    dados_Atividade = Atividade.objects.get(id = id)
-    #add later
-    return 0
 
 #upadates the fields of a spcific atividade
 def updateAtividade(request, id):
@@ -548,7 +560,10 @@ def updateAtividade(request, id):
     sessao = SessaoAtividade.objects.filter(atividadeid = id)
 
     AtividadeTematicaFormset = formset_factory(AtividadeTematicaForm, extra=0)
-    AtividadeMaterialFormset = formset_factory(AtividadeMaterialForm, extra=0)
+    if not material:
+        AtividadeMaterialFormset = formset_factory(AtividadeMaterialForm, extra=1)
+    else:
+         AtividadeMaterialFormset = formset_factory(AtividadeMaterialForm, extra=0)
     AtividadeSessaoFormset = formset_factory(AtividadeSessaoForm, extra=0)
 
     if request.method == 'GET':
@@ -669,19 +684,6 @@ def requestAtividade(request):
 	#add later
 	return 0
 
-#valid atividade
-def validAtividade(request, id):
-    dados_atividade = Atividade.objects.get(id = id)
-    #form = AtividadeForm(request.POST, instance = dados_atividade)
-    #if form.is_valid():
-    #atividade = form.save(commit=False)
-    dados_atividade.validada = 1 
-    dados_atividade.save()
-    return redirect('atividades:allAtividades')
-    # dados_atividade = Atividade.objects.get(id = id)
-    # dados_atividade.delete()
-    # return HttpResponseRedirect(reverse('atividades:allAtividades'))
-
 def recuseAtividade(request, id):
     dados_atividade = Atividade.objects.get(id = id)
     #form = AtividadeForm(request.POST, instance = dados_atividade)
@@ -741,6 +743,7 @@ def updateAtribuirLocal(request, id):
     allCampus = Campus.objects.all()
     allEdificios = Edificio.objects.filter(campusid=local.campusid)
     locais = Local.objects.filter(campusid=local.campusid).filter(edicifioid=local.edicifioid)
+    locais_exterior = Local.objects.filter(campusid = local.campusid).filter(indoor=False)
     allTematicaAtividade = AtividadeTematica.objects.all()
     allMaterialAtividade = AtividadeMaterial.objects.all()
     allSessaoAtividade = SessaoAtividade.objects.all()
@@ -752,6 +755,7 @@ def updateAtribuirLocal(request, id):
             return  redirect('atividades:allAtividades')
 
     context = { 'allLocais' : locais, 
+                'allLocaisExt': locais_exterior,
                 'allEdificios' : allEdificios, 
                 'allCampus' : allCampus, 
                 'atividade' : dados_atividade, 
@@ -781,6 +785,11 @@ def getLocalExterior(request, campusid):
 def getDescricaoLocal(request, localid):
     l = Local.objects.get(id = localid)
     dados_local = [(l.id, str(l.descricao))]
+    return JsonResponse(dict(dados_local))
+
+def getLocalImage(request, localid):
+    l = Local.objects.get(id = localid)
+    dados_local = [(l.id, str(l.mapa_sala))]
     return JsonResponse(dict(dados_local))
 #-----------------------------------------------------
 # Tematica CRUD- Create Read Update Delete
@@ -828,7 +837,7 @@ def addTematica(request):
 
 def updateTematica(request, id):
     dados = Tematica.objects.get(id = id)
-    form = SessaoForm(request.POST or None, instance=dados)
+    form = TematicaForm(request.POST or None, instance=dados)
     if request.method == "POST":
         #form = TematicaForm(request.POST, instance = dados)
         if form.is_valid():
