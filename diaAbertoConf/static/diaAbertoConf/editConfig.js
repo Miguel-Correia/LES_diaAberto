@@ -65,3 +65,71 @@ $('.previousStep').click(function(){
         }
     }
 })
+
+function goToStep(event, step){
+    
+    console.log(step)
+
+    if(step == 1){
+        currentStep = 1
+        $('.previousStep').attr("disabled", true);
+        $('.nextStep').attr("disabled", false);
+
+        $('.InfoDiaAberto').show()
+        $('.InfoAtividades').hide()
+        $('.InfoInscricao').hide()
+        $('.InfoAlmoços').hide()
+        $('.InfoContactos').hide()
+        
+        $('.step5').addClass("bg-secondary") 
+        $('.step1').removeClass("bg-secondary") 
+
+    }else if(step == 2){
+        currentStep = 2
+        $('.nextStep').attr("disabled", false);
+
+        $('.InfoDiaAberto').hide()
+        $('.InfoAtividades').show()
+        $('.InfoInscricao').hide()
+        $('.InfoAlmoços').hide()
+        $('.InfoContactos').hide()
+      
+        $('.step5').addClass("bg-secondary") 
+        $('.step2').removeClass("bg-secondary")
+
+    }else if(step == 3){
+        currentStep = 3
+        $('.nextStep').attr("disabled", false);
+
+        $('.InfoDiaAberto').hide()
+        $('.InfoAtividades').hide()
+        $('.InfoInscricao').show()
+        $('.InfoAlmoços').hide()
+        $('.InfoContactos').hide()
+      
+
+        $('.InfoContactos').hide()
+        $('.InfoInscricao').show()
+        $('.step5').addClass("bg-secondary") 
+        $('.step3').removeClass("bg-secondary") 
+
+    }else if(step == 4){
+        currentStep = 4
+        $('.nextStep').attr("disabled", false);~
+
+        $('.InfoDiaAberto').hide()
+        $('.InfoAtividades').hide()
+        $('.InfoInscricao').hide()
+        $('.InfoAlmoços').show()
+        $('.InfoContactos').hide()
+      
+
+        $('.InfoContactos').hide()
+        $('.InfoAlmoços').show()
+        $('.step5').addClass("bg-secondary") 
+        $('.step4').removeClass("bg-secondary") 
+        $('.save').hide()
+
+    }
+
+}
