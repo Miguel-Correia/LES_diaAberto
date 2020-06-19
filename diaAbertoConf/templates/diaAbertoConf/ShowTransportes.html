@@ -5,6 +5,48 @@
 		<link rel="stylesheet" href="{% static "diaAbertoConf/ShowTransportes.css" %}">
 	{% endblock %}
 
+	{% block navContent %}
+    	<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+    			<a class="nav-link" href="#">Inscrições</a>
+    		</li>
+    		<li class="nav-item dropdown">
+    			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Atividades
+    			</a>
+    			<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    				<a class="dropdown-item" href="{% url 'atividades:allAtividades'%}">Atividades</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allEdificios'%}">Edifícios</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allCampus'%}">Campus</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allLocais'%}">Locais</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allUnidadeOrganicas'%}">Unidade Orgânicas</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allDepartamentos'%}">Departamentos</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allTematicas'%}">Temáticas</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allMateriais'%}">Materiais</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allSessoes'%}">Horários de Sessões</a>
+				</div>
+    		</li>
+			<li class="nav-item">
+    			<a class="nav-link" href="{% url 'diaAbertoConf:editConfig' %}">Configuração do Dia Aberto</a>
+    		</li>        	      		
+    		<li class="nav-item dropdown">
+    			<a class="nav-link dropdown-toggle active" href="#" id="DiaAbertoConfNavbar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    				Transportes
+    			</a>
+    			<div class="dropdown-menu" aria-labelledby="DiaAbertoConfNavbar">
+    				<a class="dropdown-item" href="{% url 'diaAbertoConf:allTransportes'%}">Gestão de Transportes</a>
+    			  	<a class="dropdown-item" href="{% url 'diaAbertoConf:allHorarios'%}">Horários de Transportes</a>
+    			</div>
+    		</li>
+    		<li class="nav-item">
+    			<a class="nav-link " href="{% url 'diaAbertoConf:gestaoEmentas'%}">Almoços</a>
+    		</li>
+			<li class="nav-item">
+    			<a class="nav-link" href="{% url 'tarefas:showTarefas' %}">Tarefas</a>
+    		</li>
+		</ul>
+	{% endblock %}
+
 	{% block content %}
     	<div class = "row mx-4 my-4">
 			<div class="col-xs-3 col-sm-3 col-md-3">
