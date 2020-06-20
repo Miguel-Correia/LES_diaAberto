@@ -96,7 +96,7 @@
                             <label for="descricao">Descrição</label>
                         </div>
                         <div class="col-sm-6">
-                            <textarea rows="5" cols="3" id="descricao" type="text" name="descricao" class="form-control">{{local.descricao}}</textarea>
+                            <textarea rows="5" cols="3" id="descricao" type="text" name="descricao" class="form-control" readonly>{{local.descricao}}</textarea>
                         </div>
                     </div>
                     <div class="indoor form-group row" style="display:none">
@@ -127,7 +127,7 @@
                             </select>
                         </div>
                     </div>
-                    <div id="mapa_sala" class="form-group row" style="display:none">
+                    <div id="mapa_sala" class="form-group row" {% if not local.mapa_sala %}style="display:none" {% endif %}>
                         <label class="col-sm-4 col-form-label">Mapa </label>
                         <div class="col-sm-6">
                             <a class="imageShow" href="" data-toggle="modal" data-target="#ImageModal" data-image="{{local.mapa_sala}}">Visualizar a imagem</a>

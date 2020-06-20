@@ -261,7 +261,7 @@
 											{% for  key, tarefaGrupos in allTarefaGrupos.items %}
 												{% if key == tarefa.id %}
 													{% for grupo in tarefaGrupos%}
-														<p>{{grupo.inscricaoid}}</p>
+														<p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{grupo.inscricaoid}}</p>
 													{% endfor%}
 												{% endif %}
 											{% endfor %}			
@@ -285,8 +285,9 @@
 											{% if key == tarefa.id %}
 												{% for colab in tarefaColab%}
 													<p>
+													&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;
 													{{colab.nome}}, {{colab.email}} 
-													<a type="button" class="btn btn-outline-danger fas fa-times ml-2 rmcolab" href="" data-toggle="modal" data-target="#RemoveColab" data-id="{% url 'tarefas:removeColaborador' id=tarefa.id colabid=colab.id%}"></a>
+													<a type="button" class="fas fa-times ml-2 rmcolab" style="color:red"href="" data-toggle="modal" data-target="#RemoveColab" data-id="{% url 'tarefas:removeColaborador' id=tarefa.id colabid=colab.id%}"></a>
 													</p>
 												{% endfor%}
 											{% endif %}

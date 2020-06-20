@@ -159,7 +159,7 @@
                             <span class="input-group-text"><i class="far fa-calendar"></i></span>
                           </div>
                           <select id="id_data" name="data" class="form-control">
-                                <option disabled selected>Data inicial</option>
+                                <option disabled selected>Pesquisar por data</option>
                                 {% for dia in daysDiaAberto %}
                                     {% if dia|date:"m/d/Y" == data %}
                                         <option selected value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>

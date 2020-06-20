@@ -340,34 +340,37 @@ def showLocais(request):
 #upadates the fields of a spcific local
 def updateLocal(request, id):
     dados_Local = Local.objects.get(id = id)
-    allEdificios = Edificio.objects.all()
+
+    form = LocalForm(request.GET or None, instance= dados_Local)
+
     allCampus = Campus.objects.all()
+    allEdificios = Edificio.objects.filter(campusid=dados_Local.campusid.id)
 
-    #form = LocalForm(instance= dados_Local)
-
-    if request.method == "POST":
-        form = LocalForm(request.POST, request.FILES, instance= dados_Local)
+    
+    if request.method == "POST":    
+        form = LocalForm(request.POST or None, request.FILES or None, instance= dados_Local)    
         if form.is_valid():
-            if form.cleaned_data['indoor'] == True:
-                dados_Local.campusid = form.cleaned_data['campusid']
-                dados_Local.indoor = form.cleaned_data['indoor']
-                dados_Local.descricao = form.cleaned_data['descricao']
-                dados_Local.andar = form.cleaned_data['andar']
-                dados_Local.sala = form.cleaned_data['sala']
-                dados_Local.edicifioid = Edificio.objects.get(id=request.POST['edicifioid'])
-                if form.cleaned_data['mapa_sala'] != None:
-                    dados_Local.mapa_sala = form.cleaned_data['mapa_sala']
-            else:
-                dados_Local.campusid = form.cleaned_data['campusid']
-                dados_Local.indoor = form.cleaned_data['indoor']
-                dados_Local.descricao = form.cleaned_data['descricao']
-                dados_Local.nome_local_exterior = form.cleaned_data['nome_local_exterior']
-                dados_Local.andar = None
-                dados_Local.sala = None
-                dados_Local.edicifioid = None
-                if form.cleaned_data['mapa_sala'] != None:
-                    dados_Local.mapa_sala = form.cleaned_data['mapa_sala']
-            dados_Local.save()
+            form.save()
+            """ if form.cleaned_data['indoor'] == True: """
+            """     dados_Local.campusid = form.cleaned_data['campusid'] """
+            """     dados_Local.indoor = form.cleaned_data['indoor'] """
+            """     dados_Local.descricao = form.cleaned_data['descricao'] """
+            """     dados_Local.andar = form.cleaned_data['andar'] """
+            """     dados_Local.sala = form.cleaned_data['sala'] """
+            """     dados_Local.edicifioid = form.cleaned_data['edicifioid'] """
+            """     if request.POST.get('mapa_sala'): """
+            """         dados_Local.mapa_sala = "mapas_salas/" + request.POST.get('mapa_sala') """
+            """ else: """
+            """     dados_Local.campusid = form.cleaned_data['campusid'] """
+            """     dados_Local.indoor = form.cleaned_data['indoor'] """
+            """     dados_Local.descricao = form.cleaned_data['descricao'] """
+            """     dados_Local.nome_local_exterior = form.cleaned_data['nome_local_exterior'] """
+            """     dados_Local.andar = None """
+            """     dados_Local.sala = None """
+            """     dados_Local.edicifioid = None """
+            """     if form.cleaned_data['mapa_sala'] != None: """
+            """         dados_Local.mapa_sala = form.cleaned_data['mapa_sala'] """
+            """ dados_Local.save() """
             return  redirect('atividades:allLocais')
     
     context = {'allCampus' : allCampus, 'allEdificios' : allEdificios, 'local' : dados_Local, 'form' : form}
@@ -611,28 +614,30 @@ def updateAtividade(request, id):
             #Save and add
             if len(materialformset) >= len(material):
                 for index, form in enumerate(materialformset):
-                    if index < len(material):
-                        material[index].materialid = form.cleaned_data['materialid']
-                        material[index].quantidade = form.cleaned_data['quantidade']
-                        material[index].atividadeid = f
-                        material[index].save()
-                    else:
-                        new_material = AtividadeMaterial(
-                            atividadeid = f,
-                            materialid = form.cleaned_data['materialid'],
-                            quantidade = form.cleaned_data['quantidade']
-                        )
-                        new_material.save()
+                    if form.cleaned_data.get('materialid'):
+                        if index < len(material):
+                            material[index].materialid = form.cleaned_data['materialid']
+                            material[index].quantidade = form.cleaned_data['quantidade']
+                            material[index].atividadeid = f
+                            material[index].save()
+                        else:
+                            new_material = AtividadeMaterial(
+                                atividadeid = f,
+                                materialid = form.cleaned_data['materialid'],
+                                quantidade = form.cleaned_data['quantidade']
+                            )
+                            new_material.save()
             #Save and delete
             else:
                 for index, m in enumerate(material):
-                    if index < len(materialformset):
-                        m.materialid = materialformset[index].cleaned_data['materialid']
-                        m.quantidade = materialformset[index].cleaned_data['quantidade']
-                        m.atividadeid = f
-                        m.save()
-                    else:
-                        m.delete()
+                    if materialformset[index].cleaned_data.get('materialid'):
+                        if index < len(materialformset):
+                            m.materialid = materialformset[index].cleaned_data['materialid']
+                            m.quantidade = materialformset[index].cleaned_data['quantidade']
+                            m.atividadeid = f
+                            m.save()
+                        else:
+                            m.delete()
             #Atividade Sessao
             #Save and add
             if len(sessaoformset) >= len(sessao):

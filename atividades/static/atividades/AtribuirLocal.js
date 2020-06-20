@@ -75,7 +75,10 @@ function getLocalImage(){
                 success: function(data){
                     $.each(data, function(index, text){
                         console.log(text)
-                        $('a.imageShow').data("image", text)
+                        if(text != '')
+                            $('a.imageShow').data("image", text)
+                        else
+                            $('#mapa_sala').hide()
                     })
                 },
         }); 
