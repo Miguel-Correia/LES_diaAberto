@@ -8,22 +8,22 @@
 	{% block content %}
     	<div class = "row mx-4 my-4">
 			<div class="col-xs-4 col-sm-4 col-md-4">
-				<p class="text-muted">Dados da Tarefa</p>
+				<p class="text-muted">Dados da tarefa</p>
 				<hr>
                 
                 <p><b>Nome:</b>  {{ dadosTarefa.nome}}</p>
                 <b>Descrição:</b>  
                 <p>{{ dadosTarefa.descricao}}</p>
-                <p><b>Tipo de Tarefa:</b>  {{ dadosTarefa.tipoTarefa }}</p>
+                <p><b>Tipo de tarefa:</b>  {{ dadosTarefa.tipoTarefa }}</p>
                 <p><b>Dia:</b>  {{ dadosTarefa.data|date:"d-m-Y"}}</p>
                 <p><b>Horario:</b>  {{ dadosTarefa.horario|time:"H:i" }}</p>
                 <hr>
                 {% if dadosTarefa.tipoTarefa == 'Transporte' %}
-                    <b>Atividade Origem:</b>  
+                    <b>Atividade origem:</b>  
                     <p>{{ dadosTarefa.sessao_atividadeid_origem.atividadeid.nome }}, {{ dadosTarefa.sessao_atividadeid_origem.sessaoid}}</p>
                     <b>Origem:</b>  
                     <p>{{ dadosTarefa.origem }}</p>
-                    <b>Atividade Destino:</b>  
+                    <b>Atividade destino:</b>  
                     <p>{{ dadosTarefa.sessao_atividadeid_destino.atividadeid.nome }}, {{ dadosTarefa.sessao_atividadeid_destino.sessaoid}}</p>
                     <b>Destino:</b>  
                     <p>{{ dadosTarefa.destino }}</p>
@@ -43,7 +43,7 @@
 					<ol class="breadcrumb bg-white">
 						<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
                         <li class="breadcrumb-item"><a href="{% url 'tarefas:showTarefas' %}">Tarefas</a></li>
-                        <li class="breadcrumb-item active">Atribuir Tarefa</li>
+                        <li class="breadcrumb-item active">Atribuir tarefa</li>
 					</ol>
 				</nav>
                 <form id="formfilters" method="get">
@@ -52,7 +52,7 @@
 					<input id="id_direction" name="direction" {% if direction %} value="{{direction}}" {% endif %} type="hidden">
                     <div class="form-group row">
 				    	<div class="col-xs-6 col-sm-6 col-md-6 text-muted">
-                            Filtrar Colaboradores
+                            Filtrar colaboradores
                         </div>
 				    	<div class="col-xs-6 col-sm-6 col-md-6 text-right">
 				    		<a href="{% url 'tarefas:atribuirTarefa' id=dadosTarefa.id %}">Limpar filtros</a>
@@ -61,10 +61,10 @@
                     <hr>                
                     <div class="form-group row">
                         <div class="col-xs-4 col-sm-4 col-md-4">					
-				            <input id="id_nomeColab" name="nomeColab" type="text" class="form-control" placeholder="Nome do Colaborador" {% if nomeColaboradorSearched %} value="{{nomeColaboradorSearched}}"{% endif %}>
+				            <input id="id_nomeColab" name="nomeColab" type="text" class="form-control" placeholder="Nome do colaborador" {% if nomeColaboradorSearched %} value="{{nomeColaboradorSearched}}"{% endif %}>
                         </div>
                         <div class="col-xs-4 col-sm-4 col-md-4">
-                            <input id="id_emailColab" name="emailColab" type="text" class="form-control" placeholder="E-mail do Colaborador" {% if emailColaboradorSearched %} value="{{emailColaboradorSearched}}"{% endif %}>
+                            <input id="id_emailColab" name="emailColab" type="text" class="form-control" placeholder="E-mail do colaborador" {% if emailColaboradorSearched %} value="{{emailColaboradorSearched}}"{% endif %}>
 				    	</div>
                         <div class="col-xs-4 col-sm-4 col-md-4">
                             <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>

@@ -6,20 +6,27 @@
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:allTransportes' %}">Transportes</a></li>
-					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:allHorarios'%}">Horários Transportes</a></li>
-					<li class="breadcrumb-item active">Adicionar Horários</li>
+					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:allHorarios'%}">Horários transportes</a></li>
+					<li class="breadcrumb-item active">Adicionar horários</li>
 				</ol>
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4 style="text-align:center;">Adicionar Horário Transporte</h4>
+                    <h4 style="text-align:center;">Adicionar horário transporte</h4>
     		    </div>
 				<div class = "col-sm-4 offset-sm-4">
-    		    {% if saved %}
-                    <div class="alert alert-primary" role="alert" style="text-align:center;">
-                        O horário de transporte foi guardado com sucesso!
-                    </div>
-                {% endif %}
+    		    	{% if saved %}
+                	    <div class="alert alert-primary" role="alert" style="text-align:center;">
+                	        O horário de transporte foi guardado com sucesso!
+                	    </div>
+                	{% endif %}
+					{% for key, value in form.errors.items %}
+						{% for error in value %}
+            				<div class="alert alert-danger" style="text-align:center;">
+               					{{ error }}
+            				</div>
+						{% endfor%}
+					{% endfor%}
             	</div>
             </div>
     	    <hr class="mx-5">
@@ -27,13 +34,6 @@
     		    <div class = "col-sm-6  offset-sm-3 mt-5">
 					<form action = "{% url 'diaAbertoConf:createHorarioTransporte' %}" method="post">
 						{% csrf_token %}
-						{% for key, value in form.errors.items %}
-							{% for error in value %}
-            					<div class="alert alert-danger" style="text-align:center;">
-               						{{ error }}
-            					</div>
-							{% endfor%}
-						{% endfor%}
   						<div class="form-group row mb-4">
     						<label for="hora_de_partida" class="col-sm-4 col-form-label">Hora de partida</label>
     						<div class="col-sm-8">

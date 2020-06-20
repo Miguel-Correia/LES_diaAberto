@@ -6,12 +6,12 @@
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
 					<li class="breadcrumb-item"><a href="{% url 'tarefas:showTarefas' %}">Tarefas</a></li>
-					<li class="breadcrumb-item active">Adicionar Tarefa</li>
+					<li class="breadcrumb-item active">Adicionar tarefa</li>
 				</ol>
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4 style="text-align:center;">Adicionar Tarefa</h4>
+                    <h4 style="text-align:center;">Adicionar tarefa</h4>
     		    </div>
 				<div class = "col-sm-4 offset-sm-4">
     		    {% if saved %}
@@ -39,8 +39,8 @@
     						</div>
   						</div>
   						<div class="form-group row pb-5">
-                            <label class="form-check-label col-sm-3"> {{formTarefa.tipoTarefa.label}} </label>
-    						<div class="col-sm-8">
+                            <label class="col-sm-3"> {{formTarefa.tipoTarefa.label}} </label>
+    						<div class="col-sm-8 ">
                                 {{formTarefa.tipoTarefa}}
     						</div>
   						</div>

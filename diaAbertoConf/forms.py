@@ -111,6 +111,21 @@ class HorarioTransporteForm(ModelForm):
                 code='invalid'
             )
 
+        if self.instance.id:
+            for h in HorarioTransporte.objects.all():
+                if h.hora_de_partida == hpartida and h.hora_de_chegada == hchegada and self.instance.id != h.id:
+                    raise forms.ValidationError(
+                    _('O horário que pretende editar já existe'),
+                    code='invalid'
+                    )
+        else:
+            for h in HorarioTransporte.objects.all():
+                if h.hora_de_partida == hpartida and h.hora_de_chegada == hchegada:
+                    raise forms.ValidationError(
+                    _('O horário que pretende criar já existe'),
+                    code='invalid'
+                    )
+
 class RotaInscForm(ModelForm):
 
 
@@ -129,7 +144,7 @@ class RotaInscForm(ModelForm):
             'inscricaoid': TextInput()
         }
         labels = {
-            'num_passageiros': _('Número de Passageiros'),
+            'num_passageiros': _('Número de passageiros'),
             'inscricaoid': _('Grupo')
         } 
 
@@ -139,11 +154,14 @@ class EmentaForm(ModelForm):
         model = Ementa
         fields =    '__all__'
 
+
 class PratoForm(ModelForm):
     class Meta:
         model = Prato
         fields =    '__all__'
-        
+
+PratoFormSet = formset_factory(PratoForm, extra=1)
+
 class DiaAbertoForm(ModelForm):
     class Meta:
         model = DiaAberto

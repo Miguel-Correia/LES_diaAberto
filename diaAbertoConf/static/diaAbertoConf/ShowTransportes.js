@@ -48,6 +48,7 @@ $('th.Sortable').click(function(){
 })
 
 $('button.page').click(function(){
+    console.log("clicked")
     var page = $(this).data('page')
     var form = $('#formfilters')
     form.find("#id_page").val(page)

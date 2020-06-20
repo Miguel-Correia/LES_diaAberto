@@ -58,6 +58,37 @@ $(document).on('click', '.remove-form-row', function(e){
     return false;
 })
 
+//-----------------------------------------------------------
+//----------------------------------------------------------
+//-----------------------------------------------------------
+
+function removeInsc(select){
+    console.log($(select).val())
+
+    selectedOptions = []
+
+    $('select[name$=inscricao]').each(function(){
+        if (!selectedOptions.includes($(this).val()))
+            selectedOptions.push()
+    })
+
+    $('select[name$=inscricao]').each(function(){
+        if($(this).attr('id') != $(select).attr('id')){
+            $(this).find('option').each(function(){
+                if($(this).val() == $(select).val())
+                    $(this).hide()
+                else
+                    $(this).show()
+            })
+        }else
+            continue
+    })
+}
+
+$('select[name$=inscricao]').change(function(){
+    removeInsc(this)
+})
+
 //----------------------------------------------------
 //                  AJAX 
 //----------------------------------------------------
