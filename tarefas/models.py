@@ -7,7 +7,7 @@ class Tarefa(models.Model):
     sessao_atividadeid_destino = models.ForeignKey("atividades.SessaoAtividade", related_name='destino', on_delete=models.SET_NULL, db_column='Sessao_AtividadeID_Destino', blank=True, null=True)  # Field name made lowercase.
     sessao_atividadeid_origem = models.ForeignKey("atividades.SessaoAtividade", related_name='origem', on_delete=models.SET_NULL, db_column='Sessao_AtividadeID_Origem', blank=True, null=True)  # Field name made lowercase.
     sessao_atividadeid = models.ForeignKey("atividades.SessaoAtividade", related_name='TarefaSessaoAtividade', on_delete=models.CASCADE, db_column='SessaoAtividadeID', blank=True, null=True)
-    utilizadorid = models.ForeignKey("atividades.Utilizador", related_name='tarefa_coordenador', on_delete=models.DO_NOTHING, db_column='UtilizadorID')  # Field name made lowercase.
+    utilizadorid = models.ForeignKey("utilizadores.Utilizador", related_name='tarefa_coordenador', on_delete=models.DO_NOTHING, db_column='UtilizadorID')  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)
     descricao = models.CharField(db_column='Descricao', max_length=255, blank=True, null=True)  # Field name made lowercase.
     tipoTarefa = models.CharField(db_column='TipoTarefa', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -16,7 +16,7 @@ class Tarefa(models.Model):
     horario = models.TimeField(db_column='Horario', blank=True, null=True)  # Field name made lowercase.
     data = models.DateField(db_column='Data', blank=True, null=True)
     estado = models.BooleanField(db_column='Estado', blank=True, null=True)
-    colaboradores = models.ManyToManyField("atividades.Utilizador", related_name='tarefa_colaborador')
+    colaboradores = models.ManyToManyField("utilizadores.Utilizador", related_name='tarefa_colaborador')
 
     class Meta:
         db_table = 'tarefa'

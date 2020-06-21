@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from tarefas.filters import TarefaFilter, ColaboradorFilter
 from tarefas.models import Tarefa, InscricaoTarefa
 from diaAbertoConf.models import DiaAberto
-from atividades.models import UnidadeOrganica, SessaoAtividade, Inscricao, SessaoAtividadeInscricao, Utilizador
+from atividades.models import UnidadeOrganica, SessaoAtividade, Inscricao, SessaoAtividadeInscricao
+from utilizadores.models import Utilizador
 from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm, TarefaGruposForm, TarefaGruposFormset
 
 
@@ -32,7 +33,7 @@ def createTarefa(request):
             tipoTarefa = formTarefa.cleaned_data['tipoTarefa']
             
             if tipoTarefa == 'Atividade':
-                formTarefaAtividade = TarefaAtividadeForm(request.POST, uoId=UnidadeOrganica.objects.get(id=1))
+                formTarefaAtividade = TarefaAtividadeForm(request.POST, uoId=UnidadeOrganica.objects.get(id='3'))
                 if formTarefaAtividade.is_valid():
                     t = formTarefa.save(commit=False)
                     t.estado = False
@@ -70,7 +71,7 @@ def createTarefa(request):
 
     formTarefa = TarefaForm()
     # Change later so that id equals the UO of the autheticated Coordenador
-    formTarefaAtividade = TarefaAtividadeForm(request.GET or None, uoId=UnidadeOrganica.objects.get(id=1))
+    formTarefaAtividade = TarefaAtividadeForm(request.GET or None, uoId=UnidadeOrganica.objects.get(id='3'))
     formTarefaTransporte = TarefaTransporteForm(request.GET or None)
     formSetTarefaGrupos = TarefaGruposFormset(request.GET or None)
     
@@ -84,6 +85,8 @@ def createTarefa(request):
 
     return render(request, 'tarefas/AdicionarTarefa.html', context)
 
+@login_required()
+@permission_required('tarefas.view_tarefa')
 def showTarefas(request):
 
     #Filtering Results
@@ -277,7 +280,7 @@ def updateTarefa(request, id):
             formTarefaAtividade = TarefaAtividadeForm(
                 initial={'atividade': dados_Tarefa.sessao_atividadeid.atividadeid.id,
                          'sessaoAtividade': dados_Tarefa.sessao_atividadeid.id},
-                uoId=UnidadeOrganica.objects.get(id=1),
+                uoId=UnidadeOrganica.objects.get(id=3),
                 sA=dados_Tarefa.sessao_atividadeid.atividadeid.id
             )
     
@@ -324,7 +327,7 @@ def updateTarefa(request, id):
                 return redirect('tarefas:showTarefas')
         
         elif dados_Tarefa.tipoTarefa == 'Atividade':
-            formTarefaAtividade = TarefaAtividadeForm(request.POST, uoId=UnidadeOrganica.objects.get(id=1))
+            formTarefaAtividade = TarefaAtividadeForm(request.POST, uoId=UnidadeOrganica.objects.get(id=3))
             if formTarefa.is_valid() and formTarefaAtividade.is_valid():
                 t = formTarefa.save(commit=False)
                 t.tipoTarefa = 'Atividade'

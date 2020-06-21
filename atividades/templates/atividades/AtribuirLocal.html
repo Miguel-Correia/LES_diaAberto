@@ -1,4 +1,4 @@
-{% extends "diaAbertoConf/Home.html" %}
+{% extends "atividades/ShowAtividades.html" %}
 
 	{% block content %}
     	<div class = "row mx-4 my-4">
@@ -66,10 +66,12 @@
                             <label for="nome">Interior</label>
                         </div>
                         <div class="col-sm-8">
-                            &nbsp;&nbsp;&nbsp;&nbsp;<input class="show-indoor form-check-input" type="radio" value="True" id="indoor" name="indoor">
+                            &nbsp;&nbsp;&nbsp;&nbsp;<input class="show-indoor form-check-input" type="radio" value="True" id="indoor" name="indoor" required
+                            {% if local.indoor == True %} checked {% endif %}>
                             <label class="form-check-label" for="Sim">Sim</label>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input class="hide-indoor form-check-input" type="radio" value="False" id="indoor" name="indoor">
+                            <input class="hide-indoor form-check-input" type="radio" value="False" id="indoor" name="indoor" required
+                            {% if local.indoor == False %} checked {% endif %}>
                             <label class="form-check-label" for="Nao">Não</label>
                         </div>
                     </div>
@@ -78,7 +80,15 @@
                             <label for="descricao">Nome do local</label>
                         </div>
                         <div class="col-sm-6">
-                            <select id="localid_exterior" type="text" name="localid_exterior" class="form-control"> </select>
+                            <select id="localid_exterior" type="text" name="localid_exterior" class="form-control"> 
+                                {% for l in allLocaisExt %}
+                                    {% if local == l %}
+                                        <option value="{{l.id}}" selected>{{l.nome_local_exterior}}</option>
+                                    {% else %}
+                                        <option value="{{l.id}}">{{l.nome_local_exterior}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                     <div class="outdoor form-group row" style="display:none">
@@ -86,13 +96,20 @@
                             <label for="descricao">Descrição</label>
                         </div>
                         <div class="col-sm-6">
-                            <textarea rows="5" cols="3" id="descricao" type="text" name="descricao" class="form-control"> </textarea>
+                            <textarea rows="5" cols="3" id="descricao" type="text" name="descricao" class="form-control" readonly>{{local.descricao}}</textarea>
                         </div>
                     </div>
                     <div class="indoor form-group row" style="display:none">
                         <label for="edificio" class="col-sm-4 col-form-label">Edifício</label>
                         <div class="col-sm-6">
                             <select name="edicifioid" id = "id_edicifioid" class = "form-control">
+                                {% for edificio in allEdificios %}
+                                    {% if local.edicifioid == edificio %}
+                                        <option value="{{edificio.id}}" selected>{{edificio.nome_edificio}}</option>
+                                    {% else %}
+                                        <option value="{{edificio.id}}">{{edificio.nome_edificio}}</option>
+                                    {% endif %}
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -100,130 +117,75 @@
                         <label for="andar" class="col-sm-4 col-form-label">Local</label>
                         <div class="col-sm-6">
                             <select name="localid_interior" id = "id_localid_interior" class = "form-control">
+                                {% for l in allLocais %}
+                                    {% if local == l %}
+                                        <option value="{{local.id}}" selected>Andar {{l.andar}}, Sala {{l.sala}}</option>
+                                    {% else %}
+                                        <option value="{{local.id}}">Andar {{l.andar}}, Sala {{l.sala}}</option>
+                                    {% endif %}
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
+                    <div id="mapa_sala" class="form-group row" {% if not local.mapa_sala %}style="display:none" {% endif %}>
+                        <label class="col-sm-4 col-form-label">Mapa </label>
+                        <div class="col-sm-6">
+                            <a class="imageShow" href="" data-toggle="modal" data-target="#ImageModal" data-image="{{local.mapa_sala}}">Visualizar a imagem</a>
+                        </div>
+                    </div>                 
                     <hr>
-					<div class="form-group row">
-						<div class="col-sm-1 mr-5">
-							<a type="button" class="btn btn-secondary" href="{% url 'atividades:allAtividades'%}">Cancelar</a>
-						</div>
-						<div class="col-sm-1">
-							<button type="submit" class="btn btn-primary">Atribuir</button>
+                    <div class="form-group row mt-5">
+						<div class="col-sm-10">
+							<a type="button" class="btn btn-secondary mr-3" href="{% url 'atividades:allAtividades' %}">Cancelar</a>
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Atribuir</button>
 						</div>
 					</div>
+                    <div class="modal fade" id="myModal">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                      
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                          <h4 class="modal-title">Aviso</h4>
+                                          <button type="button" class="close" data-dismiss="modal">×</button>
+                                        </div>
+                                        
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                          Tem a certeza que pretende atribuir este local?
+                                        </div>
+                                        
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                          <button type="submit" class="btn btn-success">Sim</a>
+                                          <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+                                        </div>        
+                                      </div>
+                                    </div>
+                                  </div>
 				</form>
 			</div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="ImageModal" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Mapa do Local</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <img src=""  width="100%" height="100%">
+              </div>
+            </div>
+          </div>
         </div>
 	{% endblock %}
 
 	{% block js %}
-		<script type='text/javascript'> 
-            $(document).on('click', '.show-indoor', function(){
-            $('.indoor').show();
-            $('.outdoor').hide();
-        });
-        $(document).on('click', '.hide-indoor', function(){
-            $('.indoor').hide();
-            $('.outdoor').show();
-        });
-
-        $('input[type=radio]').change(function(){
-            console.log("oi");
-            if ($(this).val() == 'True'){
-                getEdificio();
-            }
-            else{
-                console.log("aa");
-                getLocalExterior();
-            }
-        })
-
-        function getDescricao(){
-            localid = $('select[name=localid_exterior]').val();
-            request_url = '/GestaoAtividades/getDescricaoLocal/' + localid;
-            $.ajax({
-                    url: request_url,
-                    dataType: "json",
-                    success: function(data){
-                        $.each(data, function(index, text){
-                            $('textarea[name=descricao]').html(text)
-                        })
-                    },
-                });
-        }
-
-        function getLocalExterior(){
-            campusid = $('select[name=campusid]').val();
-            request_url = '/GestaoAtividades/getLocalExterior/' + campusid;
-            $.ajax({
-                    url: request_url,
-                    dataType: "json",
-                    success: function(data){
-                        $.each(data, function(index, text){
-                            $('select[name=localid_exterior]').append(
-                                $('<option></option>').val(index).html(text)
-                            )
-                        })
-                        getDescricao();
-                    },
-                });
-        }
-
-            function getLocais(){
-                edificioid = $('select[name=edicifioid]').val();
-                request_url = '/GestaoAtividades/getLocal/' + edificioid;
-                $.ajax({
-                    url: request_url,
-                    dataType: "json",
-                    success: function(data){
-                        $.each(data, function(index, text){
-                            $('select[name=localid_interior]').append(
-                                $('<option></option>').val(index).html(text)
-                            )
-                        })
-                    },
-                });
-            }
-
-            function getEdificio(){
-                 $('select[name=edicifioid]').find('option').each(function(){
-                    $(this).remove();
-                })
-                $('select[name=localid_interior]').find('option').each(function(){
-                    $(this).remove();
-                })
-                campusid = $('select[name=campusid]').val();
-                console.log(campusid);
-                request_url = '/GestaoAtividades/getEdificio/' + campusid;
-                $.ajax({
-                    url: request_url,
-                    dataType: "json",
-                    success: function(data){
-                        $.each(data, function(index, text){
-                            $('select[name=edicifioid]').append(
-                                $('<option></option>').val(index).html(text)
-                            )
-                        })
-                        getLocais()
-                    },
-                });
-            }
-
-            $('select[name=localid_exterior]').change(function(){
-               getDescricao();
-            })
-
-            $('select[name=campusid]').change(function(){
-               getEdificio();
-               getLocalExterior();
-            })
-
-            $('select[name=edicifioid]').change(function(){
-                $('select[name=localid_interior]').find('option').each(function(){
-                    $(this).remove();
-                })
-                getLocais()
-            })
-        </script> 
-	{% endblock %}
+        {% load static %}
+		<script src={% static "atividades/AtribuirLocal.js" %}></script>  
+    {% endblock %}

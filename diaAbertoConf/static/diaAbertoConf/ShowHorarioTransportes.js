@@ -28,3 +28,11 @@ $(document).ready( function(){
         $(this).has('i').addClass('tableBorder')
     })
 })
+
+$('button.page').click(function(){
+    console.log("clicked")
+    var page = $(this).data('page')
+    var form = $('#formfilters')
+    form.find("#id_page").val(page)
+    form.submit()
+})

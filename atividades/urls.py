@@ -11,7 +11,6 @@ urlpatterns = [
     path('Atividades/create', views.createAtividade, name='createAtividade'),
     path('Atividades/delete/<int:id>', views.deleteAtividade, name='deleteAtividade'),
     path('Atividades/update/<int:id>', views.updateAtividade, name='updateAtividade'),
-    path('Atividades/valid/<int:id>', views.validAtividade, name='validAtividade'),
     path('Atividades/recuse/<int:id>', views.recuseAtividade, name='recuseAtividade'),
     path('Atividades/atribuir/<int:id>', views.atribuirLocal, name='atribuirLocal'),
     path('Atividades/changeAtribuir/<int:id>', views.updateAtribuirLocal, name='updateAtribuirLocal'),
@@ -21,6 +20,8 @@ urlpatterns = [
     path('getLocal/<int:edificioid>', views.getLocal, name='getLocal'),
     path('getLocalExterior/<int:campusid>', views.getLocalExterior, name='getLocalExterior'),
     path('getDescricaoLocal/<int:localid>', views.getDescricaoLocal, name='getDescricaoLocal'),
+    path('getLocalImage/<int:localid>', views.getLocalImage, name='getLocalImage'),
+
     
     path('Edificios/', views.showEdificios, name='allEdificios'),
     path('Edificios/create', views.createEdificio, name='createEdificio'),

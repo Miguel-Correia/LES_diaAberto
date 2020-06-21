@@ -65,3 +65,87 @@ $('.previousStep').click(function(){
         }
     }
 })
+
+function goToStep(step){
+    
+    console.log(step)
+    $('.save').hide()
+    if(step == 1){
+        currentStep = 1
+        $('.previousStep').attr("disabled", true);
+        $('.nextStep').attr("disabled", false);
+
+        $('.InfoDiaAberto').show()
+        $('.InfoAtividades').hide()
+        $('.InfoInscricao').hide()
+        $('.InfoAlmoços').hide()
+        $('.InfoContactos').hide()
+        
+        $('.step5').addClass("bg-secondary")
+        $('.step4').addClass("bg-secondary") 
+        $('.step3').addClass("bg-secondary") 
+        $('.step2').addClass("bg-secondary")  
+
+
+        $('.step1').removeClass("bg-secondary") 
+
+    }else if(step == 2){
+        currentStep = 2
+        $('.previousStep').attr("disabled", false);
+        $('.nextStep').attr("disabled", false);
+
+        $('.InfoDiaAberto').hide()
+        $('.InfoAtividades').show()
+        $('.InfoInscricao').hide()
+        $('.InfoAlmoços').hide()
+        $('.InfoContactos').hide()
+      
+        $('.step5').addClass("bg-secondary") 
+        $('.step4').addClass("bg-secondary") 
+        $('.step3').addClass("bg-secondary") 
+        $('.step1').addClass("bg-secondary")
+
+        $('.step2').removeClass("bg-secondary")
+
+    }else if(step == 3){
+        currentStep = 3
+        $('.previousStep').attr("disabled", false);
+        $('.nextStep').attr("disabled", false);
+
+        $('.InfoDiaAberto').hide()
+        $('.InfoAtividades').hide()
+        $('.InfoInscricao').show()
+        $('.InfoAlmoços').hide()
+        $('.InfoContactos').hide()
+      
+        
+        $('.step5').addClass("bg-secondary") 
+        $('.step4').addClass("bg-secondary") 
+        $('.step2').addClass("bg-secondary") 
+        $('.step1').addClass("bg-secondary")
+
+        $('.step3').removeClass("bg-secondary") 
+
+    }else if(step == 4){
+        currentStep = 4
+        $('.previousStep').attr("disabled", false);
+        $('.nextStep').attr("disabled", false);
+
+        $('.InfoDiaAberto').hide()
+        $('.InfoAtividades').hide()
+        $('.InfoInscricao').hide()
+        $('.InfoAlmoços').show()
+        $('.InfoContactos').hide()
+      
+        
+
+        $('.step5').addClass("bg-secondary") 
+        $('.step3').addClass("bg-secondary") 
+        $('.step2').addClass("bg-secondary") 
+        $('.step1').addClass("bg-secondary")
+
+        $('.step4').removeClass("bg-secondary") 
+
+    }
+
+}

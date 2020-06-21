@@ -107,9 +107,24 @@ class HorarioTransporteForm(ModelForm):
 
         if hpartida >= hchegada:
             raise forms.ValidationError(
-                _('Hora de partida deve ser inferior a hora de chegada'),
+                _('Hora de partida deve ser inferior à hora de chegada'),
                 code='invalid'
             )
+
+        if self.instance.id:
+            for h in HorarioTransporte.objects.all():
+                if h.hora_de_partida == hpartida and h.hora_de_chegada == hchegada and self.instance.id != h.id:
+                    raise forms.ValidationError(
+                    _('O horário que pretende editar já existe'),
+                    code='invalid'
+                    )
+        else:
+            for h in HorarioTransporte.objects.all():
+                if h.hora_de_partida == hpartida and h.hora_de_chegada == hchegada:
+                    raise forms.ValidationError(
+                    _('O horário que pretende criar já existe'),
+                    code='invalid'
+                    )
 
 class RotaInscForm(ModelForm):
 
@@ -129,7 +144,7 @@ class RotaInscForm(ModelForm):
             'inscricaoid': TextInput()
         }
         labels = {
-            'num_passageiros': _('Número de Passageiros'),
+            'num_passageiros': _('Número de passageiros'),
             'inscricaoid': _('Grupo')
         } 
 
@@ -139,11 +154,14 @@ class EmentaForm(ModelForm):
         model = Ementa
         fields =    '__all__'
 
+
 class PratoForm(ModelForm):
     class Meta:
         model = Prato
         fields =    '__all__'
-        
+
+PratoFormSet = formset_factory(PratoForm, extra=1)
+
 class DiaAbertoForm(ModelForm):
     class Meta:
         model = DiaAberto
@@ -162,24 +180,24 @@ class DiaAbertoForm(ModelForm):
 
         if dInico > dFim:
             raise forms.ValidationError(
-                ('Data de fim deve ser depois ou no mesmo dia da data de inicio'),
+                ('Data de fim do Dia Aberto deve ser depois ou no mesmo dia da data de início do Dia Aberto'),
                 code='invalid'
             )   
 
         if dInicInsc >= dFimInsc:
             raise forms.ValidationError(
-                ('Data de fim do período de inscricao deve de ser depois  da data de inico do período de inscricao'),
+                ('Data de fim do período de inscrição deve de ser depois da data de iníco do período de inscrição'),
                 code='invalid'
             )  
 
         if dIpropAtiv >= dFpropAtiv:
             raise forms.ValidationError(
-                ('Data de fim do período de proposta de atividades deve de ser depois da data de inico do período de proposta de atividades'),
+                ('Data de fim do período de proposta de atividades deve de ser depois da data de iníco do período de proposta de atividades'),
                 code='invalid'
             )  
 
         if dInicInsc < dIpropAtiv:
             raise forms.ValidationError(
-                ('Data de incio do período de inscricao deve de ser depois da data de fim do período de proposta de atividades'),
+                ('Data de início do período de inscrição deve de ser depois da data de fim do período de proposta de atividades'),
                 code='invalid'
             )                          

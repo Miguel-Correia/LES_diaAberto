@@ -1,4 +1,4 @@
-{% extends "diaAbertoConf/Home.html" %}
+{% extends "atividades/ShowAtividades.html" %}
 
      {% block css %}
         {% load static %}
@@ -37,6 +37,21 @@
 						  <input {% if campusid__nome %} value="{{campusid__nome}}" {% endif %} name="campusid__nome" id="id_campusid__nome" type="text" class="form-control" placeholder="Pesquisar por campus">
 						</div>
 					</div>
+                    <div class="form-group row">
+                      <select id="id_indoor" name="indoor" class="form-control">
+                        <option disabled selected>Pesquisar por tipo de local</option>
+                        {% if localTipoSearched == "false" %}
+                            <option value="false" selected>Exterior</option>
+                            <option value="true">Interior</option>                         
+                        {% elif  localTipoSearched == "true"%}
+                            <option value="false">Exterior</option>
+                            <option value="true" selected>Interior</option>
+                        {% else %}
+                            <option value="false">Exterior</option>
+                            <option value="true">Interior</option>
+                        {% endif %}
+                      </select>
+                    </div>
                     <hr>
                     <div class="form-group row float-right">
                         <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
@@ -216,43 +231,43 @@
             }
         })
 
-$('th.Sortable').click(function(){
+        $('th.Sortable').click(function(){
+        
+            var form = $('#formfilters')
 
-    var form = $('#formfilters')
+            if($(this).hasClass('Campus')){
+                if($(this).hasClass('asc')){
+                    form.find("#id_order_by").val("campusid")
+                    form.find("#id_direction").val("desc")
+                }else{
+                    form.find("#id_order_by").val("campusid")
+                    form.find("#id_direction").val("asc")    
+                }
+            }
+            else if($(this).hasClass('Indoor')){
+                if($(this).hasClass('asc')){
+                    form.find("#id_order_by").val("indoor")
+                    form.find("#id_direction").val("desc")
+                }else{
+                    form.find("#id_order_by").val("indoor")
+                    form.find("#id_direction").val("asc")    
+                }
+            }
+            form.submit()
+        })
 
-    if($(this).hasClass('Campus')){
-        if($(this).hasClass('asc')){
-            form.find("#id_order_by").val("campusid")
-            form.find("#id_direction").val("desc")
-        }else{
-            form.find("#id_order_by").val("campusid")
-            form.find("#id_direction").val("asc")    
-        }
-    }
-    else if($(this).hasClass('Indoor')){
-        if($(this).hasClass('asc')){
-            form.find("#id_order_by").val("indoor")
-            form.find("#id_direction").val("desc")
-        }else{
-            form.find("#id_order_by").val("indoor")
-            form.find("#id_direction").val("asc")    
-        }
-    }
-    form.submit()
-})
-
-$('button.page').click(function(){
-    var page = $(this).data('page')
-    var form = $('#formfilters')
-    form.find("#id_page").val(page)
-    form.submit()
-})
-
-$(document).ready( function(){
-    $('th.Sortable').each(function(){
-        $(this).has('i').addClass('tableBorder')
-    })
-})
+        $('button.page').click(function(){
+            var page = $(this).data('page')
+            var form = $('#formfilters')
+            form.find("#id_page").val(page)
+            form.submit()
+        })
+    
+        $(document).ready( function(){
+            $('th.Sortable').each(function(){
+                $(this).has('i').addClass('tableBorder')
+            })
+        })
 
         
         $('.delete').click(function (){

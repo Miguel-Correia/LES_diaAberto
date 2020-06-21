@@ -1,9 +1,51 @@
 {% extends "diaAbertoConf/Home.html" %}
 
-    {% block css %}
-        {% load static %}
-        <link rel="stylesheet" href="{% static "atividades/showAtividades.css" %}">
-    {% endblock %}
+  {% block css %}
+      {% load static %}
+      <link rel="stylesheet" href="{% static "atividades/showAtividades.css" %}">
+  {% endblock %}
+
+  {% block navContent %}
+    	<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+    			<a class="nav-link" href="#">Inscrições</a>
+    		</li>
+    		<li class="nav-item dropdown">
+    			<a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Atividades
+    			</a>
+    			<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    				<a class="dropdown-item" href="{% url 'atividades:allAtividades'%}">Atividades</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allEdificios'%}">Edifícios</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allCampus'%}">Campus</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allLocais'%}">Locais</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allUnidadeOrganicas'%}">Unidade Orgânicas</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allDepartamentos'%}">Departamentos</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allTematicas'%}">Temáticas</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allMateriais'%}">Materiais</a>
+    				<a class="dropdown-item" href="{% url 'atividades:allSessoes'%}">Horários de Sessões</a>
+				</div>
+    		</li>
+			<li class="nav-item">
+    			<a class="nav-link" href="{% url 'diaAbertoConf:editConfig' %}">Configuração do Dia Aberto</a>
+    		</li>        	      		
+    		<li class="nav-item dropdown">
+    			<a class="nav-link dropdown-toggle" href="#" id="DiaAbertoConfNavbar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    				Transportes
+    			</a>
+    			<div class="dropdown-menu" aria-labelledby="DiaAbertoConfNavbar">
+    				<a class="dropdown-item" href="{% url 'diaAbertoConf:allTransportes'%}">Gestão de Transportes</a>
+    			  	<a class="dropdown-item" href="{% url 'diaAbertoConf:allHorarios'%}">Horários de Transportes</a>
+    			</div>
+    		</li>
+    		<li class="nav-item">
+    			<a class="nav-link " href="{% url 'diaAbertoConf:gestaoEmentas'%}">Almoços</a>
+    		</li>
+			<li class="nav-item">
+    			<a class="nav-link" href="{% url 'tarefas:showTarefas' %}">Tarefas</a>
+    		</li>
+		</ul>
+	{% endblock %}
 
 	{% block content %}
     <div class = "row mx-4 my-4">
@@ -117,7 +159,7 @@
                             <span class="input-group-text"><i class="far fa-calendar"></i></span>
                           </div>
                           <select id="id_data" name="data" class="form-control">
-                                <option disabled selected>Data inicial</option>
+                                <option disabled selected>Pesquisar por data</option>
                                 {% for dia in daysDiaAberto %}
                                     {% if dia|date:"m/d/Y" == data %}
                                         <option selected value={{ dia | date:"m/d/Y"}}>{{dia |date:"d-m-Y"}}</option>
@@ -200,7 +242,7 @@
 												<div>
 													<p><b>Descrição:</b> {{ atividade.descricao}}</p>
 													
-													<p><b>Local:</b> {{ atividade.localid}}</p>
+													<p><b>Local:</b> {% if atividade.localid %} {{atividade.localid}} {% else %} Não atribuído {% endif %}</p>
 													<p><b>Duração:</b> {{ atividade.duracao}}</p>
                         				    		<p><b>Sessão:</b><p>
                         							{% for form in listSessao %}
@@ -220,12 +262,15 @@
                         				    		{% endif %}
                         				    		{% endfor %}
                         				    		<p><b>Limite de participantes:</b> {{ atividade.limite_de_participantes}}</p>
-                        				    		<p><b>Material:</b></p>
-                        							{% for form in listMaterial %}
-                        							{% if form.atividadeid.id == atividade.id %} 
-                        				    		<p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{form.materialid.nome}} x {{form.quantidade}}</p>
-                        				    		{% endif %}
-                        				    		{% endfor %}
+
+                                        {% for  key, material in listMaterial.items %}
+												                  {% if key == atividade.id %}
+                                            <p><b>Material:</b></p>
+                                            {% for m in material %}                        				    		                     							
+                        				    		      <p>&nbsp; <i class="fas fa-arrow-right fa-xs"></i> &nbsp;{{m.materialid.nome}} x {{m.quantidade}}</p>
+                        				    		    {% endfor %}
+                                          {% endif %}
+                                        {% endfor %}
 												</div>
 											</td>
                         				</tr>
@@ -233,7 +278,7 @@
                                             <td></td>
                                             <td colspan="5">
                                                 {% if atividade.validada == -1 %}
-                                                <p><!-- <a href="" class="btn btn-outline-success validate" data-toggle="modal" data-target="#myModal1" data-id="{% url 'atividades:validAtividade' id=atividade.id %}">Aceitar atividade</a> -->
+                                                <p>
                                                 <br>
                                                 <a href="{% url 'atividades:atribuirLocal' id=atividade.id %}" class="btn btn-outline-success mr-3">Aceitar atividade</a>
                                                 <a href="" class="recuse btn btn-outline-danger" data-toggle="modal" data-target="#Modalrecusar" data-id="{% url 'atividades:recuseAtividade' id=atividade.id %}">Recusar atividade</a>

@@ -11,7 +11,7 @@ from django.db.models.functions import Lower
 
 from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Ementa, Prato, Rota_Inscricao, DiaAberto
 from atividades.models import Inscricao
-from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, EmentaForm, PratoForm, DiaAbertoForm, formset_factory
+from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, EmentaForm, PratoForm, DiaAbertoForm, formset_factory, PratoFormSet
 
 from diaAbertoConf.filters import RotaFilter, TransporteFilter, HorarioTransporteFilter, InscRotaFilter
 
@@ -77,7 +77,7 @@ def showTransportes(request):
         rotas = rotasFiltered.qs
 
     #Pagination
-    paginator = Paginator(transportes, 5) 
+    paginator = Paginator(transportes, 1) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -270,7 +270,12 @@ def showHorarios_Transporte(request):
     else:
         horarios = horariosFiltered.qs
 
-    context = { 'allHorarios_Transporte': horarios,
+    #Pagination
+    paginator = Paginator(horarios, 3) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = { 'page_obj': page_obj,
                 'hora_de_partidaSearched': request.GET.get('hora_de_partida'),
                 'hora_de_chegadaSearched': request.GET.get('hora_de_chegada'),
                 'order_by': order_by,
@@ -412,6 +417,7 @@ def createInscAssociada(request, id):
 def updateInscAssociada(request, id, idRota_Insc):
     dados_rota = Rota.objects.get(id=id)
     dadosRota_Insc = Rota_Inscricao.objects.get(id=idRota_Insc)
+    grupo = dadosRota_Insc.inscricaoid
 
     error = ""
 
@@ -421,10 +427,9 @@ def updateInscAssociada(request, id, idRota_Insc):
     for rotaInsc in all_rotaInsc:
         lugaresOcupados += rotaInsc.num_passageiros
 
-    form = RotaInscForm(request.GET or None, instance=dadosRota_Insc)
+    form = RotaInscForm(request.POST or None, instance=dadosRota_Insc)
 
     if request.method == "POST":   
-        form = RotaInscForm(request.POST, instance=dadosRota_Insc)     
         if form.is_valid():
             num_passageiros = form.cleaned_data['num_passageiros']
 
@@ -438,6 +443,7 @@ def updateInscAssociada(request, id, idRota_Insc):
     
     context = { 'dados_rota': dados_rota,
                 'dadosRota_Insc': dadosRota_Insc,
+                'grupo':grupo,
                 'form': form,
                 'lugaresOcupados': lugaresOcupados,
                 'lugaresDisponiveis': dados_rota.transporteid.capacidade - lugaresOcupados,
@@ -487,12 +493,14 @@ def showNewPratos(request, id):
 
 def newPrato(request,id):
     dados_Ementa = Ementa.objects.get(id = id)
+    formset = PratoFormSet(request.POST)
     context={ 'ementaData': dados_Ementa,}
     if request.method == "POST":
-        form = PratoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('diaAbertoConf:showNewPratos',args=(),kwargs={'id': id}))
+        form = PratoFormSet(request.POST)
+        for prato in form:
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse('diaAbertoConf:showNewPratos',args=(),kwargs={'id': id}))
         else:
             form = PratoForm()
         return render(request,'diaAbertoConf/newPratos.html',context)   

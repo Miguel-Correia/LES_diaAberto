@@ -1,4 +1,4 @@
-{% extends "diaAbertoConf/Home.html" %}
+{% extends "atividades/ShowAtividades.html" %}
 	
 	{% block css %}
         {% load static %}
@@ -29,6 +29,7 @@
 						  <input {% if nome %} value="{{nome}}" {% endif %} name="nome" id="id_nome" type="text" class="form-control" placeholder="Pesquisar por nome">
 						</div>
 					</div>
+                    <hr>
 					<div class="form-group row float-right">
 						<button class="btn btn-outline-primary" type="submit"><i class="fas fa-search fa-sm"></i> Procurar</button>
 					</div>

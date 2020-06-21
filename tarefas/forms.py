@@ -91,13 +91,13 @@ class TarefaTransporteForm(forms.Form):
         label = "Hora"
     )
     sessaoAtividade_origem = forms.CharField(
-        label = "Sessão Atividade Origem",
+        label = "Sessão atividade origem",
         widget = Select(attrs={
             'class' : 'form-control',
         })
     )
     sessaoAtividade_destino = forms.CharField(
-        label = "Sessão Atividade Destino",
+        label = "Sessão atividade destino",
         widget = Select(attrs={
             'class' : 'form-control',
         })
