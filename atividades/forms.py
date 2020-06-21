@@ -36,18 +36,18 @@ class CampusForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         nome = cleaned_data.get("nome")
-        if not self.instance:
+        if self.instance.id:
             for campus in Campus.objects.all():
-                if nome == campus.nome:
+                if nome.lower() == campus.nome.lower() and self.instance.id != campus.id:
                     raise forms.ValidationError(
-                        ('O campus que pretende criar já existe'),
+                        ('O campus que pretende editar já existe'),
                     code='invalid'
                     )
         else:
             for campus in Campus.objects.all():
-                if nome == campus.nome and self.instance.id != campus.id:
+                if nome.lower() == campus.nome.lower():
                     raise forms.ValidationError(
-                        ('O campus que pretende editar já existe'),
+                        ('O campus que pretende criar já existe'),
                     code='invalid'
                     )
 
