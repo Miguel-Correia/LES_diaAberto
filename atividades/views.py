@@ -10,7 +10,8 @@ from django.db.models.functions import Lower
 
 from .filters import UnidadeOrganicaFilter, DepartamentoFilter, LocalFilter, CampusFilter, EdificioFilter, TematicaFilter, MaterialFilter, AtividadeFilter, SessaoFilter
 
-from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica, Utilizador, AtividadeTematica, AtividadeMaterial, Sessao, SessaoAtividade, Material
+from atividades.models import Edificio, Campus, Departamento, Local, Atividade, UnidadeOrganica, Tematica, AtividadeTematica, AtividadeMaterial, Sessao, SessaoAtividade, Material
+from utilizadores.models import Utilizador
 
 from atividades.forms import EdificioForm, CampusForm, DepartamentoForm, LocalForm, AtividadeForm, UnidadeOrganicaForm, TematicaForm, AtividadeTematicaFormset, AtividadeMaterialFormset, AtividadeTematicaForm, AtividadeMaterialForm, AtividadeSessaoForm, AtividadeSessaoFormset, SessaoForm, MaterialForm
 

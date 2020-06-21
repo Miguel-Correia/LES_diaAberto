@@ -307,7 +307,7 @@ class AtividadeMaterialForm(ModelForm):
         fields = ['materialid', 'quantidade']
         widgets = { 
             'materialid': Select(
-                choices= [(material.id, material.nome) for material in Material.objects.all()],
+                choices= [],
                 attrs= {
                     'class' : 'form-control',
                 }),
@@ -320,7 +320,11 @@ class AtividadeMaterialForm(ModelForm):
         labels = {
             'materialid': ('Material'),
             'quantidade' : ('Quantidade'),
-        } 
+        }
+
+        def __init__(self, *args, **kwargs):
+            super(AtividadeMaterialForm,self).__init__(*args,**kwargs)   
+            self.fields['materialid'].choices = [(material.id, material.nome) for material in Material.objects.all()]
 
 AtividadeMaterialFormset = formset_factory(AtividadeMaterialForm, extra=1)
 

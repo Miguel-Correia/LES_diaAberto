@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'diaAbertoConf.apps.DiaabertoconfConfig',
     'atividades.apps.AtividadesConfig',
     'tarefas.apps.TarefasConfig',
+    'utilizadores.apps.UtilizadoresConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -89,6 +90,10 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'utilizadores.Utilizador'
+AUTHENTICATION_BACKENDS = [
+    'utilizadores.backends.AuthBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -131,4 +136,4 @@ STATIC_URL = '/static/'
 MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
 MEDIA_URL= "/media/"
 
-LOGIN_URL= "/"
+LOGIN_URL= "/Utilizador/login"

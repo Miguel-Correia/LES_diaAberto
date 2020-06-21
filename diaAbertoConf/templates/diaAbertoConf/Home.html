@@ -28,6 +28,7 @@
         		  	<div class="collapse navbar-collapse" id="navbarNav">
 					{% block navContent %}
         		    	<ul class="navbar-nav mr-auto">
+							{% if user.is_authenticated %}
 							<li class="nav-item">
         		        		<a class="nav-link" href="#">Inscrições</a>
         		      		</li>
@@ -65,10 +66,12 @@
 							<li class="nav-item">
         		        		<a class="nav-link" href="{% url 'tarefas:showTarefas' %}">Tarefas</a>
         		      		</li>
+							{% endif %}
 						</ul>
 					{% endblock %}
 					{% block navButtons %}
 						<ul class="navbar-nav">
+							{% if user.is_authenticated %}
       						<li class="nav-item dropdown mx-1">
 								<button class="btn nav-link" type="button" data-toggle="dropdown">
 									<i class="fas fa-bell"></i>
@@ -97,10 +100,22 @@
       							</ul>
 							</li>
 							<li class="nav-item  mx-1">
-								<button class="btn nav-link" type="button">
+								<button class="btn nav-link" type="button" onclick="window.location.href='{% url 'utilizadores:logout' %}'">
 									<i class="fas fa-sign-out-alt"></i> Sair
 								</button>
 							</li>
+							{% else %}
+							<li class="nav-item  mx-1">
+								<button class="btn nav-link" type="button">
+									<i class="fas fa-user"></i> Registar-se
+								</button>
+							</li>
+							<li class="nav-item  mx-1">
+								<button class="btn nav-link" type="button" onclick="window.location.href='{% url 'utilizadores:login' %}'">
+									<i class="fas fa-sign-in-alt"></i> Entrar
+								</button>
+							</li>
+							{% endif %}
         		    	</ul>
 					{% endblock %}
         		  	</div>

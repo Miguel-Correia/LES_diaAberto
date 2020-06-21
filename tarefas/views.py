@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from tarefas.filters import TarefaFilter, ColaboradorFilter
 from tarefas.models import Tarefa, InscricaoTarefa
 from diaAbertoConf.models import DiaAberto
-from atividades.models import UnidadeOrganica, SessaoAtividade, Inscricao, SessaoAtividadeInscricao, Utilizador
+from atividades.models import UnidadeOrganica, SessaoAtividade, Inscricao, SessaoAtividadeInscricao
+from utilizadores.models import Utilizador
 from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm, TarefaGruposForm, TarefaGruposFormset
 
 
@@ -84,6 +85,8 @@ def createTarefa(request):
 
     return render(request, 'tarefas/AdicionarTarefa.html', context)
 
+@login_required()
+@permission_required('tarefas.view_tarefa')
 def showTarefas(request):
 
     #Filtering Results

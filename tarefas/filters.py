@@ -1,6 +1,6 @@
 import django_filters
 from .models import Tarefa
-from atividades.models import Utilizador
+from utilizadores.models import Utilizador
 
 class TarefaFilter(django_filters.FilterSet):
     nome = django_filters.CharFilter(field_name="nome", lookup_expr="icontains")
