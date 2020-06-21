@@ -5,7 +5,7 @@ from enum import Enum
 class Utilizador(AbstractBaseUser, PermissionsMixin):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     #inscricaoid = models.ForeignKey(Inscrio, models.DO_NOTHING, db_column='InscriçãoID', blank=True, null=True)  # Field name made lowercase.
-    unidade_orgânicaid = models.ForeignKey("atividades.UnidadeOrganica", models.DO_NOTHING, db_column='Unidade OrgânicaID', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    unidade_organicaid = models.ForeignKey("atividades.UnidadeOrganica", models.DO_NOTHING, db_column='Unidade_OrganicaID', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     departamentoid = models.ForeignKey("atividades.Departamento", models.DO_NOTHING, db_column='DepartamentoID', blank=True, null=True)  # Field name made lowercase.
     #registo_horárioid = models.ForeignKey(RegistoHorrio, models.DO_NOTHING, db_column='Registo HorárioID', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     #gestão_de_perfilid = models.ForeignKey(GestoDePerfil, models.DO_NOTHING, db_column='Gestão de PerfilID')  # Field name made lowercase. Field renamed to remove unsuitable characters.

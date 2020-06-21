@@ -93,6 +93,7 @@ DATABASES = {
 AUTH_USER_MODEL = 'utilizadores.Utilizador'
 AUTHENTICATION_BACKENDS = [
     'utilizadores.backends.AuthBackend',
+    'django.contrib.auth.backends.ModelBackend'
 ]
 
 # Password validation

@@ -21,7 +21,8 @@ from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm,
 # Tarefas CRUD- Create Read Update Delete
 # ----------------------------------------------------------
 
-
+@login_required()
+@permission_required('tarefas.add_tarefa', raise_exception=True)
 def createTarefa(request):
 
     saved = False
@@ -86,7 +87,7 @@ def createTarefa(request):
     return render(request, 'tarefas/AdicionarTarefa.html', context)
 
 @login_required()
-@permission_required('tarefas.view_tarefa')
+@permission_required('tarefas.view_tarefa', raise_exception=True)
 def showTarefas(request):
 
     #Filtering Results
@@ -153,7 +154,8 @@ def showTarefas(request):
 
     return render(request, 'tarefas/showTarefas.html', context)
 
-
+@login_required()
+@permission_required('tarefas.assign_tarefa', raise_exception=True)
 def atribuirTarefa(request, id):
     tarefa = Tarefa.objects.get(id=id)
     uo_id = tarefa.utilizadorid.unidade_organicaid
@@ -213,6 +215,8 @@ def atribuirTarefa(request, id):
     }
     return render(request, 'tarefas/AtribuirTarefa.html', context)
 
+@login_required()
+@permission_required('tarefas.remove_colab_from_tarefa', raise_exception=True)
 def removeColab(request, id, colabid):
     tarefa = Tarefa.objects.get(id=id)
     tarefa.colaboradores.remove(Utilizador.objects.get(id=colabid))
@@ -223,12 +227,15 @@ def removeColab(request, id, colabid):
     
     return redirect('tarefas:showTarefas')
 
+@login_required()
+@permission_required('tarefas.delete_tarefa', raise_exception=True)
 def deleteTarefa(request, id):
     tarefa = Tarefa.objects.get(id=id)
     tarefa.delete()
     return redirect('tarefas:showTarefas')
 
-
+@login_required()
+@permission_required('tarefas.change_tarefa', raise_exception=True)
 def updateTarefa(request, id):
     dados_Tarefa = Tarefa.objects.get(id=id)
     formTarefaTransporte = None

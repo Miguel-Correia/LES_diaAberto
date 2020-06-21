@@ -19,10 +19,4 @@ class AuthBackend(BaseBackend):
 			return Utilizador.objects.get(id=user_id)
 		except Utilizador.DoesNotExist:
 			return None
-
-	def has_perm(self, perm, obj=None):
-		if obj is None or type(obj) is not Utilizador:
-			return False;
-		return bool(obj.user_type & perm)
-
 	

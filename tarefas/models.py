@@ -20,6 +20,10 @@ class Tarefa(models.Model):
 
     class Meta:
         db_table = 'tarefa'
+        permissions = [
+            ("assign_tarefa", "Can assign a tarefa to a colaborador "),
+            ("remove_colab_from_tarefa", "Can remove a colaborador from a tarefa"),
+        ]
 
 
 class InscricaoTarefa(models.Model):
