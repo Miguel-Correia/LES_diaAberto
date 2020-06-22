@@ -184,7 +184,9 @@
 					</ol>
 				</nav>
 
+        {% if inDate %}
 				<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'atividades:createAtividade' %}"> + Adicionar atividade</a>
+        {% endif %}
 
     	    	<!-- <table class="table table-hover"> -->
     	  <table class="table">
@@ -231,8 +233,13 @@
                 {% elif atividade.validada == -1 %}
                   <td><h5><span class="badge badge-warning ">Pendente</span></h5></td>
                 {% endif %}
+                {% if inDate %}
                 <td><a class="btn btn-outline-success far fa-edit" href="{% url 'atividades:updateAtividade' id=atividade.id %}"></a></td>
-                <td><a href="" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteAtividade' id=atividade.id %}"></a></td>  
+                <td><a href="" class="delete btn btn-outline-danger fas fa-trash-alt" data-toggle="modal" data-target="#Modal" data-id="{% url 'atividades:deleteAtividade' id=atividade.id %}"></a></td>
+                {% else %}
+                <td></td>
+                <td></td>
+                {% endif %}  
                 </tr>
             </tbody>
                     <tbody class="hide">
@@ -240,8 +247,9 @@
 											<td colspan="1"></td>
 											<td colspan="2">
 												<div>
+                          <p><b>Criador da atividade:</b> {{atividade.utilizadorid.nome}}</p>
 													<p><b>Descrição:</b> {{ atividade.descricao}}</p>
-													
+													<p><b>Unidade Orgânica:</b> {{ atividade.unidadeorganicaid.nome}}</p>
 													<p><b>Local:</b> {% if atividade.localid %} {{atividade.localid}} {% else %} Não atribuído {% endif %}</p>
 													<p><b>Duração:</b> {{ atividade.duracao}}</p>
                         				    		<p><b>Sessão:</b><p>
@@ -274,6 +282,8 @@
 												</div>
 											</td>
                         				</tr>
+                                        {% if perms.atividades.validates_atividade and perms.atividades.alterar_local %}
+                                        {% if inDate %}
                                         <tr>
                                             <td></td>
                                             <td colspan="5">
@@ -293,6 +303,8 @@
 
                                             </td>
                                         </tr>
+                                        {% endif %}
+                                        {% endif %}
 							<tbody>
 								{% endfor %}
                     </tbody>

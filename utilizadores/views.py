@@ -15,7 +15,8 @@ def login(request):
 	##print("PASSWORD_MADE: " + str(make_password("kaputaze")))
 	##print("PASSWORD_CHECK: " + str(check_password("kaputaze", str(make_password("kaputaze")))))
 	if(request.user.is_authenticated):
-		return HttpResponse("You are alredi logged in mayte! WOOOT")
+		#return HttpResponse("You are alredi logged in mayte! WOOOT")
+		return redirect('diaAbertoConf:index')
 
 	if request.method == 'POST':
 		form = LoginForm(request.POST)

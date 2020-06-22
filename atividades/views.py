@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from django.forms import modelformset_factory, formset_factory
 import datetime
 from django.db.models.functions import Lower
+from django.contrib.auth.decorators import login_required, permission_required
 
 from .filters import UnidadeOrganicaFilter, DepartamentoFilter, LocalFilter, CampusFilter, EdificioFilter, TematicaFilter, MaterialFilter, AtividadeFilter, SessaoFilter
 
@@ -19,6 +20,8 @@ from diaAbertoConf.models import DiaAberto
 # Create your views here.
 
 #Creates new edificio
+@login_required()
+@permission_required('atividades.add_edificio', raise_exception=True)
 def createEdificio(request):
     allCampus = Campus.objects.all()
     form = EdificioForm(request.POST or None)
@@ -32,6 +35,8 @@ def createEdificio(request):
     return render(request, 'atividades/AdicionarEdificio.html', context)
 
 #show all edificios
+@login_required()
+@permission_required('atividades.view_edificio', raise_exception=True)
 def showEdificios(request):
     allEdificios = Edificio.objects.all()
     allCampus = Campus.objects.all()
@@ -64,6 +69,8 @@ def showEdificios(request):
     return render(request, 'atividades/ShowEdificios.html', context)
 
 #upadates the fields of a spcific edificio
+@login_required()
+@permission_required('atividades.change_edificio', raise_exception=True)
 def updateEdificio(request, id):
     dados_Edificio = Edificio.objects.get(id = id)
     allCampus = Campus.objects.all()
@@ -78,12 +85,16 @@ def updateEdificio(request, id):
     return render(request, 'atividades/EditarEdificio.html' ,context)
 
 #deletes a edificio
+@login_required()
+@permission_required('atividades.delete_edificio', raise_exception=True)
 def deleteEdificio(request, id):
     dados_edificio = Edificio.objects.get(id = id)
     dados_edificio.delete()
     return HttpResponseRedirect(reverse('atividades:allEdificios'))
 
 #Creates new campus
+@login_required()
+@permission_required('atividades.add_campus', raise_exception=True)
 def createCampus(request):
     form = CampusForm()
     saved = False
@@ -97,6 +108,8 @@ def createCampus(request):
     return render(request, 'atividades/AdicionarCampus.html', context)
 
 #show all campus
+@login_required()
+@permission_required('atividades.view_campus', raise_exception=True)
 def showCampus(request):#, ordena):
     allCampus = Campus.objects.all()
     myFilter = CampusFilter(request.GET, queryset=allCampus)
@@ -123,6 +136,8 @@ def showCampus(request):#, ordena):
     return render(request, 'atividades/ShowCampus.html', context)
 
 #upadates the fields of a spcific campus
+@login_required()
+@permission_required('atividades.change_campus', raise_exception=True)
 def updateCampus(request, id):
     dados_Campus = Campus.objects.get(id = id)
     form = CampusForm(request.POST or None, instance = dados_Campus)
@@ -135,12 +150,16 @@ def updateCampus(request, id):
     return render(request, 'atividades/EditarCampus.html', {'form' : form, 'campus' : dados_Campus})
 
 #deletes a campus
+@login_required()
+@permission_required('atividades.delete_campus', raise_exception=True)
 def deleteCampus(request, id):
     dados_campus = Campus.objects.get(id = id)
     dados_campus.delete()
     return HttpResponseRedirect(reverse('atividades:allCampus'))
 
 #Creates new unidade
+@login_required()
+@permission_required('atividades.add_unidadeorganica', raise_exception=True)
 def createUnidadeOrganica(request):
     form = UnidadeOrganicaForm(request.POST or None)
     saved = False
@@ -154,6 +173,8 @@ def createUnidadeOrganica(request):
     return render(request, 'atividades/AdicionarUO.html', context)
 
 #show all unidade
+@login_required()
+@permission_required('atividades.view_unidadeorganica', raise_exception=True)
 def showUnidadeOrganicas(request):
     allUnidadeOrganicas = UnidadeOrganica.objects.all()
     myFilter = UnidadeOrganicaFilter(request.GET, queryset=allUnidadeOrganicas)
@@ -182,6 +203,8 @@ def showUnidadeOrganicas(request):
                 }
     return render(request, 'atividades/ShowUO.html', context)
 
+@login_required()
+@permission_required('atividades.change_unidadeorganica', raise_exception=True)
 #upadates the fields of a spcific unidade
 def updateUnidadeOrganica(request, id):
     dados_UnidadeOrganica = UnidadeOrganica.objects.get(id = id)
@@ -197,12 +220,16 @@ def updateUnidadeOrganica(request, id):
     return render(request, 'atividades/EditarUO.html', context)
 
 #deletes a unidade
+@login_required()
+@permission_required('atividades.delete_unidadeorganica', raise_exception=True)
 def deleteUnidadeOrganica(request, id):
     dados_unidadeorganica = UnidadeOrganica.objects.get(id = id)
     dados_unidadeorganica.delete()
     return HttpResponseRedirect(reverse('atividades:allUnidadeOrganicas'))
 
 #Creates new departamento
+@login_required()
+@permission_required('atividades.add_departamento', raise_exception=True)
 def createDepartamento(request):
     allUnidadeOrganicas = UnidadeOrganica.objects.all()
     form = DepartamentoForm()
@@ -219,6 +246,8 @@ def createDepartamento(request):
 
 
 #show all departamntos
+@login_required()
+@permission_required('atividades.view_departamento', raise_exception=True)
 def showDepartamentos(request):
     allDepartamentos = Departamento.objects.all()
     myFilter = DepartamentoFilter(request.GET, queryset=allDepartamentos)
@@ -250,6 +279,8 @@ def showDepartamentos(request):
     return render(request, 'atividades/ShowDepartamentos.html', context)
 
 #upadates the fields of a spcific departamento
+@login_required()
+@permission_required('atividades.change_departamento', raise_exception=True)
 def updateDepartamento(request, id):
     dados_Departamento = Departamento.objects.get(id = id)
     allUnidadeOrganicas = UnidadeOrganica.objects.all()
@@ -263,12 +294,16 @@ def updateDepartamento(request, id):
     return render(request, 'atividades/EditarDepartamento.html', context)
 
 #deletes a departamento
+@login_required()
+@permission_required('atividades.delete_departamento', raise_exception=True)
 def deleteDepartamento(request, id):
     dados_departamento = Departamento.objects.get(id = id)
     dados_departamento.delete()
     return HttpResponseRedirect(reverse('atividades:allDepartamentos'))
 
 #Creates new local
+@login_required()
+@permission_required('atividades.add_local', raise_exception=True)
 def createLocal(request):
     form = LocalForm()
     saved = False
@@ -306,6 +341,8 @@ def createLocal(request):
     return render(request, 'atividades/AdicionarLocal.html', context)
 
 #show all local
+@login_required()
+@permission_required('atividades.view_local', raise_exception=True)
 def showLocais(request):
     allLocais = Local.objects.all()
     allCampus = Campus.objects.all()
@@ -339,6 +376,8 @@ def showLocais(request):
     return render(request, 'atividades/ShowLocais.html', context)
 
 #upadates the fields of a spcific local
+@login_required()
+@permission_required('atividades.change_local', raise_exception=True)
 def updateLocal(request, id):
     dados_Local = Local.objects.get(id = id)
 
@@ -379,6 +418,8 @@ def updateLocal(request, id):
 
 
 #deletes a local
+@login_required()
+@permission_required('atividades.delete_local', raise_exception=True)
 def deleteLocal(request, id):
     dados_local = Local.objects.get(id = id)
     atividades = Atividade.objects.filter(localid= dados_local.id)
@@ -390,71 +431,91 @@ def deleteLocal(request, id):
     return redirect('atividades:allLocais')
 
 #Creates new atvidade
+@login_required()
+@permission_required('atividades.add_atividade', raise_exception=True)
 def createAtividade(request):
 
-    saved = False
+    try: 
+        diaAberto = DiaAberto.objects.all()[0]
+    except IndexError:
+        diaAberto = None
 
-    form = AtividadeForm(request.GET or None)
-    tematicaformset = AtividadeTematicaFormset(request.GET or None, prefix='formTematica')
-    materialformset = AtividadeMaterialFormset(request.GET or None, prefix='formMaterial')
-    sessaoformset = AtividadeSessaoFormset(request.GET or None, prefix='formSessao')
-    
-    if request.method == "POST":
+    data_atual = datetime.datetime.today().strftime('%Y-%m-%d')
+
+    if diaAberto.data_inicio_propor_atividades.strftime('%Y-%m-%d') <= data_atual and diaAberto.data_fim_propor_atividades.strftime('%Y-%m-%d') >= data_atual:
+        saved = False
+
+        form = AtividadeForm(request.GET or None)
+        tematicaformset = AtividadeTematicaFormset(request.GET or None, prefix='formTematica')
+        materialformset = AtividadeMaterialFormset(request.GET or None, prefix='formMaterial')
+        sessaoformset = AtividadeSessaoFormset(request.GET or None, prefix='formSessao')
         
-        form = AtividadeForm(request.POST)
-        tematicaformset = AtividadeTematicaFormset(request.POST, prefix='formTematica')
-        materialformset = AtividadeMaterialFormset(request.POST, prefix='formMaterial')
-        sessaoformset = AtividadeSessaoFormset(request.POST, prefix='formSessao') 
-        
-        if form.is_valid() and materialformset.is_valid() and tematicaformset.is_valid() and sessaoformset.is_valid():
-            utilizador = Utilizador.objects.get(id = 1)
-            atividade = form.save(commit=False)
-            atividade.utilizadorid = utilizador
-            atividade.unidadeorganicaid = utilizador.unidade_organicaid
-            atividade.validada = -1
-            atividade.editavel = True
-            atividade.save()
+        if request.method == "POST":
             
+            form = AtividadeForm(request.POST)
+            tematicaformset = AtividadeTematicaFormset(request.POST, prefix='formTematica')
+            materialformset = AtividadeMaterialFormset(request.POST, prefix='formMaterial')
+            sessaoformset = AtividadeSessaoFormset(request.POST, prefix='formSessao') 
             
-            for form in materialformset:
-                if form.cleaned_data.get('materialid'):
-                    material = AtividadeMaterial(
+            if form.is_valid() and materialformset.is_valid() and tematicaformset.is_valid() and sessaoformset.is_valid():
+                utilizador = request.user
+                atividade = form.save(commit=False)
+                atividade.utilizadorid = utilizador
+                atividade.unidadeorganicaid = utilizador.unidade_organicaid
+                atividade.validada = -1
+                atividade.editavel = True
+                atividade.save()
+                
+                
+                for form in materialformset:
+                    if form.cleaned_data.get('materialid'):
+                        material = AtividadeMaterial(
+                            atividadeid = atividade,
+                            materialid = form.cleaned_data['materialid'],
+                            quantidade = form.cleaned_data['quantidade']
+                        )
+                        material.save()
+                for form in tematicaformset:
+                    tematica = AtividadeTematica(
                         atividadeid = atividade,
-                        materialid = form.cleaned_data['materialid'],
-                        quantidade = form.cleaned_data['quantidade']
+                        tematicaid = form.cleaned_data['tematicaid']
                     )
-                    material.save()
-            for form in tematicaformset:
-                tematica = AtividadeTematica(
-                    atividadeid = atividade,
-                    tematicaid = form.cleaned_data['tematicaid']
-                )
-                tematica.save()
-            for form in sessaoformset: 
-                sessao = SessaoAtividade(
-                    atividadeid = atividade,
-                    sessaoid = form.cleaned_data['sessaoid'],
-                    data = form.cleaned_data['data']
-                )
-                sessao.save()
-            saved = True
-            
-            form = AtividadeForm(request.GET or None)
-            tematicaformset = AtividadeTematicaFormset(request.GET or None, prefix='formTematica')
-            materialformset = AtividadeMaterialFormset(request.GET or None, prefix='formMaterial')
-            sessaoformset = AtividadeSessaoFormset(request.GET or None, prefix='formSessao')
-    
-    context = { 'form' : form, 
-                'saved' : saved, 
-                'AtividadeTematicaFormset' : tematicaformset, 
-                'AtividadeMaterialFormset' : materialformset,
-                'AtividadeSessaoFormset' : sessaoformset,
-            }  
-    return render(request, 'atividades/AdicionarAtividade.html', context)
+                    tematica.save()
+                for form in sessaoformset: 
+                    sessao = SessaoAtividade(
+                        atividadeid = atividade,
+                        sessaoid = form.cleaned_data['sessaoid'],
+                        data = form.cleaned_data['data']
+                    )
+                    sessao.save()
+                saved = True
+                
+                form = AtividadeForm(request.GET or None)
+                tematicaformset = AtividadeTematicaFormset(request.GET or None, prefix='formTematica')
+                materialformset = AtividadeMaterialFormset(request.GET or None, prefix='formMaterial')
+                sessaoformset = AtividadeSessaoFormset(request.GET or None, prefix='formSessao')
+        
+        context = { 'form' : form, 
+                    'saved' : saved, 
+                    'AtividadeTematicaFormset' : tematicaformset, 
+                    'AtividadeMaterialFormset' : materialformset,
+                    'AtividadeSessaoFormset' : sessaoformset,
+                }  
+        return render(request, 'atividades/AdicionarAtividade.html', context)
+    else:
+        return redirect(reverse('atividades:allAtividades'))
 
 #show all atividade
+@login_required()
+@permission_required('atividades.view_atividade', raise_exception=True)
 def showAtividades(request):
-    allAtividades = Atividade.objects.all()
+    if request.user.user_type == 0b10000:
+        allAtividades = Atividade.objects.all()
+    elif request.user.user_type == 0b00001:
+        allAtividades = Atividade.objects.filter(unidadeorganicaid = request.user.unidade_organicaid)
+    else:
+        allAtividades = Atividade.objects.filter(utilizadorid=request.user)
+
     allCampus = Campus.objects.all()
     allEdificios = Edificio.objects.all()
     allTematicaAtividade = AtividadeTematica.objects.all()
@@ -471,7 +532,14 @@ def showAtividades(request):
             current_date += datetime.timedelta(days=1)
             daysDiaAberto.append(current_date)
     except IndexError:
-        pass
+        diaAberto = None
+
+    data_atual = datetime.date.today()
+
+    if diaAberto.data_inicio_propor_atividades <= data_atual and diaAberto.data_fim_propor_atividades >= data_atual:
+        inDate = True
+    else:
+        inDate = False
 
     myFilter = AtividadeFilter(request.GET, queryset=allAtividades)
     
@@ -503,9 +571,6 @@ def showAtividades(request):
     sessao_gte = request.GET.get('sessao_gte')
     sessao_lte = request.GET.get('sessao_lte')
     data = request.GET.get('data')
-
-    #local_campus = request.GET.get('localid__campusid')
-    #localid__edicifioid = request.GET.get('localid__edicifioid')
     
     try:
         localcampusSearched =  int(request.GET.get('localcampus'))
@@ -516,6 +581,8 @@ def showAtividades(request):
         localedificioSearched = int(request.GET.get('localedicifio'))
     except TypeError:
         localedificioSearched = None
+
+    print(diaAberto.data_inicio_propor_atividades)
 
     context = {
         'page_obj': page_obj, 
@@ -536,7 +603,9 @@ def showAtividades(request):
         'direction' : direction,
         'sessao_gte' : sessao_gte,
         'sessao_lte' : sessao_lte,
-        'data' : data
+        'data' : data,
+        'diaAberto' : diaAberto,
+        'inDate' : inDate
         }
     return render(request, 'atividades/ShowAtividades.html', context)
 
@@ -556,132 +625,158 @@ def showDetailsAtividade(request, id):
 
 
 #upadates the fields of a spcific atividade
+@login_required()
+@permission_required('atividades.change_atividade', raise_exception=True)
 def updateAtividade(request, id):
 
-    dados_Atividade = Atividade.objects.get(id = id)
-    tematica = AtividadeTematica.objects.filter(atividadeid = id)
-    material = AtividadeMaterial.objects.filter(atividadeid = id)
-    sessao = SessaoAtividade.objects.filter(atividadeid = id)
+    try: 
+        diaAberto = DiaAberto.objects.all()[0]
+    except IndexError:
+        diaAberto = None
 
-    AtividadeTematicaFormset = formset_factory(AtividadeTematicaForm, extra=0)
-    if not material:
-        AtividadeMaterialFormset = formset_factory(AtividadeMaterialForm, extra=1)
-    else:
-         AtividadeMaterialFormset = formset_factory(AtividadeMaterialForm, extra=0)
-    AtividadeSessaoFormset = formset_factory(AtividadeSessaoForm, extra=0)
+    data_atual = datetime.datetime.today().strftime('%Y-%m-%d')
 
-    if request.method == 'GET':
-        form = AtividadeForm(instance=dados_Atividade)
-        tematicaformset = AtividadeTematicaFormset(initial = [{'tematicaid': t.tematicaid.id} for t in tematica], prefix='formTematica')
-        materialformset = AtividadeMaterialFormset(initial = [{'materialid': m.materialid.id, 'quantidade': m.quantidade} for m in material], prefix='formMaterial')
-        sessaoformset = AtividadeSessaoFormset(initial = [{'sessaoid': s.sessaoid.id, 'data': s.data} for s in sessao], prefix='formSessao')
-    elif request.method == 'POST':
-        form = AtividadeForm(request.POST, instance = dados_Atividade)
+    if diaAberto.data_inicio_propor_atividades.strftime('%Y-%m-%d') <= data_atual and diaAberto.data_fim_propor_atividades.strftime('%Y-%m-%d') >= data_atual:
 
-        tematicaformset = AtividadeTematicaFormset(request.POST, initial = [{'tematicaid': t.tematicaid.id} for t in tematica], prefix='formTematica')
-        materialformset = AtividadeMaterialFormset(request.POST, initial = [{'materialid': m.materialid.id, 'quantidade': m.quantidade} for m in material], prefix='formMaterial')
-        sessaoformset = AtividadeSessaoFormset(request.POST, initial = [{'sessaoid': s.sessaoid.id, 'data': s.data} for s in sessao], prefix='formSessao')
+        dados_Atividade = Atividade.objects.get(id = id)
+        tematica = AtividadeTematica.objects.filter(atividadeid = id)
+        material = AtividadeMaterial.objects.filter(atividadeid = id)
+        sessao = SessaoAtividade.objects.filter(atividadeid = id)
 
-        if form.is_valid() and tematicaformset.is_valid() and materialformset.is_valid() and sessaoformset.is_valid():
-            f = form.save(commit=False)
-            f.validada = -1
-            f.localid = None
-            f.save()
-            
-            #Atividade Tematica
-            #Save and add
-            if len(tematicaformset) >= len(tematica):
-                for index, form in enumerate(tematicaformset):
-                    if index < len(tematica):
-                        tematica[index].tematicaid = form.cleaned_data['tematicaid']
-                        tematica[index].atividadeid = f
-                        tematica[index].save()
-                    else:
-                        new_tematica = AtividadeTematica(
-                            atividadeid = f,
-                            tematicaid = form.cleaned_data['tematicaid']
-                        )
-                        new_tematica.save()
-            #Save and delete
-            else:
-                for index, t in enumerate(tematica):
-                    if index < len(tematicaformset):
-                        t.tematicaid = tematicaformset[index].cleaned_data['tematicaid']
-                        t.atividadeid = f
-                        t.save()
-                    else:
-                        t.delete()
-            #Atividade Material
-            #Save and add
-            if len(materialformset) >= len(material):
-                for index, form in enumerate(materialformset):
-                    if form.cleaned_data.get('materialid'):
-                        if index < len(material):
-                            material[index].materialid = form.cleaned_data['materialid']
-                            material[index].quantidade = form.cleaned_data['quantidade']
-                            material[index].atividadeid = f
-                            material[index].save()
+        AtividadeTematicaFormset = formset_factory(AtividadeTematicaForm, extra=0)
+        if not material:
+            AtividadeMaterialFormset = formset_factory(AtividadeMaterialForm, extra=1)
+        else:
+             AtividadeMaterialFormset = formset_factory(AtividadeMaterialForm, extra=0)
+        AtividadeSessaoFormset = formset_factory(AtividadeSessaoForm, extra=0)
+
+        if request.method == 'GET':
+            form = AtividadeForm(instance=dados_Atividade)
+            tematicaformset = AtividadeTematicaFormset(initial = [{'tematicaid': t.tematicaid.id} for t in tematica], prefix='formTematica')
+            materialformset = AtividadeMaterialFormset(initial = [{'materialid': m.materialid.id, 'quantidade': m.quantidade} for m in material], prefix='formMaterial')
+            sessaoformset = AtividadeSessaoFormset(initial = [{'sessaoid': s.sessaoid.id, 'data': s.data} for s in sessao], prefix='formSessao')
+        elif request.method == 'POST':
+            form = AtividadeForm(request.POST, instance = dados_Atividade)
+
+            tematicaformset = AtividadeTematicaFormset(request.POST, initial = [{'tematicaid': t.tematicaid.id} for t in tematica], prefix='formTematica')
+            materialformset = AtividadeMaterialFormset(request.POST, initial = [{'materialid': m.materialid.id, 'quantidade': m.quantidade} for m in material], prefix='formMaterial')
+            sessaoformset = AtividadeSessaoFormset(request.POST, initial = [{'sessaoid': s.sessaoid.id, 'data': s.data} for s in sessao], prefix='formSessao')
+
+            if form.is_valid() and tematicaformset.is_valid() and materialformset.is_valid() and sessaoformset.is_valid():
+                f = form.save(commit=False)
+                f.validada = -1
+                f.localid = None
+                f.save()
+                
+                #Atividade Tematica
+                #Save and add
+                if len(tematicaformset) >= len(tematica):
+                    for index, form in enumerate(tematicaformset):
+                        if index < len(tematica):
+                            tematica[index].tematicaid = form.cleaned_data['tematicaid']
+                            tematica[index].atividadeid = f
+                            tematica[index].save()
                         else:
-                            new_material = AtividadeMaterial(
+                            new_tematica = AtividadeTematica(
                                 atividadeid = f,
-                                materialid = form.cleaned_data['materialid'],
-                                quantidade = form.cleaned_data['quantidade']
+                                tematicaid = form.cleaned_data['tematicaid']
                             )
-                            new_material.save()
-            #Save and delete
-            else:
-                for index, m in enumerate(material):
-                    if materialformset[index].cleaned_data.get('materialid'):
-                        if index < len(materialformset):
-                            m.materialid = materialformset[index].cleaned_data['materialid']
-                            m.quantidade = materialformset[index].cleaned_data['quantidade']
-                            m.atividadeid = f
-                            m.save()
+                            new_tematica.save()
+                #Save and delete
+                else:
+                    for index, t in enumerate(tematica):
+                        if index < len(tematicaformset):
+                            t.tematicaid = tematicaformset[index].cleaned_data['tematicaid']
+                            t.atividadeid = f
+                            t.save()
                         else:
-                            m.delete()
-            #Atividade Sessao
-            #Save and add
-            if len(sessaoformset) >= len(sessao):
-                for index, form in enumerate(sessaoformset):
-                    if index < len(sessao):
-                        sessao[index].sessaoid = form.cleaned_data['sessaoid']
-                        sessao[index].data = form.cleaned_data['data']
-                        sessao[index].atividadeid = f
-                        sessao[index].save()
-                    else:
-                        new_sessao = SessaoAtividade(
-                            atividadeid = f,
-                            sessaoid = form.cleaned_data['sessaoid'],
-                            data = form.cleaned_data['data']
-                        )
-                        new_sessao.save()
-            #Save and delete
-            else:
-                for index, s in enumerate(sessao):
-                    if index < len(sessaoformset):
-                        s.sessaoid = sessaoformset[index].cleaned_data['sessaoid']
-                        s.data = sessaoformset[index].cleaned_data['data']
-                        s.atividadeid = f
-                        s.save()
-                    else:
-                        s.delete()
+                            t.delete()
+                #Atividade Material
+                #Save and add
+                if len(materialformset) >= len(material):
+                    for index, form in enumerate(materialformset):
+                        if form.cleaned_data.get('materialid'):
+                            if index < len(material):
+                                material[index].materialid = form.cleaned_data['materialid']
+                                material[index].quantidade = form.cleaned_data['quantidade']
+                                material[index].atividadeid = f
+                                material[index].save()
+                            else:
+                                new_material = AtividadeMaterial(
+                                    atividadeid = f,
+                                    materialid = form.cleaned_data['materialid'],
+                                    quantidade = form.cleaned_data['quantidade']
+                                )
+                                new_material.save()
+                #Save and delete
+                else:
+                    for index, m in enumerate(material):
+                        if materialformset[index].cleaned_data.get('materialid'):
+                            if index < len(materialformset):
+                                m.materialid = materialformset[index].cleaned_data['materialid']
+                                m.quantidade = materialformset[index].cleaned_data['quantidade']
+                                m.atividadeid = f
+                                m.save()
+                            else:
+                                m.delete()
+                #Atividade Sessao
+                #Save and add
+                if len(sessaoformset) >= len(sessao):
+                    for index, form in enumerate(sessaoformset):
+                        if index < len(sessao):
+                            sessao[index].sessaoid = form.cleaned_data['sessaoid']
+                            sessao[index].data = form.cleaned_data['data']
+                            sessao[index].atividadeid = f
+                            sessao[index].save()
+                        else:
+                            new_sessao = SessaoAtividade(
+                                atividadeid = f,
+                                sessaoid = form.cleaned_data['sessaoid'],
+                                data = form.cleaned_data['data']
+                            )
+                            new_sessao.save()
+                #Save and delete
+                else:
+                    for index, s in enumerate(sessao):
+                        if index < len(sessaoformset):
+                            s.sessaoid = sessaoformset[index].cleaned_data['sessaoid']
+                            s.data = sessaoformset[index].cleaned_data['data']
+                            s.atividadeid = f
+                            s.save()
+                        else:
+                            s.delete()
 
-            return  redirect('atividades:allAtividades')
+                return  redirect('atividades:allAtividades')
 
-    context = { 'atividade' : dados_Atividade, 
-                'AtividadeForm': form,
-                'AtividadeTematicaFormset' : tematicaformset,
-                'AtividadeMaterialFormset' : materialformset,
-                'AtividadeSessaoFormset' : sessaoformset,
-            }
+        context = { 'atividade' : dados_Atividade, 
+                    'AtividadeForm': form,
+                    'AtividadeTematicaFormset' : tematicaformset,
+                    'AtividadeMaterialFormset' : materialformset,
+                    'AtividadeSessaoFormset' : sessaoformset,
+                }
 
-    return render(request, 'atividades/EditarAtividade.html', context)
+        return render(request, 'atividades/EditarAtividade.html', context)
+    else:
+        return redirect(reverse('atividades:allAtividades'))
     
 #deletes a atividade
+@login_required()
+@permission_required('atividades.delete_atividade', raise_exception=True)
 def deleteAtividade(request, id):
-    dados_atividade = Atividade.objects.get(id = id)
-    dados_atividade.delete()
-    return HttpResponseRedirect(reverse('atividades:allAtividades'))
+
+    try: 
+        diaAberto = DiaAberto.objects.all()[0]
+    except IndexError:
+        diaAberto = None
+
+    data_atual = datetime.datetime.today().strftime('%Y-%m-%d')
+
+    if diaAberto.data_inicio_propor_atividades.strftime('%Y-%m-%d') <= data_atual and diaAberto.data_fim_propor_atividades.strftime('%Y-%m-%d') >= data_atual:   
+        dados_atividade = Atividade.objects.get(id = id)
+        dados_atividade.delete()
+        return HttpResponseRedirect(reverse('atividades:allAtividades'))
+    else:
+        return redirect(reverse('atividades:allAtividades'))
 
 #request atividade
 def requestAtividade(request):
@@ -690,87 +785,120 @@ def requestAtividade(request):
 	#add later
 	return 0
 
+@login_required()
+@permission_required('atividades.validates_atividade', raise_exception=True)
 def recuseAtividade(request, id):
-    dados_atividade = Atividade.objects.get(id = id)
-    #form = AtividadeForm(request.POST, instance = dados_atividade)
-    #if form.is_valid():
-    #atividade = form.save(commit=False)
-    dados_atividade.validada = 0 
-    dados_atividade.save()
-    return redirect('atividades:allAtividades')
-    # dados_atividade = Atividade.objects.get(id = id)
-    # dados_atividade.delete()
-    # return HttpResponseRedirect(reverse('atividades:allAtividades'))
 
-def atribuirLocal(request, id):
-    dados_atividade = Atividade.objects.get(id = id)
-    allCampus = Campus.objects.all()
-    allTematicaAtividade = AtividadeTematica.objects.all()
-    allMaterialAtividade = AtividadeMaterial.objects.all()
-    listMateriais = []
-    for material in allMaterialAtividade:
-        if material.atividadeid.id == dados_atividade.id:
-            listMateriais.append(material)
-    allSessaoAtividade = SessaoAtividade.objects.all()
-
-    try:
-        allEdificios = Edificio.objects.filter(campusid = allCampus[0].id)
+    try: 
+        diaAberto = DiaAberto.objects.all()[0]
     except IndexError:
-        allEdificios = None
-    
-    try:
-        allLocais = Local.objects.filter(edicifioid = allEdificios[0].id)
-    except IndexError: 
-        allLocais = None
+        diaAberto = None
 
-    if request.method == 'POST':
-        indoor = request.POST.get('indoor')
-        if indoor == "True":
-            dados_atividade.localid = Local.objects.get(id = request.POST.get("localid_interior"))
-        else:
-            dados_atividade.localid = Local.objects.get(id = request.POST.get("localid_exterior"))
-        dados_atividade.validada = 1
+    data_atual = datetime.datetime.today().strftime('%Y-%m-%d')
+
+    if diaAberto.data_inicio_propor_atividades.strftime('%Y-%m-%d') <= data_atual and diaAberto.data_fim_propor_atividades.strftime('%Y-%m-%d') >= data_atual:
+        dados_atividade = Atividade.objects.get(id = id)
+        dados_atividade.validada = 0 
         dados_atividade.save()
         return redirect('atividades:allAtividades')
+    else:
+        return redirect(reverse('atividades:allAtividades'))
 
-    context = { 'allLocais' : allLocais, 
-                'allEdificios' : allEdificios, 
-                'allCampus' : allCampus, 
-                'atividade' : dados_atividade, 
-                'listTematica' : allTematicaAtividade, 
-                'listMaterial' : listMateriais, 
-                'listSessao' : allSessaoAtividade
-            }
-    return render(request, 'atividades/AtribuirLocal.html', context)
+@login_required()
+@permission_required('atividades.atribuir_local', raise_exception=True)
+def atribuirLocal(request, id):
 
-def updateAtribuirLocal(request, id):
-    dados_atividade = Atividade.objects.get(id = id)
-    local = dados_atividade.localid
-    allCampus = Campus.objects.all()
-    allEdificios = Edificio.objects.filter(campusid=local.campusid)
-    locais = Local.objects.filter(campusid=local.campusid).filter(edicifioid=local.edicifioid)
-    locais_exterior = Local.objects.filter(campusid = local.campusid).filter(indoor=False)
-    allTematicaAtividade = AtividadeTematica.objects.all()
-    allMaterialAtividade = AtividadeMaterial.objects.all()
-    allSessaoAtividade = SessaoAtividade.objects.all()
+    try: 
+        diaAberto = DiaAberto.objects.all()[0]
+    except IndexError:
+        diaAberto = None
 
-    if request.method == "POST":
-        if form.is_valid():
-            dados_atividade.localid = form.cleaned_data['localid']
+    data_atual = datetime.datetime.today().strftime('%Y-%m-%d')
+
+    if diaAberto.data_inicio_propor_atividades.strftime('%Y-%m-%d') <= data_atual and diaAberto.data_fim_propor_atividades.strftime('%Y-%m-%d') >= data_atual:
+        dados_atividade = Atividade.objects.get(id = id)
+        allCampus = Campus.objects.all()
+        allTematicaAtividade = AtividadeTematica.objects.all()
+        allMaterialAtividade = AtividadeMaterial.objects.all()
+        listMateriais = []
+        for material in allMaterialAtividade:
+            if material.atividadeid.id == dados_atividade.id:
+                listMateriais.append(material)
+        allSessaoAtividade = SessaoAtividade.objects.all()
+
+        try:
+            allEdificios = Edificio.objects.filter(campusid = allCampus[0].id)
+        except IndexError:
+            allEdificios = None
+        
+        try:
+            allLocais = Local.objects.filter(edicifioid = allEdificios[0].id)
+        except IndexError: 
+            allLocais = None
+
+        if request.method == 'POST':
+            indoor = request.POST.get('indoor')
+            if indoor == "True":
+                dados_atividade.localid = Local.objects.get(id = request.POST.get("localid_interior"))
+            else:
+                dados_atividade.localid = Local.objects.get(id = request.POST.get("localid_exterior"))
+            dados_atividade.validada = 1
             dados_atividade.save()
-            return  redirect('atividades:allAtividades')
+            return redirect('atividades:allAtividades')
 
-    context = { 'allLocais' : locais, 
-                'allLocaisExt': locais_exterior,
-                'allEdificios' : allEdificios, 
-                'allCampus' : allCampus, 
-                'atividade' : dados_atividade, 
-                'listTematica' : allTematicaAtividade, 
-                'listMaterial' : allMaterialAtividade, 
-                'listSessao' : allSessaoAtividade,
-                'local' : local
-            }
-    return render(request, 'atividades/AtribuirLocal.html', context)
+        context = { 'allLocais' : allLocais, 
+                    'allEdificios' : allEdificios, 
+                    'allCampus' : allCampus, 
+                    'atividade' : dados_atividade, 
+                    'listTematica' : allTematicaAtividade, 
+                    'listMaterial' : listMateriais, 
+                    'listSessao' : allSessaoAtividade
+                }
+        return render(request, 'atividades/AtribuirLocal.html', context)
+    else:
+        return redirect(reverse('atividades:allAtividades'))
+
+@login_required()
+@permission_required('atividades.alterar_local', raise_exception=True)
+def updateAtribuirLocal(request, id):
+
+    try: 
+        diaAberto = DiaAberto.objects.all()[0]
+    except IndexError:
+        diaAberto = None
+
+    data_atual = datetime.datetime.today().strftime('%Y-%m-%d')
+
+    if diaAberto.data_inicio_propor_atividades.strftime('%Y-%m-%d') <= data_atual and diaAberto.data_fim_propor_atividades.strftime('%Y-%m-%d') >= data_atual:
+        dados_atividade = Atividade.objects.get(id = id)
+        local = dados_atividade.localid
+        allCampus = Campus.objects.all()
+        allEdificios = Edificio.objects.filter(campusid=local.campusid)
+        locais = Local.objects.filter(campusid=local.campusid).filter(edicifioid=local.edicifioid)
+        locais_exterior = Local.objects.filter(campusid = local.campusid).filter(indoor=False)
+        allTematicaAtividade = AtividadeTematica.objects.all()
+        allMaterialAtividade = AtividadeMaterial.objects.all()
+        allSessaoAtividade = SessaoAtividade.objects.all()
+
+        if request.method == "POST":
+            if form.is_valid():
+                dados_atividade.localid = form.cleaned_data['localid']
+                dados_atividade.save()
+                return  redirect('atividades:allAtividades')
+
+        context = { 'allLocais' : locais, 
+                    'allLocaisExt': locais_exterior,
+                    'allEdificios' : allEdificios, 
+                    'allCampus' : allCampus, 
+                    'atividade' : dados_atividade, 
+                    'listTematica' : allTematicaAtividade, 
+                    'listMaterial' : allMaterialAtividade, 
+                    'listSessao' : allSessaoAtividade,
+                    'local' : local
+                }
+        return render(request, 'atividades/AtribuirLocal.html', context)
+    else:
+        return redirect(reverse('atividades:allAtividades'))
 
 def getEdificio(request, campusid):
     dados_edificio = [(e.id, e.nome_edificio) for e in Edificio.objects.filter(campusid = campusid)]
@@ -801,6 +929,8 @@ def getLocalImage(request, localid):
 # Tematica CRUD- Create Read Update Delete
 #----------------------------------------------------------------
 #showAll
+@login_required()
+@permission_required('atividades.view_tematica', raise_exception=True)
 def showTematicas(request):
     allTematicas = Tematica.objects.all()
     myFilter = TematicaFilter(request.GET, queryset=allTematicas)
@@ -829,7 +959,8 @@ def showTematicas(request):
                 }
     return render(request, 'atividades/ShowTematicas.html', context)
 
-#Add tematica
+@login_required()
+@permission_required('atividades.add_tematica', raise_exception=True)
 def addTematica(request):
     form = TematicaForm()
     saved = False
@@ -841,6 +972,8 @@ def addTematica(request):
     context = {'form' : form, 'saved' : saved}
     return render(request, 'atividades/AdicionarTematica.html', context)
 
+@login_required()
+@permission_required('atividades.change_tematica', raise_exception=True)
 def updateTematica(request, id):
     dados = Tematica.objects.get(id = id)
     form = TematicaForm(request.POST or None, instance=dados)
@@ -853,6 +986,8 @@ def updateTematica(request, id):
     context = {'tematica': dados, 'form' : form}
     return render(request, 'atividades/EditarTematica.html', context)
 
+@login_required()
+@permission_required('atividades.delete_tematica', raise_exception=True)
 def deleteTematica(request, id):
     dados = Tematica.objects.get(id = id)
     dados.delete()
@@ -861,6 +996,8 @@ def deleteTematica(request, id):
 #-----------------------------------------------------
 # Material CRUD- Create Read Update Delete
 #----------------------------------------------------------------
+@login_required()
+@permission_required('atividades.add_material', raise_exception=True)
 def createMaterial(request):
     form = MaterialForm()
     saved = False
@@ -873,6 +1010,8 @@ def createMaterial(request):
     context = {'form' : form, 'saved' : saved}
     return render(request, 'atividades/AdicionarMaterial.html', context)
 
+@login_required()
+@permission_required('atividades.view_material', raise_exception=True)
 def showMateriais(request):
     allMateriais = Material.objects.all()
     myFilter = MaterialFilter(request.GET, queryset=allMateriais)
@@ -895,6 +1034,8 @@ def showMateriais(request):
     'nome' : nome, 'order_by' : order_by, 'direction' : direction}
     return render(request, 'atividades/ShowMateriais.html', context)
 
+@login_required()
+@permission_required('atividades.change_material', raise_exception=True)
 def updateMaterial(request, id):
     dados_Material = Material.objects.get(id = id)
     form = MaterialForm(request.POST or None, instance = dados_Material)
@@ -905,6 +1046,8 @@ def updateMaterial(request, id):
 
     return render(request, 'atividades/EditarMaterial.html', {'form' : form, 'material' : dados_Material})
 
+@login_required()
+@permission_required('atividades.delete_material', raise_exception=True)
 def deleteMaterial(request, id):
     dados_Material = Material.objects.get(id = id)
     dados_Material.delete()
@@ -915,6 +1058,8 @@ def deleteMaterial(request, id):
 # Sessao CRUD - Create Read Update Delete
 #-------------------------------------------------------------------------
 
+@login_required()
+@permission_required('atividades.view_sessao', raise_exception=True)
 def showSessoes(request):
     allSessoes = Sessao.objects.all()
     myFilter = SessaoFilter(request.GET, queryset=allSessoes)
@@ -945,6 +1090,8 @@ def showSessoes(request):
                 }
     return render(request, 'atividades/ShowHorarioSessao.html', context)
 
+@login_required()
+@permission_required('atividades.add_sessao', raise_exception=True)
 def addSessao(request):
     form = SessaoForm()
     saved = False
@@ -957,6 +1104,8 @@ def addSessao(request):
     context = {'form' : form, 'saved' : saved}
     return render(request, 'atividades/AdicionarHorarioSessao.html', context)
 
+@login_required()
+@permission_required('atividades.change_sessao', raise_exception=True)
 def updateSessao(request, id):
     dados = Sessao.objects.get(id=id)
     form = SessaoForm(request.POST or None, instance=dados)
@@ -968,6 +1117,8 @@ def updateSessao(request, id):
 
     return render(request,'atividades/EditarHorarioSessao.html' , {'form' : form, 'sessao':dados})
 
+@login_required()
+@permission_required('atividades.delete_sessao', raise_exception=True)
 def deleteSessao(request, id):
     dados = Sessao.objects.get(id=id)
     dados.delete()

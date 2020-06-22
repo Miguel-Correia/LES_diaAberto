@@ -111,6 +111,11 @@ class Atividade(models.Model):
     class Meta:
         
         db_table = 'atividade'
+        permissions = [
+            ("validates_atividade", "Can validate atividade"),
+            ("atribuir_local", "Can atribuir local da atividade"),
+            ("alterar_local", "Can alterar local da atividade")
+            ]
 
 class Material(models.Model):
     #id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
