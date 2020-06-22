@@ -61,7 +61,7 @@ $(document).on('click', '.remove-form-row', function(e){
 //-----------------------------------------------------------
 //----------------------------------------------------------
 //-----------------------------------------------------------
-
+/*
 function removeInsc(select){
     console.log($(select).val())
 
@@ -81,14 +81,14 @@ function removeInsc(select){
                     $(this).show()
             })
         }else
-            continue
+            pass
     })
 }
 
 $('select[name$=inscricao]').change(function(){
     removeInsc(this)
 })
-
+*/
 //----------------------------------------------------
 //                  AJAX 
 //----------------------------------------------------

@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.functions import Lower
-
+from django.contrib.auth.decorators import login_required, permission_required
 
 from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Ementa, Prato, Rota_Inscricao, DiaAberto
 from atividades.models import Inscricao
@@ -26,6 +26,8 @@ def index(request):
         context ={}
     return render(request, 'diaAbertoConf/Home.html',context)
 
+@login_required()
+@permission_required('diaAbertoConf.add_diaaberto', raise_exception=True)
 def editConfDiaAberto(request):
     try:
         diaAberto_data = DiaAberto.objects.all()[0]
@@ -50,6 +52,8 @@ def editConfDiaAberto(request):
 #--------------------------------------------------------
 
 #show all transporteUniversidade_Horarios
+@login_required()
+@permission_required('diaAbertoConf.view_transporte', raise_exception=True)
 def showTransportes(request):
     allTransportes = Transporte.objects.all()
     allRotas = Rota.objects.all()
@@ -111,6 +115,8 @@ def showTransportes(request):
     return render(request, 'diaAbertoConf/ShowTransportes.html', context)
 
 #Creates new transporte
+@login_required()
+@permission_required('diaAbertoConf.add_transporte', raise_exception=True)
 def createTransporte(request):
     saved = False
     horarios = HorarioTransporte.objects.all()
@@ -146,6 +152,8 @@ def createTransporte(request):
         })
 
 #deletes a transporteUniversidade_Horario
+@login_required()
+@permission_required('diaAbertoConf.delete_transporte', raise_exception=True)
 def deleteTransporte(request, id):
     dados_Transporte = Transporte.objects.get(id = id)
     dados_Transporte.delete()
@@ -166,6 +174,8 @@ def getTotalHorarios(rotaformset):
             result+=1
     return result
 
+@login_required()
+@permission_required('diaAbertoConf.change_transporte', raise_exception=True)
 def updateTransporte(request, id):
     dados_Transporte = Transporte.objects.get(id = id)
     rotas_Transporte = Rota.objects.filter(transporteid = dados_Transporte.id)
@@ -254,6 +264,8 @@ def updateTransporte(request, id):
 #------------------------------------------------------------
 
 #show all Horarios Transporte
+@login_required()
+@permission_required('diaAbertoConf.view_horariotransporte', raise_exception=True)
 def showHorarios_Transporte(request):
     allHorarios_Transporte = HorarioTransporte.objects.all()
     horariosFiltered = HorarioTransporteFilter(request.GET, queryset=allHorarios_Transporte)
@@ -271,7 +283,7 @@ def showHorarios_Transporte(request):
         horarios = horariosFiltered.qs
 
     #Pagination
-    paginator = Paginator(horarios, 3) 
+    paginator = Paginator(horarios, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -285,6 +297,8 @@ def showHorarios_Transporte(request):
     return render(request, 'diaAbertoConf/ShowHorarioTransportes.html', context)
 
 #Creates new Horario Transporte
+@login_required()
+@permission_required('diaAbertoConf.add_horariotransporte', raise_exception=True)
 def createHorario_Transporte(request):
     saved = False
     form = HorarioTransporteForm(request.POST or None)
@@ -297,6 +311,8 @@ def createHorario_Transporte(request):
     return render(request, 'diaAbertoConf/AdicionarHorarioTransporte.html', {'form': form, 'saved':saved})
 
 #updates the fields of a spcific Horario_Transporte
+@login_required()
+@permission_required('diaAbertoConf.change_horariotransporte', raise_exception=True)
 def updateHorario_Transporte(request, id):
     dados_Horario_Transporte = HorarioTransporte.objects.get(id = id)
     form = HorarioTransporteForm(None)
@@ -312,6 +328,8 @@ def updateHorario_Transporte(request, id):
     return render(request, 'diaAbertoConf/EditarHorarioTransporte.html', context)
 
 #deletes a Horario_Transporte
+@login_required()
+@permission_required('diaAbertoConf.delete_horariotransporte', raise_exception=True)
 def deleteHorario_Transporte(request, id):
     dados_Horario_Transporte = HorarioTransporte.objects.get(id = id)
     dados_Horario_Transporte.delete()
@@ -321,6 +339,8 @@ def deleteHorario_Transporte(request, id):
 #Rotas Inscrições - CRUD
 #---------------------------------------------------------------------------------------
 
+@login_required()
+@permission_required('diaAbertoConf.view_rota_inscricao', raise_exception=True)
 def showInscAssociada(request, id):
     dados_rota = Rota.objects.get(id=id)
     dados_rotaInsc = Rota_Inscricao.objects.filter(rotaid = dados_rota.id)
@@ -349,6 +369,8 @@ def showInscAssociada(request, id):
 
     return render(request, 'diaAbertoConf/ShowInscAssociada.html', context)
 
+@login_required()
+@permission_required('diaAbertoConf.add_rota_inscricao', raise_exception=True)
 def createInscAssociada(request, id):
     saved = False
     dados_rota = Rota.objects.get(id=id)
@@ -414,6 +436,8 @@ def createInscAssociada(request, id):
 
     return render(request, 'diaAbertoConf/AdicionarInscAssociada.html', context)
 
+@login_required()
+@permission_required('diaAbertoConf.change_rota_inscricao', raise_exception=True)
 def updateInscAssociada(request, id, idRota_Insc):
     dados_rota = Rota.objects.get(id=id)
     dadosRota_Insc = Rota_Inscricao.objects.get(id=idRota_Insc)
@@ -451,6 +475,8 @@ def updateInscAssociada(request, id, idRota_Insc):
 
     return render(request, 'diaAbertoConf/EditarInscAssociada.html', context)
 
+@login_required()
+@permission_required('diaAbertoConf.delete_rota_inscricao', raise_exception=True)
 def deleteInscAssociada(reques,id, idRota_Insc):
     dados_rotaInsc = Rota_Inscricao.objects.get(id = idRota_Insc)
     dados_rotaInsc.delete()
@@ -461,11 +487,15 @@ def deleteInscAssociada(reques,id, idRota_Insc):
 #Gestao de Ementas
 #--------------------------------------------------------------------------------------
 
+@login_required()
+@permission_required('diaAbertoConf.view_ementa', raise_exception=True)
 def gestaoEmentas(request):
     allEmentas = Ementa.objects.all()
     context = {'allEmentas' : allEmentas,}
     return render(request, 'diaAbertoConf/GestaoEmentas.html', context)
 
+@login_required()
+@permission_required('diaAbertoConf.delete_ementa', raise_exception=True)
 def deleteEmenta(request, id):
     dados_Ementa = Ementa.objects.get(id = id)
     dados_Ementa.delete()
@@ -536,6 +566,8 @@ def editPrato(request,id):
     else:
        return  HttpResponseRedirect(reverse('diaAbertoConf:gestaoEmentas')) 
 
+@login_required()
+@permission_required('diaAbertoConf.delete_prato', raise_exception=True)
 def deletePrato(request, id):
     diaAberto_data = DiaAberto.objects.get(id=1)
     dados_Prato = Prato.objects.get(id = id)

@@ -21,10 +21,12 @@ from tarefas.forms import TarefaForm, TarefaAtividadeForm, TarefaTransporteForm,
 # Tarefas CRUD- Create Read Update Delete
 # ----------------------------------------------------------
 
-
+@login_required()
+@permission_required('tarefas.add_tarefa', raise_exception=True)
 def createTarefa(request):
 
     saved = False
+    user = request.user
     
     if request.method == 'POST':
         formTarefa = TarefaForm(request.POST)
@@ -33,12 +35,12 @@ def createTarefa(request):
             tipoTarefa = formTarefa.cleaned_data['tipoTarefa']
             
             if tipoTarefa == 'Atividade':
-                formTarefaAtividade = TarefaAtividadeForm(request.POST, uoId=UnidadeOrganica.objects.get(id='3'))
+                formTarefaAtividade = TarefaAtividadeForm(request.POST, uoId=user.unidade_organicaid)
                 if formTarefaAtividade.is_valid():
                     t = formTarefa.save(commit=False)
                     t.estado = False
                     # Change for logged in user
-                    t.utilizadorid = Utilizador.objects.get(id=1)
+                    t.utilizadorid = user
                     t.sessao_atividadeid = SessaoAtividade.objects.get(id=formTarefaAtividade.cleaned_data['sessaoAtividade'])
                     t.horario = t.sessao_atividadeid.sessaoid.hora_de_inicio
                     t.data = t.sessao_atividadeid.data
@@ -51,7 +53,7 @@ def createTarefa(request):
                     t = formTarefa.save(commit=False)
                     t.estado = False
                     # Change for logged in user
-                    t.utilizadorid = Utilizador.objects.get(id=1)
+                    t.utilizadorid = user
                     t.sessao_atividadeid_destino = SessaoAtividade.objects.get(
                         id=formTarefaTransporte.cleaned_data['sessaoAtividade_destino'])
                     t.sessao_atividadeid_origem = SessaoAtividade.objects.get(
@@ -71,7 +73,7 @@ def createTarefa(request):
 
     formTarefa = TarefaForm()
     # Change later so that id equals the UO of the autheticated Coordenador
-    formTarefaAtividade = TarefaAtividadeForm(request.GET or None, uoId=UnidadeOrganica.objects.get(id='3'))
+    formTarefaAtividade = TarefaAtividadeForm(request.GET or None, uoId=user.unidade_organicaid)
     formTarefaTransporte = TarefaTransporteForm(request.GET or None)
     formSetTarefaGrupos = TarefaGruposFormset(request.GET or None)
     
@@ -86,11 +88,16 @@ def createTarefa(request):
     return render(request, 'tarefas/AdicionarTarefa.html', context)
 
 @login_required()
-@permission_required('tarefas.view_tarefa')
+@permission_required('tarefas.view_tarefa', raise_exception=True)
 def showTarefas(request):
 
+    user = request.user
+
     #Filtering Results
-    tarefasFiltered = TarefaFilter(request.GET, queryset=Tarefa.objects.all())
+    if user.user_type == 0b10000:
+        tarefasFiltered = TarefaFilter(request.GET, queryset=Tarefa.objects.all())
+    else:
+        tarefasFiltered = TarefaFilter(request.GET, queryset=Tarefa.objects.filter(utilizadorid = user))
 
     #Ordering Results
     order_by = request.GET.get('order_by')
@@ -153,7 +160,8 @@ def showTarefas(request):
 
     return render(request, 'tarefas/showTarefas.html', context)
 
-
+@login_required()
+@permission_required('tarefas.assign_tarefa', raise_exception=True)
 def atribuirTarefa(request, id):
     tarefa = Tarefa.objects.get(id=id)
     uo_id = tarefa.utilizadorid.unidade_organicaid
@@ -168,7 +176,7 @@ def atribuirTarefa(request, id):
 
 
     # change later depending on other group user_type numeration
-    allcolaboradores = Utilizador.objects.filter(unidade_organicaid=uo_id).filter(user_type=3)
+    allcolaboradores = Utilizador.objects.filter(unidade_organicaid=uo_id).filter(user_type=0b00001)
 
     colaboradoresFiltered = ColaboradorFilter(request.GET, allcolaboradores)
 
@@ -213,6 +221,8 @@ def atribuirTarefa(request, id):
     }
     return render(request, 'tarefas/AtribuirTarefa.html', context)
 
+@login_required()
+@permission_required('tarefas.remove_colab_from_tarefa', raise_exception=True)
 def removeColab(request, id, colabid):
     tarefa = Tarefa.objects.get(id=id)
     tarefa.colaboradores.remove(Utilizador.objects.get(id=colabid))
@@ -223,13 +233,18 @@ def removeColab(request, id, colabid):
     
     return redirect('tarefas:showTarefas')
 
+@login_required()
+@permission_required('tarefas.delete_tarefa', raise_exception=True)
 def deleteTarefa(request, id):
     tarefa = Tarefa.objects.get(id=id)
     tarefa.delete()
     return redirect('tarefas:showTarefas')
 
-
+@login_required()
+@permission_required('tarefas.change_tarefa', raise_exception=True)
 def updateTarefa(request, id):
+    user = request.user
+
     dados_Tarefa = Tarefa.objects.get(id=id)
     formTarefaTransporte = None
     formSetTarefaGrupos = None
@@ -280,7 +295,7 @@ def updateTarefa(request, id):
             formTarefaAtividade = TarefaAtividadeForm(
                 initial={'atividade': dados_Tarefa.sessao_atividadeid.atividadeid.id,
                          'sessaoAtividade': dados_Tarefa.sessao_atividadeid.id},
-                uoId=UnidadeOrganica.objects.get(id=3),
+                uoId=user.unidade_organicaid,
                 sA=dados_Tarefa.sessao_atividadeid.atividadeid.id
             )
     
@@ -327,7 +342,7 @@ def updateTarefa(request, id):
                 return redirect('tarefas:showTarefas')
         
         elif dados_Tarefa.tipoTarefa == 'Atividade':
-            formTarefaAtividade = TarefaAtividadeForm(request.POST, uoId=UnidadeOrganica.objects.get(id=3))
+            formTarefaAtividade = TarefaAtividadeForm(request.POST, uoId=user.unidade_organicaid,)
             if formTarefa.is_valid() and formTarefaAtividade.is_valid():
                 t = formTarefa.save(commit=False)
                 t.tipoTarefa = 'Atividade'
@@ -365,7 +380,7 @@ def getSessoesBydate(request, date):
     sessoesAtividades =  SessaoAtividade.objects.filter(data=date).order_by('sessaoid__hora_de_inicio')
     for sessao in sessoesAtividades:
         # change later to authenticated user
-        if sessao.atividadeid.validada == 1 and sessao.atividadeid.unidadeorganicaid == Utilizador.objects.get(id=1).unidade_organicaid:
+        if sessao.atividadeid.validada == 1 and sessao.atividadeid.unidadeorganicaid == request.user.unidade_organicaid:
             sessoes.append((sessao.sessaoid.hora_de_inicio.strftime("%H:%M") + ", " + str(sessao.atividadeid.nome) , (str(sessao.id))))
 
     return JsonResponse(dict(sessoes))
@@ -385,7 +400,7 @@ def getSessoesNext(request, sessao_atividadeid, date):
     sessoesAtividades =  SessaoAtividade.objects.filter(data=date).order_by('sessaoid__hora_de_inicio')
     for sessao in sessoesAtividades:
         # change later to authenticated user
-        if sessao.atividadeid.validada == 1 and sessao.atividadeid.unidadeorganicaid == Utilizador.objects.get(id=1).unidade_organicaid:
+        if sessao.atividadeid.validada == 1 and sessao.atividadeid.unidadeorganicaid == request.user.unidade_organicaid:
             # gets all the sessoes within a 60 minute gap since the hora_fim of the sessao_atual
             if sessao.sessaoid.hora_de_inicio >= hora_fim.time() and sessao.sessaoid.hora_de_inicio <= (
                     hora_fim + datetime.timedelta(minutes=60)).time():
