@@ -283,7 +283,7 @@ def showHorarios_Transporte(request):
         horarios = horariosFiltered.qs
 
     #Pagination
-    paginator = Paginator(horarios, 3) 
+    paginator = Paginator(horarios, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
