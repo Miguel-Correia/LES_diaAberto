@@ -3,6 +3,11 @@ $('.delete').click(function (){
     $("#deleteModal").attr("action", data_var);
 })
 
+$('.imageShow').click(function (){
+    var data_var = "/media/" + $(this).data('image');
+    $("#ImageModal").find('img').attr("src", data_var);
+})
+
 $('.recuse').click(function (){
     var data_var = $(this).data('id');
     $("#recuseModal").attr("action", data_var);

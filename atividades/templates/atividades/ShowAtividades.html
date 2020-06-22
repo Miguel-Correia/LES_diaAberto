@@ -263,6 +263,9 @@
 													<p><b>Descrição:</b> {{ atividade.descricao}}</p>
 													
 													<p><b>Local:</b> {% if atividade.localid %} {{atividade.localid}} {% else %} Não atribuído {% endif %}</p>
+                          {% if atividade.localid %}
+                            <p><b>Mapa do Local: </b><a class="imageShow" href="" data-toggle="modal" data-target="#ImageModal" data-image="{{atividade.localid.mapa_sala}}">Visualizar a imagem</a></p>
+                          {% endif %}
 													<p><b>Duração:</b> {{ atividade.duracao}}</p>
                         				    		<p><b>Sessão:</b><p>
                         							{% for form in listSessao %}
@@ -389,6 +392,23 @@
               <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
             </form>
           </div>        
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ImageModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">Mapa do Local</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <img src=""  width="100%" height="100%">
+          </div>
         </div>
       </div>
     </div>

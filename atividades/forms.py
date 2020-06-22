@@ -315,6 +315,7 @@ class AtividadeMaterialForm(ModelForm):
             'class': 'form-control',
             'placeholder' : 'Introduza a quantidade',
             'min' : 1,
+            'oninvalid': "goToStep('3')"
             }),
         }
         labels = {

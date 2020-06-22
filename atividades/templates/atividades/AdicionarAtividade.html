@@ -377,8 +377,25 @@
 
                     $('.step2').removeClass("bg-secondary")
 
+                }else if(step == 3){
+                    currentStep = 3
+                    $('.previousStep').attr("disabled", false);
+                    $('.nextStep').attr("disabled", false);
+
+                    $('.InfoAtividades').hide()
+                    $('.InfoTematicas').hide()
+                    $('.InfoMateriais').show()
+                    $('.InfoSessoes').hide()
+
+                    
+                    $('.step4').addClass("bg-secondary") 
+                    $('.step2').addClass("bg-secondary") 
+                    $('.step1').addClass("bg-secondary")
+
+                    $('.step3').removeClass("bg-secondary")
                 }
             }
+
         </script>
     
     {% endblock %}

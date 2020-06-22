@@ -417,7 +417,7 @@ def createAtividade(request):
             
             
             for form in materialformset:
-                if form.cleaned_data.get('materialid'):
+                if form.cleaned_data.get('materialid') and form.cleaned_data.get('quantidade') and form.cleaned_data.get('quantidade')>0:
                     material = AtividadeMaterial(
                         atividadeid = atividade,
                         materialid = form.cleaned_data['materialid'],
@@ -582,7 +582,7 @@ def updateAtividade(request, id):
         materialformset = AtividadeMaterialFormset(request.POST, initial = [{'materialid': m.materialid.id, 'quantidade': m.quantidade} for m in material], prefix='formMaterial')
         sessaoformset = AtividadeSessaoFormset(request.POST, initial = [{'sessaoid': s.sessaoid.id, 'data': s.data} for s in sessao], prefix='formSessao')
 
-        if form.is_valid() and tematicaformset.is_valid() and materialformset.is_valid() and sessaoformset.is_valid():
+        if form.is_valid() and materialformset.is_valid() and tematicaformset.is_valid() and sessaoformset.is_valid():
             f = form.save(commit=False)
             f.validada = -1
             f.localid = None
@@ -612,10 +612,10 @@ def updateAtividade(request, id):
                     else:
                         t.delete()
             #Atividade Material
-            #Save and add
+            #Save and add          
             if len(materialformset) >= len(material):
                 for index, form in enumerate(materialformset):
-                    if form.cleaned_data.get('materialid'):
+                    if form.cleaned_data.get('materialid') and form.cleaned_data.get('quantidade') and form.cleaned_data.get('quantidade')>0:
                         if index < len(material):
                             material[index].materialid = form.cleaned_data['materialid']
                             material[index].quantidade = form.cleaned_data['quantidade']
@@ -631,7 +631,7 @@ def updateAtividade(request, id):
             #Save and delete
             else:
                 for index, m in enumerate(material):
-                    if materialformset[index].cleaned_data.get('materialid'):
+                    if materialformset[index].cleaned_data.get('materialid') and form.cleaned_data.get('quantidade')>0:
                         if index < len(materialformset):
                             m.materialid = materialformset[index].cleaned_data['materialid']
                             m.quantidade = materialformset[index].cleaned_data['quantidade']
