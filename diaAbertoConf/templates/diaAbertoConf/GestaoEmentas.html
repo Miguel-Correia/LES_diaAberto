@@ -1,67 +1,6 @@
 
 {% extends 'diaAbertoConf/Home.html' %}
 
-{% block navContent %}
-    <ul class="navbar-nav mr-auto">
-		{% if user.is_authenticated %}
-			{% if perms.atividades.view_inscricao%}
-				<li class="nav-item">
-    				<a class="nav-link" href="#">Inscrições</a>
-    			</li>
-			{% endif %}
-			{% if perms.atividades.view_atividade%}
-				{% if  perms.atividades.view_edificio and perms.atividades.view_campus and perms.atividades.view_local and perms.atividades.view_unidadeorganica and  perms.atividades.view_departamento and perms.atividades.view_tematica and perms.atividades.view_material and perms.atividades.view_sessaoatividade %}
-    				<li class="nav-item dropdown">
-    					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							Atividades
-    					</a>
-    					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-    						<a class="dropdown-item" href="{% url 'atividades:allAtividades'%}">Atividades</a>
-    						<a class="dropdown-item" href="{% url 'atividades:allEdificios'%}">Edifícios</a>
-    						<a class="dropdown-item" href="{% url 'atividades:allCampus'%}">Campus</a>
-    						<a class="dropdown-item" href="{% url 'atividades:allLocais'%}">Locais</a>
-    						<a class="dropdown-item" href="{% url 'atividades:allUnidadeOrganicas'%}">Unidade Orgânicas</a>
-    						<a class="dropdown-item" href="{% url 'atividades:allDepartamentos'%}">Departamentos</a>
-    						<a class="dropdown-item" href="{% url 'atividades:allTematicas'%}">Temáticas</a>
-    						<a class="dropdown-item" href="{% url 'atividades:allMateriais'%}">Materiais</a>
-    						<a class="dropdown-item" href="{% url 'atividades:allSessoes'%}">Horários de Sessões</a>
-						</div>
-    				</li>
-				{%else%}
-					<li class="nav-item">
-    					<a class="nav-link" href="{% url 'atividades:allAtividades' %}">Atividades</a>
-    				</li>  
-				{%endif%}
-			{% endif %}
-			{% if perms.diaAbertoConf.view_diaaberto%}
-				<li class="nav-item">
-    				<a class="nav-link" href="{% url 'diaAbertoConf:editConfig' %}">Configuração do Dia Aberto</a>
-    			</li>
-			{% endif %}
-			{% if perms.diaAbertoConf.view_transporte %}        	      		
-    			<li class="nav-item dropdown">
-    				<a class="nav-link dropdown-toggle" href="#" id="DiaAbertoConfNavbar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    					Transportes
-    				</a>
-    				<div class="dropdown-menu" aria-labelledby="DiaAbertoConfNavbar">
-    					<a class="dropdown-item" href="{% url 'diaAbertoConf:allTransportes'%}">Gestão de Transportes</a>
-    				  	<a class="dropdown-item" href="{% url 'diaAbertoConf:allHorarios'%}">Horários de Transportes</a>
-    				</div>
-    			</li>
-			{% endif %}
-			{% if perms.diaAbertoConf.view_ementa %}  
-    			<li class="nav-item">
-    				<a class="nav-link active" href="{% url 'diaAbertoConf:gestaoEmentas'%}">Almoços</a>
-    			</li>
-			{% endif %}
-			{% if perms.tarefas.view_tarefa %}
-				<li class="nav-item">
-    				<a class="nav-link" href="{% url 'tarefas:showTarefas' %}">Tarefas</a>
-    			</li>
-			{% endif %}
-		{% endif %}
-	</ul>
-{% endblock %}
 
 {% block content %}
 <div class="container mb-5 pb-5">
@@ -81,7 +20,7 @@
                     <span class="glyphicon glyphicon-plus"></span> Nova Ementa 
                 </a>
             </div> {% endcomment %}
-			<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'diaAbertoConf:showNewEmenta' %}"> + Adicionar Ementa</a>
+			<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'diaAbertoConf:createEmenta' %}"> + Adicionar Ementa</a>
             <p></p>
     	    <div class = "row">
     		    <div class = "col-sm-10 ">
@@ -89,17 +28,24 @@
     		    		<table class="table">
                     	    <thead>
                     	        <tr>
+									<th scope="col"></th>
                     	            <th scope="col">Dia</th>
                                     <th scope="col"></th>
+                    	            <th scope="col"></th>
+									<th scope="col"></th>
                     	            <th scope="col"></th>
                     	        </tr>
                     	    </thead>
                     	    <tbody>
 								{% for ementa in allEmentas %}
+								<tbody>
                     	        	<tr>
+										<td><i class="fas fa-chevron-right"></i></td>
                     	        	    <th scope="row">{{ ementa.dia }}</th>
-                    	        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'diaAbertoConf:showEditEmenta' id=ementa.id %}"  ></a></td>
-                    	        	   	<td><a class="btn btn-outline-danger fas fa-trash-alt" href="" data-toggle="modal" data-target="#Modal" data-id="{% url 'diaAbertoConf:deleteEmenta' id=ementa.id %}"></a></td>
+										<th scope="row">Aluno<p> {{ diaAberto.preco_aluno }}€</th>
+										<th scope="row">Professor<p> {{ diaAberto.preco_professor }}€</th>
+                    	        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'diaAbertoConf:EditarEmenta' id=ementa.id %}"  ></a></td>
+                    	        	   	<td><a class="btn btn-outline-danger fas fa-trash-alt delete" href="" data-toggle="modal" data-target="#Modal" data-id="{% url 'diaAbertoConf:deleteEmenta' id=ementa.id %}"></a></td>
 										<div class="modal" id="Modal">
 											<div class="modal-dialog">
 												<div class="modal-content">
@@ -126,8 +72,29 @@
 											</div>
 										</div>
 									</tr>
-								{% endfor %}
-                    	    </tbody>
+                    	    	</tbody>
+								<tbody class="hide">
+									<tr>
+										<td>
+											{% for prato in allPratos %}
+												{% if prato.ementaid.id == ementa.id %}
+													{% if prato.tipo == 'Sobremesa' %}
+														<p>Sobremesa: {{prato.nome}}<p>
+														<p>{{prato.descricao}}<p>
+													{% else %}
+														{% for  type in pratosType %}
+															{% if prato.tipo == type %}
+																<p>Prato de {{type}}: {{prato.nome}}<p>
+																{% if prato.descricao %}<p>{{prato.descricao}}<p>{% endif %} 
+															{% endif %}
+														{% endfor %}
+													{% endif %}	
+												{% endif %}	
+											{% endfor %}
+										</td>	
+									</tr>
+								</tbody>
+							{% endfor %}
                     	</table>
 					{% else %}
 						<h2>Dados não se encontram disponiveis</h2>
@@ -139,7 +106,9 @@
 {% block js %}
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script type="text/javascript">
             $(function () {
                 $('.delete').click(function (){
@@ -147,5 +116,26 @@
                     $("#deleteModal").attr("action", data_var);
                 })
             });
+
+			$(".hide").hide();
+
+			$("table").click(function(event) {
+    			//event.stopPropagation();
+    			var target = $(event.target);
+				if(!target.is('a')){
+					if ( target.closest('tbody').find('i').hasClass('fas fa-chevron-right') ){
+						target.closest('tbody').next().show();
+        				target.closest('tbody').find('i').removeClass();
+						target.closest('tbody').find('i').addClass('fas fa-chevron-down');	
+
+					}else if( target.closest('tbody').find('i').hasClass('fas fa-chevron-down') ){
+						target.closest('tbody').next().hide();
+        				target.closest('tbody').find('i').removeClass();
+						target.closest('tbody').find('i').addClass('fas fa-chevron-right');	
+						
+					}    				
+				}
+			})
     </script>
 {% endblock js %}
+
