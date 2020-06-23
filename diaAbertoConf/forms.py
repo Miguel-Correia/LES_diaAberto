@@ -160,7 +160,7 @@ class PratoForm(ModelForm):
         model = Prato
         fields =    '__all__'
 
-PratoFormSet = formset_factory(PratoForm, extra=1)
+PratoFormset = formset_factory(PratoForm, extra=1)
 
 class DiaAbertoForm(ModelForm):
     class Meta:
