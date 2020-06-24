@@ -9,24 +9,24 @@
                     <nav aria-label="breadcrumb">
 						<ol class="breadcrumb bg-white">
 							<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
-							<li class="breadcrumb-item active">Almocos</li>
+							<li class="breadcrumb-item active">Almoços</li>
 						</ol>
 					</nav>
     		    </div>
             </div>
-			<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'diaAbertoConf:createEmenta' %}"> + Adicionar Ementa</a>
+			<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'diaAbertoConf:createEmenta' %}"> + Adicionar ementa</a>
             <p></p>
     	    <div class = "row">
-    		    <div class = "col-sm-10 ">
+    		    <div class = "col-sm-12 ">
     		    		<table class="table">
                     	    <thead>
                     	        <tr>
-									<th scope="col" style="width: 10%"></th>
-                    	            <th scope="col" style="width: 40%">Dia</th>
-                                    <th scope="col" style="width: 15%"></th>
-                    	            <th scope="col" style="width: 15%"></th>
-									<th scope="col" style="width: 10%"></th>
-                    	            <th scope="col" style="width: 10%"></th>
+									<th scope="col" style="width: 8%"></th>
+                    	            <th scope="col" style="width: 25%">Dia</th>
+                                    <th scope="col" style="width: 25%"></th>
+                    	            <th scope="col" style="width: 25%"></th>
+									<th scope="col" style="width: 8%"></th>
+                    	            <th scope="col" style="width: 8%"></th>
                     	        </tr>
                     	    </thead>
                     	    <tbody>
@@ -34,9 +34,9 @@
 								<tbody>
                     	        	<tr>
 										<td><i class="fas fa-chevron-right"></i></td>
-                    	        	    <th scope="row">{{ ementa.dia }}</th>
-										<th scope="row">Aluno<p> {{ diaAberto.preco_aluno }}€</th>
-										<th scope="row">Professor<p> {{ diaAberto.preco_professor }}€</th>
+                    	        	    <th scope="row">{{ ementa.dia|date:"l"}}, {{ ementa.dia|date:"d"}} de {{ ementa.dia|date:"F"}} de {{ ementa.dia|date:"Y"}}</th>
+										<th scope="row">Preço Aluno {{ diaAberto.preco_aluno }}€</th>
+										<th scope="row">Preço Professor {{ diaAberto.preco_professor }}€</th>
                     	        	    <td><a class="btn btn-outline-success far fa-edit" href="{% url 'diaAbertoConf:EditarEmenta' id=ementa.id %}"  ></a></td>
                     	        	   	<td><a class="btn btn-outline-danger fas fa-trash-alt delete" href="" data-toggle="modal" data-target="#Modal" data-id="{% url 'diaAbertoConf:deleteEmenta' id=ementa.id %}"></a></td>
 										<div class="modal" id="Modal">
