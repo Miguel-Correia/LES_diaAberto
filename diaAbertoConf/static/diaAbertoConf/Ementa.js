@@ -57,3 +57,11 @@ $(document).on('click', '.remove-form-row', function(e){
     deleteForm('form', $(this));
     return false;
 })
+
+//============Modal===================//
+$(function () {
+    $('.delete').click(function (){
+        var data_var = $(this).data('id');
+        $("#deleteModal").attr("action", data_var);
+    })
+});
