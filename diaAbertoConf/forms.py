@@ -158,9 +158,9 @@ class EmentaForm(ModelForm):
 class PratoForm(ModelForm):
     class Meta:
         model = Prato
-        fields =    '__all__'
+        fields = ['nome', 'tipo', 'descricao']
 
-PratoFormSet = formset_factory(PratoForm, extra=1)
+PratoFormset = formset_factory(PratoForm, extra=1)
 
 class DiaAbertoForm(ModelForm):
     class Meta:

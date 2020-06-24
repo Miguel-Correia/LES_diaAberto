@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Ementa, Prato, Rota_Inscricao, DiaAberto
 from atividades.models import Inscricao
-from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, EmentaForm, PratoForm, DiaAbertoForm, formset_factory, PratoFormSet
+from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, EmentaForm, PratoForm, DiaAbertoForm, formset_factory, PratoFormset
 
 from diaAbertoConf.filters import RotaFilter, TransporteFilter, HorarioTransporteFilter, InscRotaFilter
 
@@ -81,7 +81,7 @@ def showTransportes(request):
         rotas = rotasFiltered.qs
 
     #Pagination
-    paginator = Paginator(transportes, 1) 
+    paginator = Paginator(transportes, 5) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -490,8 +490,11 @@ def deleteInscAssociada(reques,id, idRota_Insc):
 @login_required()
 @permission_required('diaAbertoConf.view_ementa', raise_exception=True)
 def gestaoEmentas(request):
+    diaAberto_data = DiaAberto.objects.get(id=1)
     allEmentas = Ementa.objects.all()
-    context = {'allEmentas' : allEmentas,}
+    allPratos = Prato.objects.all()
+    pratosType = ['Sopa','Carne','Peixe','Vegetariano','Sobremesa']
+    context = {'allEmentas' : allEmentas, 'allPratos' : allPratos, 'diaAberto':diaAberto_data, 'pratosType' : pratosType}
     return render(request, 'diaAbertoConf/GestaoEmentas.html', context)
 
 @login_required()
@@ -501,79 +504,113 @@ def deleteEmenta(request, id):
     dados_Ementa.delete()
     return HttpResponseRedirect(reverse('diaAbertoConf:gestaoEmentas'))
 
-def newEmenta(request):
-    if request.method == "POST":
-        form = EmentaForm(request.POST)
-        if form.is_valid():
-            ementaData=form.save()
-            #add later
-            return HttpResponseRedirect(reverse('diaAbertoConf:showNewPratos',args=(),kwargs={'id': ementaData.id}))
-        else:
-            form = EmentaForm()
-        #add later
-        return render(request, 'diaAbertoConf/AdicionarEmenta.html')
+@login_required()
+@permission_required('diaAbertoConf.add_ementa', raise_exception=True)
+def createEmenta(request):
+    saved=False
+    if request.method == "GET":
+        ementaForm = EmentaForm(request.GET or None)
+        pratoFormSet=PratoFormset(request.GET or None)
+    elif request.method == "POST":  
+        ementaForm = EmentaForm(request.POST)
+        pratoFormSet=PratoFormset(request.POST)
+        if ementaForm.is_valid() and pratoFormSet.is_valid():
+            ementa=ementaForm.save()
+            for prato in pratoFormSet:
+               newPrato = prato.save(commit=False)
+               newPrato.ementaid = ementa
+               newPrato.save()
+            saved=True   
+            
 
-def showNewEmenta(request):
-     return render(request, 'diaAbertoConf/AdicionarEmenta.html')
+    #Gets all the dates of the diaAberto
+    daysDiaAberto = []
+    try:
+        diaAberto = DiaAberto.objects.all()[0]
+        start_date = diaAberto.data_inicio
+        end_date = diaAberto.data_fim
+        current_date = start_date
+        daysDiaAberto.append(start_date)
+        while current_date <  end_date:
+            current_date += datetime.timedelta(days=1)
+            daysDiaAberto.append(current_date)
+    except IndexError:
+        pass
 
-def showNewPratos(request, id):
-    dados_Ementa = Ementa.objects.get(id = id)
-    context={ 'ementaData': dados_Ementa,}
-    return render(request, 'diaAbertoConf/newPratos.html',context)
+    context={
+        'ementaform' : ementaForm,
+        'pratoformset': pratoFormSet,
+        'datasDiaAberto': daysDiaAberto,
+        'saved' : saved,
+        }  
+    return render(request, 'diaAbertoConf/AdicionarEmenta.html', context)  
 
-def newPrato(request,id):
-    dados_Ementa = Ementa.objects.get(id = id)
-    formset = PratoFormSet(request.POST)
-    context={ 'ementaData': dados_Ementa,}
-    if request.method == "POST":
-        form = PratoFormSet(request.POST)
-        for prato in form:
-            if form.is_valid():
-                form.save()
-                return HttpResponseRedirect(reverse('diaAbertoConf:showNewPratos',args=(),kwargs={'id': id}))
-        else:
-            form = PratoForm()
-        return render(request,'diaAbertoConf/newPratos.html',context)   
-
-
-def showEditEmenta(request, id):
-    diaAberto_data = DiaAberto.objects.get(id=1)
-    dados_Ementa = Ementa.objects.get(id = id)
-    dados_Pratos = Prato.objects.filter(ementaid = id)
-    context = {'ementa' : dados_Ementa, 'pratos' : dados_Pratos, 'diaAbertoData' : diaAberto_data}
-    return render(request, 'diaAbertoConf/editEmenta.html', context)        
-
-def editEmenta(request, id):
-    diaAberto_data = DiaAberto.objects.get(id=1)
-    dados_Ementa = Ementa.objects.get(id = id)
-    dados_Pratos = Prato.objects.filter(ementaid = dados_Ementa.id)
-    form = EmentaForm(request.POST, instance = dados_Ementa)
-    if form.is_valid():
-        form.save()
-        return  HttpResponseRedirect(reverse('diaAbertoConf:gestaoEmentas'))
-    context = {'ementa' : dados_Ementa, 'pratos' : dados_Pratos,'diaAbertoData' : diaAberto_data}
-    return render(request, 'diaAbertoConf/editEmenta.html', context)
-
-def editPrato(request,id):
-    dados_Prato= Prato.objects.get(id = id)
-    form = PratoForm(request.POST, instance=dados_Prato)
-    if form.is_valid():
-        form.save()
-        dados_Ementa = Ementa.objects.get(id=dados_Prato.ementaid)
-        dados_Pratos_Ementa = Prato.objects.filter(ementaid = dados_Ementa.id)
-        context = {'ementa' : dados_Ementa, 'pratos' : dados_Pratos_Ementa}  
-        return render(request, 'diaAbertoConf/editEmenta.html', context)
-    else:
-       return  HttpResponseRedirect(reverse('diaAbertoConf:gestaoEmentas')) 
 
 @login_required()
-@permission_required('diaAbertoConf.delete_prato', raise_exception=True)
-def deletePrato(request, id):
-    diaAberto_data = DiaAberto.objects.get(id=1)
-    dados_Prato = Prato.objects.get(id = id)
-    dados_Ementa = Ementa.objects.get(id=dados_Prato.ementaid.id)
-    dados_Prato.delete()
-    dados_Pratos_Ementa = Prato.objects.filter(ementaid = dados_Ementa.id)
-    context = {'ementa' : dados_Ementa, 'pratos' : dados_Pratos_Ementa, 'diaAbertoData' : diaAberto_data}  
-    return render(request, 'diaAbertoConf/editEmenta.html', context)
+@permission_required('diaAbertoConf.change_ementa', raise_exception=True)
+def EditarEmenta(request,id):
+    dados_Ementa = Ementa.objects.get(id = id)
+    pratos = Prato.objects.filter(ementaid = id)
+
+    PratoFormset = formset_factory(PratoForm, extra=0)
+
+    if request.method == "GET":
         
+        form = EmentaForm(instance=dados_Ementa) 
+        pratoformset= PratoFormset(initial = [{'pratoid':p.id, 'nome': p.nome, 'tipo' : p.tipo, 'descricao':p.descricao } for p in pratos])
+    
+    elif request.method == "POST":
+        
+        form = EmentaForm(request.POST,instance=dados_Ementa)
+        pratoformset= PratoFormset(request.POST, initial = [{'pratoid':p.id, 'nome': p.nome, 'tipo' : p.tipo, 'descricao':p.descricao } for p in pratos])
+        
+        if form.is_valid() and pratoformset.is_valid():
+            ementaform=form.save()
+
+            if len(pratoformset) >= len(pratos):
+                for index, form in enumerate(pratoformset):
+                    if index < len(pratos):
+                        pratos[index].nome = form.cleaned_data['nome']
+                        pratos[index].tipo = form.cleaned_data['tipo']
+                        pratos[index].descricao = form.cleaned_data['descricao']
+                        pratos[index].save()
+                    else:
+                        new_prato = Prato(
+                            ementaid=ementaform,
+                            nome=form.cleaned_data['nome'],
+                            tipo=form.cleaned_data['tipo'],
+                            descricao=form.cleaned_data['descricao'],
+                        )
+                        new_prato.save()  
+
+            else:
+                for index, p in enumerate(pratos):  
+                    if index < len(pratoformset): 
+                        p.nome=pratoformset[index].cleaned_data['nome']
+                        p.tipo=pratoformset[index].cleaned_data['tipo']
+                        p.descricao=pratoformset[index].cleaned_data['descricao']
+                        p.save()
+                    else:
+                        p.delete()   
+
+        return redirect('diaAbertoConf:gestaoEmentas')                 
+    
+    daysDiaAberto = []
+    try:
+        diaAberto = DiaAberto.objects.all()[0]
+        start_date = diaAberto.data_inicio
+        end_date = diaAberto.data_fim
+        current_date = start_date
+        daysDiaAberto.append(start_date)
+        while current_date <  end_date:
+            current_date += datetime.timedelta(days=1)
+            daysDiaAberto.append(current_date)
+    except IndexError:
+        pass
+
+    context= { 'ementa' : dados_Ementa,
+               'datasDiaAberto': daysDiaAberto,
+               'pratoformset' : pratoformset,
+            }
+
+    return render(request,'diaAbertoConf/EditarEmenta.html',context)

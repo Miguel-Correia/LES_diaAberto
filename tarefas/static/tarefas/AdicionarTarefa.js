@@ -63,30 +63,38 @@ $(document).on('click', '.remove-form-row', function(e){
 //-----------------------------------------------------------
 /*
 function removeInsc(select){
-    console.log($(select).val())
 
-    selectedOptions = []
-
-    $('select[name$=inscricao]').each(function(){
-        if (!selectedOptions.includes($(this).val()))
-            selectedOptions.push()
+    var value
+    $(select).find('option').each(function(){
+        console.log("aa")
     })
-
     $('select[name$=inscricao]').each(function(){
-        if($(this).attr('id') != $(select).attr('id')){
-            $(this).find('option').each(function(){
-                if($(this).val() == $(select).val())
+        if($(this).attr('id') != $(select).attr('id') && $(this).val()){
+            value = $(this).val()
+            $(select).find('option').each(function(){
+                if ($(this).val == value)
                     $(this).hide()
-                else
-                    $(this).show()
             })
-        }else
-            pass
+        }
+
     })
 }
 
-$('select[name$=inscricao]').change(function(){
-    removeInsc(this)
+$('select[name$=inscricao]').change(function(){ 
+    $('select[name$=inscricao]').each(function(){
+        select = $(this)
+        var value
+        $('select[name$=inscricao]').each(function(){
+            if($(this).attr('id') != select.attr('id') && $(this).val()){
+                value = $(this).val()
+                select.find('option').each(function(){
+                    if ($(this).val == value)
+                        $(this).hide()
+                })
+            }
+    
+        })
+    })
 })
 */
 //----------------------------------------------------

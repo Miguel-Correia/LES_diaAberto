@@ -701,7 +701,7 @@ def updateAtividade(request, id):
                                 m.save()
                             else:
                                 m.delete()
-
+                                
                 #Atividade Sessao
                 #Save and add
                 if len(sessaoformset) >= len(sessao):

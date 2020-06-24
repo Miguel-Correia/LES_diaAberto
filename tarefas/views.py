@@ -176,7 +176,7 @@ def atribuirTarefa(request, id):
 
 
     # change later depending on other group user_type numeration
-    allcolaboradores = Utilizador.objects.filter(unidade_organicaid=uo_id).filter(user_type=0b00001)
+    allcolaboradores = Utilizador.objects.filter(unidade_organicaid=uo_id).filter(user_type=0b00010)
 
     colaboradoresFiltered = ColaboradorFilter(request.GET, allcolaboradores)
 

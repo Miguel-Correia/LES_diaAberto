@@ -19,8 +19,6 @@ function cloneMore(selector, prefix) {
 
 			if($(this).attr('type') === "checkbox"){
 				$(this).attr({'name': name, 'id': id}).prop('checked', false);
-			}else if($(this).is('select')){
-				$(this).attr({'name': name, 'id': id}).val($(this).find("option:first").val());
 			}else {
 				$(this).attr({'name': name, 'id': id}).val('');
 			}	
