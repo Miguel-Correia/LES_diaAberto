@@ -3,7 +3,7 @@
 
 
 {% block content %}
-<div class="container mb-5 pb-5">
+<div class="container mb-5 mt-4 pb-5">
     	    <div class = "row">
     		    <div class = "col-sm-6 ">
                     <nav aria-label="breadcrumb">
@@ -12,7 +12,6 @@
 							<li class="breadcrumb-item active">Almocos</li>
 						</ol>
 					</nav>
-                    <hr>
     		    </div>
             </div>
 			<a type="button" class="btn btn-outline-success mr-2 mb-4" href="{% url 'diaAbertoConf:createEmenta' %}"> + Adicionar Ementa</a>
@@ -23,7 +22,7 @@
     		    		<table class="table">
                     	    <thead>
                     	        <tr>
-									<th scope="col" style="width: 30%"></th>
+									<th scope="col" style="width: 10%"></th>
                     	            <th scope="col" style="width: 40%">Dia</th>
                                     <th scope="col" style="width: 15%"></th>
                     	            <th scope="col" style="width: 15%"></th>
@@ -70,17 +69,18 @@
                     	    	</tbody>
 								<tbody class="hide">
 									<tr>
+										<td></td>
 										<td>
 											{% for prato in allPratos %}
 												{% if prato.ementaid.id == ementa.id %}
 													{% if prato.tipo == 'Sobremesa' %}
-														<p>Sobremesa: {{prato.nome}}<p>
-														{% if prato.descricao != 'None'%}<p>{{prato.descricao}}<p>{% endif %}
+														<p><b>Sobremesa: </b>{{prato.nome}}<p>
+														{% if prato.descricao != 'None'%}<p><b>Descrição: </b>{{prato.descricao}}<p>{% endif %}
 													{% else %}
 														{% for  type in pratosType %}
 															{% if prato.tipo == type %}
-																<p>Prato de {{type}}: {{prato.nome}}<p>
-																{% if prato.descricao != 'None' %}<p>{{prato.descricao}}<p>{% endif %} 
+																<p><b>Prato de {{type}}:</b> {{prato.nome}}<p>
+																{% if prato.descricao != 'None' %}<p><b>Descrição: </b>{{prato.descricao}}<p>{% endif %} 
 															{% endif %}
 														{% endfor %}
 													{% endif %}	

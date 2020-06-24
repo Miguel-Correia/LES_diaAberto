@@ -147,9 +147,9 @@
 									<h5 class="card-subtitle mb-4 d-flex justify-content-center">
 										{%if diaAbertoData%}
 											{% if diaAbertoData.data_fim == diaAbertoData.data_inicio %}
-											{{diaAbertoData.data_inicio|date:"d/m/Y"}}
+											{{diaAbertoData.data_inicio}}
 											{% else %}
-											De {{diaAbertoData.data_inicio|date:"d/m/Y"}} a {{diaAbertoData.data_fim|date:"d/m/Y"}}
+											De {{diaAbertoData.data_inicio}} a {{diaAbertoData.data_fim}}
 											{% endif %}
 										{% else %}
 											Simples, Intuitivo, Limpo.
