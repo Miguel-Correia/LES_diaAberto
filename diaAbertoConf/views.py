@@ -507,6 +507,7 @@ def deleteEmenta(request, id):
 @login_required()
 @permission_required('diaAbertoConf.add_ementa', raise_exception=True)
 def createEmenta(request):
+    saved=False
     if request.method == "GET":
         ementaForm = EmentaForm(request.GET or None)
         pratoFormSet=PratoFormset(request.GET or None)
@@ -519,7 +520,8 @@ def createEmenta(request):
                newPrato = prato.save(commit=False)
                newPrato.ementaid = ementa
                newPrato.save()
-            return redirect('diaAbertoConf:gestaoEmentas')
+            saved=True   
+            
 
     #Gets all the dates of the diaAberto
     daysDiaAberto = []
@@ -535,11 +537,13 @@ def createEmenta(request):
     except IndexError:
         pass
 
-    return render(request, 'diaAbertoConf/AdicionarEmenta.html', {
+    context={
         'ementaform' : ementaForm,
         'pratoformset': pratoFormSet,
         'datasDiaAberto': daysDiaAberto,
-        })    
+        'saved' : saved,
+        }  
+    return render(request, 'diaAbertoConf/AdicionarEmenta.html', context)  
 
 
 @login_required()

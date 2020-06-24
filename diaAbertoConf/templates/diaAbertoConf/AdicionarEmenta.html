@@ -11,7 +11,7 @@
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
-					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:allTransportes' %}">Almocos</a></li>
+					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:gestaoEmentas' %}">Almocos</a></li>
 					<li class="breadcrumb-item active">Adicionar Ementa</li>
 				</ol>
 			</nav>
@@ -19,6 +19,13 @@
     		    <div class = "col-sm-4 offset-sm-4">
                     <h4 style="text-align:center;">Adicionar Ementa</h4>
     		    </div>
+				<div class = "col-sm-4 offset-sm-4">
+    		    	{% if saved %}
+                    	<div class="alert alert-primary" role="alert" style="text-align:center;">
+                       	 A Ementa foi guardada com sucesso!
+                    	</div>
+                	{% endif %}
+            	</div>
             </div>
 			<hr class="mx-5">
     	    <div class = "row">
@@ -86,7 +93,7 @@
 								<a type="button" class="btn btn-secondary" href="{% url 'diaAbertoConf:gestaoEmentas' %}">Cancelar</a>
 							</div>
 							<div class="col-sm-2">
-								<button type="submit" class="btn btn-primary">Guardar</button>
+								<button type="submit" class="btn btn-primary" >Guardar</button>
 							</div>
 						</div>
 					</form>

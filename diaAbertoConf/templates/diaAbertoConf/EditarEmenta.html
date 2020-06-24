@@ -11,14 +11,15 @@
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb bg-white">
 					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:index' %}">Início</a></li>
-					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:allTransportes' %}">Almocos</a></li>
-					<li class="breadcrumb-item active">Adicionar Ementa</li>
+					<li class="breadcrumb-item"><a href="{% url 'diaAbertoConf:gestaoEmentas' %}">Almocos</a></li>
+					<li class="breadcrumb-item active">Editar Ementa</li>
 				</ol>
 			</nav>
     	    <div class = "row">
     		    <div class = "col-sm-4 offset-sm-4">
-                    <h4 style="text-align:center;">Adicionar Ementa</h4>
+                    <h4 style="text-align:center;">Editar Ementa</h4>
     		    </div>
+
             </div>
 			<hr class="mx-5">
     	    <div class = "row">
@@ -109,9 +110,33 @@
 								<a type="button" class="btn btn-secondary" href="{% url 'diaAbertoConf:gestaoEmentas' %}">Cancelar</a>
 							</div>
 							<div class="col-sm-2">
-								<button type="submit" class="btn btn-primary">Guardar</button>
+								<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal" data-id="{% url 'diaAbertoConf:EditarEmenta' id=ementa.id %}">Guardar</button>
 							</div>
-						</div>
+							<div class="modal" id="Modal">
+								<div class="modal-dialog">
+									<div class="modal-content">
+
+									<!-- Modal Header -->
+									<div class="modal-header">
+										<h4 class="modal-title">Aviso</h4>
+										<button type="button" class="close" data-dismiss="modal">×</button>
+									</div>
+
+									<!-- Modal body -->
+									<div class="modal-body">
+										Tem a certeza que pretende guardar estas alteracoes?
+									</div>
+
+									<!-- Modal footer -->
+									<div class="modal-footer">
+										<form id="deleteModal" action="" method="post">
+											{% csrf_token %}
+											<button type="submit" class="btn btn-success" >Sim</button>
+											<button type="button" class="btn btn-danger" data-dismiss="modal">Nao</button>
+									</div>
+
+								</div>
+							</div>
 					</form>
     		    </div>
     	    </div>
