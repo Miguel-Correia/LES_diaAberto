@@ -270,11 +270,8 @@
                           <p><b>Criador da atividade:</b> {{atividade.utilizadorid.nome}}</p>
 													<p><b>Descrição:</b> {{ atividade.descricao}}</p>
 													<p><b>Unidade Orgânica:</b> {{ atividade.unidadeorganicaid.nome}}</p>
-													<p><b>Local:</b> {% if atividade.localid %} {{atividade.localid}} {% else %} Não atribuído {% endif %}</p>
-                          {% if atividade.localid %}
-                            <p><b>Mapa do Local: </b><a class="imageShow" href="" data-toggle="modal" data-target="#ImageModal" data-image="{{atividade.localid.mapa_sala}}">Visualizar a imagem</a></p>
-                          {% endif %}
-													<p><b>Duração:</b> {{ atividade.duracao}}</p>
+													
+													<p><b>Duração:</b> {{ atividade.duracao}} minutos</p>
                         				    		<p><b>Sessão:</b><p>
                         							{% for form in listSessao %}
                         							{% if form.atividadeid.id == atividade.id %} 
@@ -284,6 +281,10 @@
 											</div>
 											<td colspan="3">
 												<div>
+                          <p><b>Local:</b> {% if atividade.localid %} {{atividade.localid}} {% else %} Não atribuído {% endif %}</p>
+                          {% if atividade.localid %}
+                            <p><b>Mapa do Local: </b><a class="imageShow" href="" data-toggle="modal" data-target="#ImageModal" data-image="{{atividade.localid.mapa_sala}}">Visualizar a imagem</a></p>
+                          {% endif %}
                                                     <p><b>Colaboradores:</b> {{ atividade.num_colaboradores }}
 													<p><b>Público alvo:</b> {{ atividade.public_alvo}}</p>
 													<p><b>Temática:</b></p>

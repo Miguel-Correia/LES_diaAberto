@@ -614,7 +614,6 @@ def updateAtividade(request, id):
     except IndexError:
         diaAberto = None
 
-<<<<<<< HEAD
     data_atual = datetime.datetime.today().strftime('%Y-%m-%d')
 
     if diaAberto.data_inicio_propor_atividades.strftime('%Y-%m-%d') <= data_atual and diaAberto.data_fim_propor_atividades.strftime('%Y-%m-%d') >= data_atual:
@@ -673,35 +672,35 @@ def updateAtividade(request, id):
                             t.save()
                         else:
                             t.delete()
-=======
+
             #Atividade Material
             #Save and add          
-            if len(materialformset) >= len(material):
-                for index, form in enumerate(materialformset):
-                    if form.cleaned_data.get('materialid') and form.cleaned_data.get('quantidade') and form.cleaned_data.get('quantidade')>0:
-                        if index < len(material):
-                            material[index].materialid = form.cleaned_data['materialid']
-                            material[index].quantidade = form.cleaned_data['quantidade']
-                            material[index].atividadeid = f
-                            material[index].save()
-                        else:
-                            new_material = AtividadeMaterial(
-                                atividadeid = f,
-                                materialid = form.cleaned_data['materialid'],
-                                quantidade = form.cleaned_data['quantidade']
-                            )
-                            new_material.save()
-            #Save and delete
-            else:
-                for index, m in enumerate(material):
-                    if materialformset[index].cleaned_data.get('materialid') and form.cleaned_data.get('quantidade')>0:
-                        if index < len(materialformset):
-                            m.materialid = materialformset[index].cleaned_data['materialid']
-                            m.quantidade = materialformset[index].cleaned_data['quantidade']
-                            m.atividadeid = f
-                            m.save()
-                        else:
-                            m.delete()
+                if len(materialformset) >= len(material):
+                    for index, form in enumerate(materialformset):
+                        if form.cleaned_data.get('materialid') and form.cleaned_data.get('quantidade') and form.cleaned_data.get('quantidade')>0:
+                            if index < len(material):
+                                material[index].materialid = form.cleaned_data['materialid']
+                                material[index].quantidade = form.cleaned_data['quantidade']
+                                material[index].atividadeid = f
+                                material[index].save()
+                            else:
+                                new_material = AtividadeMaterial(
+                                    atividadeid = f,
+                                    materialid = form.cleaned_data['materialid'],
+                                    quantidade = form.cleaned_data['quantidade']
+                                )
+                                new_material.save()
+                #Save and delete
+                else:
+                    for index, m in enumerate(material):
+                        if materialformset[index].cleaned_data.get('materialid') and form.cleaned_data.get('quantidade')>0:
+                            if index < len(materialformset):
+                                m.materialid = materialformset[index].cleaned_data['materialid']
+                                m.quantidade = materialformset[index].cleaned_data['quantidade']
+                                m.atividadeid = f
+                                m.save()
+                            else:
+                                m.delete()
 
                 #Atividade Sessao
                 #Save and add
