@@ -32,7 +32,7 @@
     						<div class="col-sm-8">
       							<select id="id_dia" name="dia" class="form-control">
                                     {% for dia in datasDiaAberto%}
-                                        <option value={{ dia |date:"Y-m-d"}}>{{dia|date:"d-m-Y"}}</option>
+                                        <option value="{{dia|date:"Y-m-d"}}">{{dia|date:"d-m-Y"}}</option>
                                 	{% endfor %}
                                 </select>
     						</div>

@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 from diaAbertoConf.models import Transporte, Rota, HorarioTransporte, Ementa, Prato, Rota_Inscricao, DiaAberto
 from atividades.models import Inscricao
-from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, EmentaForm, PratoForm, DiaAbertoForm, formset_factory, PratoFormSet
+from diaAbertoConf.forms import TransporteForm, RotaFormSet, RotaForm, HorarioTransporteForm, RotaInscForm, EmentaForm, PratoForm, DiaAbertoForm, formset_factory, PratoFormset
 
 from diaAbertoConf.filters import RotaFilter, TransporteFilter, HorarioTransporteFilter, InscRotaFilter
 
