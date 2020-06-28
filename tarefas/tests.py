@@ -19,7 +19,7 @@ class LoggedInTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can view tarefa'))
         
@@ -36,7 +36,7 @@ class LoggedInTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can add tarefa'))
         
@@ -50,7 +50,7 @@ class LoggedInTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         
         t = Tarefa(utilizadorid=u)
@@ -64,7 +64,7 @@ class LoggedInTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can change tarefa'))
 
@@ -80,7 +80,7 @@ class LoggedInTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         
         t = Tarefa(utilizadorid=u)
@@ -94,7 +94,7 @@ class LoggedInTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='A')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFE@ualg.pt',nome = 'CoordenadorFE',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFE@ualg.pt',nome = 'CoordenadorFE',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can delete tarefa'))
 
@@ -114,7 +114,7 @@ class PermissionTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         u.user_permissions.add(Permission.objects.get(name='Can view tarefa'))
         
@@ -127,7 +127,7 @@ class PermissionTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         u.user_permissions.add(Permission.objects.get(name='Can add tarefa'))
         
@@ -141,7 +141,7 @@ class PermissionTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         u.user_permissions.add(Permission.objects.get(name='Can change tarefa'))
 
@@ -158,7 +158,7 @@ class PermissionTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='A')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFE@ualg.pt',nome = 'CoordenadorFE',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFE@ualg.pt',nome = 'CoordenadorFE',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         u.user_permissions.add(Permission.objects.get(name='Can delete tarefa'))
 
@@ -180,7 +180,7 @@ class Colaboradores_AvailableTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         u.user_permissions.add(Permission.objects.get(codename='assign_tarefa'))
 
@@ -194,7 +194,7 @@ class Colaboradores_AvailableTestCase(TestCase):
 
         result = []
         for x in range(5):
-            colab = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'colabFCT' + str(x) + '@ualg.pt',nome = 'ColabFCT' + str(x) ,data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00010, validado=1, password = make_password('12345'))
+            colab = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'colabFCT' + str(x) + '@ualg.pt',nome = 'ColabFCT' + str(x) ,data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00010, validado=1, password = make_password('12345'))
             colab.save()
             if x == 0:
                 t1.colaboradores.add(colab)
@@ -209,7 +209,7 @@ class Colaboradores_AvailableTestCase(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         u.user_permissions.add(Permission.objects.get(codename='assign_tarefa'))
 
@@ -223,7 +223,7 @@ class Colaboradores_AvailableTestCase(TestCase):
 
         result = []
         for x in range(5):
-            colab = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'colabFCT' + str(x) + '@ualg.pt',nome = 'ColabFCT' + str(x) ,data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00010, validado=1, password = make_password('12345'))
+            colab = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'colabFCT' + str(x) + '@ualg.pt',nome = 'ColabFCT' + str(x) ,data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00010, validado=1, password = make_password('12345'))
             colab.save()
             result.append(colab)
 

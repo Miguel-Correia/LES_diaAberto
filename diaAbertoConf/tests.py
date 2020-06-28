@@ -4,6 +4,7 @@ from utilizadores.models import Utilizador
 from atividades.models import *
 from .models import *
 from django.contrib.auth.hashers import check_password, make_password
+from .forms import *
 
 # Create your tests here.
 class LoggedInTestCase_Transportes(TestCase):
@@ -19,7 +20,7 @@ class LoggedInTestCase_Transportes(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can view tarefa'))
         
@@ -36,7 +37,7 @@ class LoggedInTestCase_Transportes(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can add tarefa'))
         
@@ -57,7 +58,7 @@ class LoggedInTestCase_Transportes(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can change tarefa'))
 
@@ -80,7 +81,7 @@ class LoggedInTestCase_Transportes(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='A')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFE@ualg.pt',nome = 'CoordenadorFE',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFE@ualg.pt',nome = 'CoordenadorFE',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can delete tarefa'))
 
@@ -104,7 +105,7 @@ class LoggedInTestCase_HorariosTransportes(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can view tarefa'))
         
@@ -121,7 +122,7 @@ class LoggedInTestCase_HorariosTransportes(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can add tarefa'))
         
@@ -142,7 +143,7 @@ class LoggedInTestCase_HorariosTransportes(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can change tarefa'))
 
@@ -165,7 +166,7 @@ class LoggedInTestCase_HorariosTransportes(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='A')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFE@ualg.pt',nome = 'CoordenadorFE',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFE@ualg.pt',nome = 'CoordenadorFE',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can delete tarefa'))
 
@@ -175,6 +176,97 @@ class LoggedInTestCase_HorariosTransportes(TestCase):
         self.client.login(email_p='coordenadorFE@ualg.pt', password_p= '12345')
         response = self.client.get('/Transportes/HorariosTransporte/update/' + str(t.id))
         self.assertEqual(response.status_code, 403)
+
+class PermissionTestCase_Transportes(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+    def test_enter_showTransportesPermission(self):
+        uo = UnidadeOrganica(nome='FCT')
+        uo.save()
+        d = Departamento(unidade_organicaid = uo, nome='DEEI')
+        d.save()
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'admin@ualg.pt',nome = 'Admin',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b10000, validado=1, password = make_password('12345'))
+        u.save()
+        u.user_permissions.set(Permission.objects.all())
+        
+        self.client.login(email_p='admin@ualg.pt', password_p= '12345')
+        response = self.client.get('/Transportes/')
+        self.assertEqual(response.status_code, 200)
+    
+    def test_enter_createTransportesPermission(self):
+        uo = UnidadeOrganica(nome='FCT')
+        uo.save()
+        d = Departamento(unidade_organicaid = uo, nome='DEEI')
+        d.save()
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'admin@ualg.pt',nome = 'Admin',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b10000, validado=1, password = make_password('12345'))
+        u.save()
+        u.user_permissions.set(Permission.objects.all())
+        
+        self.client.login(email_p='admin@ualg.pt', password_p= '12345')
+        response = self.client.get('/Transportes/create')
+        self.assertEqual(response.status_code, 200)
+
+    def test_enter_updateTransportesPermission(self):
+        uo = UnidadeOrganica(nome='FCT')
+        uo.save()
+        d = Departamento(unidade_organicaid = uo, nome='DEEI')
+        d.save()
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'admin@ualg.pt',nome = 'Admin',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b10000, validado=1, password = make_password('12345'))
+        u.save()
+        u.user_permissions.set(Permission.objects.all())
+
+        t = Transporte(tipo_transporte='Autocarro', capacidade=10)
+        t.save()
+        
+        self.client.login(email_p='admin@ualg.pt', password_p= '12345')
+        response = self.client.get('/Transportes/update/' + str(t.id))
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_enter_deleteTransportePermission(self):
+        uo = UnidadeOrganica(nome='FCT')
+        uo.save()
+        d = Departamento(unidade_organicaid = uo, nome='DEEI')
+        d.save()
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'admin@ualg.pt',nome = 'Admin',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b10000, validado=1, password = make_password('12345'))
+        u.save()
+        u.user_permissions.set(Permission.objects.all())
+
+        t = Transporte(tipo_transporte='Autocarro', capacidade=10)
+        t.save()
+        
+        self.client.login(email_p='coordenadorFE@ualg.pt', password_p= '12345')
+        response = self.client.get('/Transportes/delete/' + str(t.id))
+        self.assertEqual(response.status_code, 302)
+
+
+class TransporteForm_TestCase(TestCase):
+
+    def test_form_Valid(self):
+        t = HorarioTransporte(hora_de_chegada= '09:00:00', hora_de_partida='10:00:00')
+        t.save()
+        formTransporte = TransporteForm({'tipo_transporte': "autocarro", 'capacidade': 40})
+        formRota = RotaForm({'horarioid': [t.id], 'origem': "Gambelas", 'destino': "Penha", 'data': "10/02/2021"})
+        self.assertEqual(formTransporte.is_valid(), formRota.is_valid())
+
+
+class HorarioTransporteForm_TestCase(TestCase):
+    
+    def test_form_Valid(self):
+        form = HorarioTransporteForm({'hora_de_partida':"09:00:00", 'hora_de_chegada':"10:00:00"})
+        self.assertTrue(form.is_valid())
+    
+    def test_form_HoraAlreadyExists(self):
+        h = HorarioTransporte(hora_de_partida="09:00:00", hora_de_chegada="10:00:00")
+        h.save()
+        form = HorarioTransporteForm({'hora_de_partida':"09:00:00", 'hora_de_chegada':"10:00:00"})
+        self.assertFalse(form.is_valid())
+    
+    def test_form_ChegadaLessThanPartida(self):
+        form = HorarioTransporteForm({'hora_de_partida':"11:00:00", 'hora_de_chegada':"10:00:00"})
+        self.assertFalse(form.is_valid())
+
 
 class LoggedInTestCase_Ementa(TestCase):
 
@@ -190,7 +282,7 @@ class LoggedInTestCase_Ementa(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can view tarefa'))
 
@@ -212,7 +304,7 @@ class LoggedInTestCase_DiaAbertoConfig(TestCase):
         uo.save()
         d = Departamento(unidade_organicaid = uo, nome='DEEI')
         d.save()
-        u = Utilizador(unidade_organicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
+        u = Utilizador(unidade_orgânicaid = uo, departamentoid = d, email = 'coordenadorFCT@ualg.pt',nome = 'CoordenadorFCT',data_de_nascimento =  '1999-10-05', numero_telemovel= 99999, user_type= 0b00001, validado=1, password = make_password('12345'))
         u.save()
         #u.user_permissions.add(Permission.objects.get(name='Can view tarefa'))
 
